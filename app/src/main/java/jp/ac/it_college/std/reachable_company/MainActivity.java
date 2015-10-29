@@ -13,13 +13,13 @@ import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
-    //DrawerLayout関連
+    /** DrawerLayout関連 */
     private String[] mPlanetTitles;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    //Toolbar関連
+    /** Toolbar関連 */
     private Toolbar mToolbar;
     private CharSequence mTitle;
 
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initFragment(savedInstanceState);
         findViews();
         setUpToolbar();
         setUpDrawerLayout();
@@ -52,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /** CouponUploadFragmentに切り替える */
+    private void initFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_content, new CouponUploadFragment())
+                    .commit();
+        }
     }
 
     /**
@@ -88,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setAdapter(listAdapter);
 
         //サイドメニューのonClickListenerをセット
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener(
+                this, mDrawerList, mPlanetTitles, mDrawerLayout));
     }
 
     /**
