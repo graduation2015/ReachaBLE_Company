@@ -11,4 +11,15 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_coupon_select" />
 
+    <Button
+        android:id="@+id/btn_coupon_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_coupon_upload" />
+
+    <ImageView
+        android:id="@+id/img_coupon_preview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
 </LinearLayout>
