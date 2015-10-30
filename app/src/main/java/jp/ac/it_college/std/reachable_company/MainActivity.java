@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         //サイドメニューのonClickListenerをセット
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener(
-                this, mDrawerList, mPlanetTitles, mDrawerLayout));
+                this, mDrawerList, mDrawerLayout, mToolbar));
     }
 
     /**
