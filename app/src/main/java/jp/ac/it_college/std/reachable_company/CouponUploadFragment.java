@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+
+import java.io.File;
 import java.net.URISyntaxException;
 
 
@@ -37,13 +40,27 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     /** 選択されたファイルのパス */
     private String mFilePath;
 
+    /** S3アップロード関連フィールド */
+    private TransferUtility mTransferUtility;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_coupon_upload, container, false);
         findViews(contentView);
 
+        //TransferUtilityを設定
+        setUpTransferUtility();
         return contentView;
+    }
+
+    /**
+     * TransferUtilityを取得
+     */
+    private void setUpTransferUtility() {
+        mTransferUtility =
+                ((MainActivity) getActivity()).getClientManager().getTransferUtility(getActivity());
     }
 
     /**
@@ -74,8 +91,30 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
                 couponSelect();
                 break;
             case R.id.btn_coupon_upload:
+                beginUpload();
                 break;
         }
+    }
+
+    /**
+     * 選択されたクーポンをS3にアップロードする
+     */
+    private void beginUpload() {
+        //ファイルパスがnullの場合Toastを表示してメソッドを抜ける
+        if (mFilePath == null) {
+            Toast.makeText(getActivity(), "File has not been set.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //ファイルをアップロードする
+        File file = new File(mFilePath);
+        TransferObserver observer = mTransferUtility.upload(
+                Constants.BUCKET_NAME,
+                file.getName(),
+                file);
+
+        //TransferListenerをセット
+        observer.setTransferListener(new CouponUploadListener(getActivity()));
     }
 
     /**
