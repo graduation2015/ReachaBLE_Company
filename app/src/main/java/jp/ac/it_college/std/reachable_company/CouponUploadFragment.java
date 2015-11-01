@@ -13,11 +13,13 @@ import android.app.Fragment;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
@@ -36,6 +38,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private Button couponSelectButton;
     private Button couponUploadButton;
     private ImageView couponPreview;
+    private TextView lblFileName;
 
     /** 選択されたファイルのパス */
     private String mFilePath;
@@ -70,6 +73,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         couponSelectButton = (Button) contentView.findViewById(R.id.btn_coupon_select);
         couponUploadButton = (Button) contentView.findViewById(R.id.btn_coupon_upload);
         couponPreview = (ImageView) contentView.findViewById(R.id.img_coupon_preview);
+        lblFileName = (TextView) contentView.findViewById(R.id.lbl_file_name);
 
         couponSelectButton.setOnClickListener(this);
         couponUploadButton.setOnClickListener(this);
@@ -149,6 +153,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         try {
             //ファイルパスをセット
             mFilePath = getPath(data.getData());
+            //ファイルネームをセット
+            setFileName(data.getData());
             //プレビューに画像をセット
             setCouponPreview(mFilePath);
         } catch (URISyntaxException e) {
@@ -166,6 +172,31 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void setCouponPreview(String path) {
         couponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
+    }
+
+    /**
+     * ファイルネームをラベルにセット
+     */
+    private void setFileName(Uri uri) {
+        lblFileName.setText(getString(R.string.lbl_file_name) + getFileName(uri));
+    }
+
+    /**
+     * ファイル名を取得
+     * @param uri
+     * @return
+     */
+    private String getFileName(Uri uri) {
+        String fileName = null;
+        Cursor cursor =
+                getActivity().getContentResolver().query(uri, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            int nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            fileName = cursor.getString(nameIdx);
+        }
+
+        return fileName;
     }
 
     /**

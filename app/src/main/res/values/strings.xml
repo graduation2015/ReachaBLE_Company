@@ -10,6 +10,7 @@
     <string name="dialog_message_credentials">Getting credentials</string>
     <string name="dialog_title_coupon_upload">CouponUpload</string>
     <string name="dialog_message_coupon_upload">Coupon Uploading...</string>
+    <string name="lbl_file_name">"File name: "</string>
 
     <string-array name="planets_array">
         <item>Coupon upload</item>

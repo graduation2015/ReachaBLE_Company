@@ -17,9 +17,22 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_coupon_upload" />
 
-    <ImageView
-        android:id="@+id/img_coupon_preview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lbl_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_file_name"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/img_coupon_preview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+    </LinearLayout>
 
 </LinearLayout>
