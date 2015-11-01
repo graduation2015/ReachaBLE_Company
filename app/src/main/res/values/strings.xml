@@ -6,6 +6,8 @@
     <string name="drawer_close">Drawer close</string>
     <string name="btn_coupon_select">CouponSelect</string>
     <string name="btn_coupon_upload">Coupon Upload</string>
+    <string name="dialog_title_credentials">Credentials</string>
+    <string name="dialog_message_credentials">Getting credentials</string>
 
     <string-array name="planets_array">
         <item>Coupon upload</item>
