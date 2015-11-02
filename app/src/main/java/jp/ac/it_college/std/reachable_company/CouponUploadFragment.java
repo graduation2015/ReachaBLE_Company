@@ -3,7 +3,9 @@ package jp.ac.it_college.std.reachable_company;
 
 import android.app.Activity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -55,6 +57,9 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
         //TransferUtilityを設定
         setUpTransferUtility();
+
+        //SharedPreferencesにクーポンのパスがある場合プレビューにセット
+        setPreviousCoupon();
         return contentView;
     }
 
@@ -84,7 +89,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
-            setFile(data);
+            setCoupon(data);
         }
     }
 
@@ -149,10 +154,10 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * クーポンのファイルパスをセット
      * @param data
      */
-    private void setFile(Intent data) {
+    private void setCoupon(Intent data) {
         try {
             //ファイルパスをセット
-            mFilePath = getPath(data.getData());
+            setFilePath(getPath(data.getData()));
             //ファイルネームをセット
             setFileName(data.getData());
             //プレビューに画像をセット
@@ -172,6 +177,20 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void setCouponPreview(String path) {
         couponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
+    }
+
+    /**
+     * SharedPreferencesに保存したクーポンのパスがある場合、プレビューにセットする
+     */
+    private void setPreviousCoupon() {
+        SharedPreferences prefs = getActivity()
+                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+
+        String path = prefs.getString(Constants.COUPON_FILE_PATH, null);
+        if (path != null && !path.isEmpty()) {
+            //SharedPreferencesにクーポンのパスが存在し、空じゃない場合
+            setCouponPreview(path);
+        }
     }
 
     /**
@@ -197,6 +216,22 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         }
 
         return fileName;
+    }
+
+    /**
+     * ファイルパスをセット
+     * @param path
+     */
+    private void setFilePath(String path) {
+        //ファイルパスをセット
+        mFilePath = path;
+
+        //SharedPreferencesにファイルパスをセット
+        SharedPreferences prefs = getActivity()
+                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.COUPON_FILE_PATH, mFilePath);
+        editor.apply();
     }
 
     /**

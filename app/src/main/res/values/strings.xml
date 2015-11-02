@@ -11,6 +11,8 @@
     <string name="dialog_title_coupon_upload">CouponUpload</string>
     <string name="dialog_message_coupon_upload">Coupon Uploading...</string>
     <string name="lbl_file_name">"File name: "</string>
+    <string name="toggle_start_advertise">Start advertise</string>
+    <string name="toggle_stop_advertise">Stop advertise</string>
 
     <string-array name="planets_array">
         <item>Coupon upload</item>
