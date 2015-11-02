@@ -1,6 +1,8 @@
 package jp.ac.it_college.std.reachable_company;
 
 import android.app.LoaderManager;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,6 +23,9 @@ public class MainActivity extends AppCompatActivity
 
     /** タグ */
     private static final String TAG = "MainActivity";
+
+    /** Bluetooth 関連フィールド */
+    private final int REQUEST_ENABLE_BT = 0x01;
 
     /** DrawerLayout 関連フィールド */
     private String[] mPlanetTitles;
@@ -52,6 +57,26 @@ public class MainActivity extends AppCompatActivity
         setUpToolbar();
         setUpDrawerLayout();
         initAWSClient();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setUpBluetooth();
+    }
+
+    private void setUpBluetooth() {
+        BluetoothAdapter bt = BluetoothAdapter.getDefaultAdapter();
+
+        if (bt == null) {
+            return;
+        }
+
+        if (!bt.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+
     }
 
     private void initHandler() {
