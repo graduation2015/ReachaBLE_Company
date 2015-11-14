@@ -13,10 +13,18 @@
     <string name="lbl_file_name">"File name: "</string>
     <string name="toggle_start_advertise">Start advertise</string>
     <string name="toggle_stop_advertise">Stop advertise</string>
+    <string name="btn_category_select">CategorySelect</string>
 
     <string-array name="planets_array">
         <item>Coupon upload</item>
         <item>Advertise coupon</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Book</item>
+        <item>Music</item>
+        <item>Game</item>
+        <item>Food</item>
     </string-array>
 
 </resources>
