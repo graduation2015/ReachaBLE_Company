@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.reachable_company;
 
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -24,25 +25,28 @@ public class MainActivity extends AppCompatActivity
     /** タグ */
     private static final String TAG = "MainActivity";
 
-    /** Bluetooth 関連フィールド */
+    /* Bluetooth 関連フィールド */
     private final int REQUEST_ENABLE_BT = 0x01;
 
-    /** DrawerLayout 関連フィールド */
+    /* DrawerLayout 関連フィールド */
     private String[] mPlanetTitles;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    /** Toolbar 関連フィールド */
+    /* Toolbar 関連フィールド */
     private Toolbar mToolbar;
     private CharSequence mTitle;
 
-    /** AWSClientManager 関連フィールド */
+    /* AWSClientManager 関連フィールド */
     private AWSClientManager mClientManager;
 
-    /** ProgressDialogFragment 関連フィールド */
+    /* ProgressDialogFragment 関連フィールド */
     private ProgressDialogFragment mDialogFragment;
     private Handler mHandler;
+
+    /* MainActivity 関連フィールド */
+    private Bundle mSavedInstanceState;
 
 
     @Override
@@ -50,10 +54,20 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        initFragment(savedInstanceState);
-        initProgressDialog();
-        initHandler();
-        findViews();
+        this.mSavedInstanceState = savedInstanceState;
+
+        //初期設定
+        initSettings();
+    }
+
+    /**
+     * 初期設定を実行
+     */
+    private void initSettings() {
+        mDialogFragment = new ProgressDialogFragment().newInstance(
+                getString(R.string.dialog_title_credentials), getString(R.string.dialog_message_credentials));
+        mHandler = new Handler(getMainLooper());
+
         setUpToolbar();
         setUpDrawerLayout();
         initAWSClient();
@@ -62,25 +76,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        //Bluetoothを有効化
         setUpBluetooth();
-    }
-
-    private void setUpBluetooth() {
-        BluetoothAdapter bt = BluetoothAdapter.getDefaultAdapter();
-
-        if (bt == null) {
-            return;
-        }
-
-        if (!bt.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-    }
-
-    private void initHandler() {
-        mHandler = new Handler(getMainLooper());
     }
 
     @Override
@@ -104,26 +101,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * ProgressDialogFragmentを初期化
+     * Fragmentを切り替える
+     * @param fragment
      */
-    private void initProgressDialog() {
-        mDialogFragment = new ProgressDialogFragment().newInstance(
-                getString(R.string.dialog_title_credentials), getString(R.string.dialog_message_credentials));
-    }
-
-    /** CouponUploadFragmentに切り替える */
-    private void initFragment(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
+    private void changeFragment(Fragment fragment) {
+        if (mSavedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container_content, new CouponUploadFragment())
+                    .replace(R.id.container_content, fragment)
                     .commit();
         }
+    }
+
+    /**
+     * Bluetoothの有効化
+     */
+    private void setUpBluetooth() {
+        BluetoothAdapter bt = BluetoothAdapter.getDefaultAdapter();
+
+        if (bt == null) {
+            return;
+        }
+
+        if (!bt.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+
     }
 
     /**
      * DrawerLayoutをセットアップする
      */
     private void setUpDrawerLayout() {
+        //レイアウトを取得
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //リストを取得
+        mDrawerList = (ListView) findViewById(R.id.side_menu_list);
+
         //ページのタイトルを取得
         mTitle = getTitle();
 
@@ -162,18 +176,10 @@ public class MainActivity extends AppCompatActivity
      * Toolbarをアクションバーとしてセットする
      */
     private void setUpToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-    }
-
-    /**
-     * レイアウトからViewを取得する
-     */
-    private void findViews() {
-        mDrawerList = (ListView) findViewById(R.id.side_menu_list);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
     /**
@@ -207,7 +213,7 @@ public class MainActivity extends AppCompatActivity
         return mHandler;
     }
 
-    /** Implemented LoaderManager.LoaderCallbacks */
+    /* Implemented LoaderManager.LoaderCallbacks */
     /**
      * CognitoAsyncTaskLoaderをインスタンス化して返す
      * @param i
@@ -222,22 +228,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * onCreateLoaderで生成されたローダがロード完了時に呼び出される
+     * onCreateLoaderで生成されたローダのロード完了時に呼び出される
      * @param loader
      * @param awsCredentials
      */
     @Override
     public void onLoadFinished(Loader<AWSCredentials> loader, AWSCredentials awsCredentials) {
-        //ProgressDialogを非表示
+        //AWSClientManagerをセット
+        setClientManager(awsCredentials);
+
         getHandler().post(new Runnable() {
             @Override
             public void run() {
+                //ProgressDialogを非表示
                 mDialogFragment.dismiss();
+
+                //CouponUploadFragmentに切り替える
+                changeFragment(new CouponUploadFragment());
             }
         });
 
-        //AWSClientManagerをセット
-        setClientManager(awsCredentials);
+
     }
 
     /**
