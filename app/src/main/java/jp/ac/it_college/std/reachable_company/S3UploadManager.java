@@ -16,7 +16,7 @@ public class S3UploadManager {
     public TransferObserver upload(File file) {
         TransferObserver observer = mTransferUtility.upload(
                 Constants.BUCKET_NAME,
-                file.getName(),
+                CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + file.getName(),
                 file);
 
         return observer;
