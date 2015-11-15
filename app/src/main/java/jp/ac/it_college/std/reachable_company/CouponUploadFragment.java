@@ -52,6 +52,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /* S3アップロード関連フィールド */
     private TransferUtility mTransferUtility;
+    private S3UploadManager mUploadManager;
 
 
     @Override
@@ -76,6 +77,9 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         mTransferUtility =
                 ((MainActivity) getActivity()).getClientManager().getTransferUtility(getActivity());
 
+        //S3UploadManagerのインスタンス生成
+        mUploadManager = new S3UploadManager(mTransferUtility);
+
         //JsonManagerを取得
         jsonManager = new JsonManager(getActivity());
 
@@ -99,7 +103,16 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
-            setCoupon(data);
+            try {
+                String path = getPath(data.getData());
+                setCoupon(path);
+            } catch (URISyntaxException e) {
+                Toast.makeText(
+                        getActivity(),
+                        "Unable to get the file from the given URI.  See error log for details",
+                        Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
 
         if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
@@ -135,6 +148,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /**
      * ダイアログで選択したカテゴリリストをセットする
+     *
      * @param data
      */
     private void setCategories(Intent data) {
@@ -169,17 +183,14 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void beginUpload() {
         //ファイルパスがnullの場合Toastを表示してメソッドを抜ける
-        if (mFilePath == null) {
+        if (getFilePath() == null) {
             Toast.makeText(getActivity(), "File has not been set.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         //ファイルをアップロードする
-        File file = new File(mFilePath);
-        TransferObserver observer = mTransferUtility.upload(
-                Constants.BUCKET_NAME,
-                file.getName(),
-                file);
+        File file = new File(getFilePath());
+        TransferObserver observer = getUploadManager().upload(file);
 
         //TransferListenerをセット
         observer.setTransferListener(new CouponUploadListener(getActivity()));
@@ -210,28 +221,22 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     * クーポンのファイルパスをセット
-     * @param data
+     * クーポンをセットする
+     * @param path
      */
-    private void setCoupon(Intent data) {
-        try {
-            //ファイルパスをセット
-            setFilePath(getPath(data.getData()));
-            //ファイルネームをセット
-            setFileName(data.getData());
-            //プレビューに画像をセット
-            setCouponPreview(mFilePath);
-        } catch (URISyntaxException e) {
-            Toast.makeText(
-                    getActivity(),
-                    "Unable to get the file from the given URI.  See error log for details",
-                    Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+    private void setCoupon(String path) {
+        //ファイルパスをセット
+        setFilePath(path);
+        //ファイルネームをセット
+        setFileName(path);
+        //プレビューに画像をセット
+        setCouponPreview(getFilePath());
     }
+
 
     /**
      * 選択されたクーポン画像をプレビューにセット
+     *
      * @param path
      */
     private void setCouponPreview(String path) {
@@ -247,43 +252,29 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
         String path = prefs.getString(Constants.COUPON_FILE_PATH, null);
         if (path != null && !path.isEmpty()) {
-            //SharedPreferencesにクーポンのパスが存在し、空じゃない場合
+            //SharedPreferencesにクーポンのパスが存在し、空じゃない場合クーポンをセット
+            setFilePath(path);
+            setFileName(path);
             setCouponPreview(path);
         }
     }
 
-    /**
-     * ファイルネームをラベルにセット
-     */
-    private void setFileName(Uri uri) {
-        lblFileName.setText(getString(R.string.lbl_file_name) + getFileName(uri));
+    private void setFileName(String path) {
+        lblFileName.setText(getString(R.string.lbl_file_name) + extractFileName(path));
     }
 
-    /**
-     * ファイル名を取得
-     * @param uri
-     * @return
-     */
-    private String getFileName(Uri uri) {
-        String fileName = null;
-        Cursor cursor =
-                getActivity().getContentResolver().query(uri, null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            int nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-            fileName = cursor.getString(nameIdx);
-        }
-
-        return fileName;
+    private String extractFileName(String path) {
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     /**
      * ファイルパスをセット
+     *
      * @param path
      */
     private void setFilePath(String path) {
         //ファイルパスをセット
-        mFilePath = path;
+        this.mFilePath = path;
 
         //SharedPreferencesにファイルパスをセット
         SharedPreferences prefs = getActivity()
@@ -293,8 +284,13 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         editor.apply();
     }
 
+    public String getFilePath() {
+        return mFilePath;
+    }
+
     /**
      * ファイルの絶対パスを取得
+     *
      * @param uri
      * @return
      * @throws URISyntaxException
@@ -354,8 +350,17 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         return null;
     }
 
+    public TransferUtility getTransferUtility() {
+        return mTransferUtility;
+    }
+
+    public S3UploadManager getUploadManager() {
+        return mUploadManager;
+    }
+
     /**
      * ストレージフォルダのファイルか判定
+     *
      * @param uri
      * @return
      */
@@ -365,6 +370,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /**
      * ダウンロードフォルダのファイルか判定
+     *
      * @param uri
      * @return
      */
@@ -374,6 +380,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /**
      * メディアフォルダのファイルか判定
+     *
      * @param uri
      * @return
      */
