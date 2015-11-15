@@ -14,14 +14,13 @@ public class BLEServer extends BluetoothGattServerCallback {
 
     private BluetoothGattServer bluetoothGattServer;
 
-    private String companyName = "company_01";
-
     //セントラル（クライアント）からReadRequestが来ると呼ばれる
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void onCharacteristicReadRequest(BluetoothDevice device, int requestId,
                                             int offset, BluetoothGattCharacteristic characteristic) {
 
-        setCharacteristicValue(characteristic, offset, companyName.getBytes());
+        //クライアントにキー名を送信
+        setCharacteristicValue(characteristic, offset, CompanyInfo.COMPANY_ID.getBytes());
         bluetoothGattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, offset,
                 characteristic.getValue());
     }
