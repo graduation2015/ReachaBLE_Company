@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<AWSCredentials> {
 
     /** タグ */
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "tag_MainActivity";
 
     /* Bluetooth 関連フィールド */
     private final int REQUEST_ENABLE_BT = 0x01;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 
     /* MainActivity 関連フィールド */
     private Bundle mSavedInstanceState;
+    private static final int COGNITO_ASYNC_TASK_LOADER_ID = 0;
 
 
     @Override
@@ -54,10 +56,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.mSavedInstanceState = savedInstanceState;
-
         //初期設定
         initSettings();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        this.mSavedInstanceState = outState;
     }
 
     /**
@@ -70,12 +76,16 @@ public class MainActivity extends AppCompatActivity
 
         setUpToolbar();
         setUpDrawerLayout();
-        initAWSClient();
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        if (getClientManager() == null) {
+            initAWSClient();
+        }
+
         //Bluetoothを有効化
         setUpBluetooth();
     }
@@ -105,7 +115,7 @@ public class MainActivity extends AppCompatActivity
      * @param fragment
      */
     private void changeFragment(Fragment fragment) {
-        if (mSavedInstanceState == null) {
+        if (getSavedInstanceState() == null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container_content, fragment)
                     .commit();
@@ -186,11 +196,11 @@ public class MainActivity extends AppCompatActivity
      * Credentialsを取得するAsyncTaskLoaderを実行する
      */
     private void initAWSClient() {
-        getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().initLoader(COGNITO_ASYNC_TASK_LOADER_ID, null, this);
     }
 
     /**
-     * AWSClientManagerのゲッター
+     * AWSClientManagerを返す
      * @return
      */
     public AWSClientManager getClientManager() {
@@ -198,7 +208,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * AWSClientManagerのセッター
+     * AWSClientManagerを返す
      * @param credentials
      */
     private void setClientManager(AWSCredentials credentials) {
@@ -206,11 +216,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Handlerのゲッター
+     * Handlerを返す
      * @return
      */
     private Handler getHandler() {
         return mHandler;
+    }
+
+    /**
+     * SavedInstanceStateを返す
+     * @return
+     */
+    public Bundle getSavedInstanceState() {
+        return mSavedInstanceState;
     }
 
     /* Implemented LoaderManager.LoaderCallbacks */
@@ -222,6 +240,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public Loader<AWSCredentials> onCreateLoader(int i, Bundle bundle) {
+        Log.d(TAG, "onCreateLoader");
         //ProgressDialogを表示
         mDialogFragment.show(getFragmentManager(), TAG);
         return new CognitoAsyncTaskLoader(this);
@@ -234,6 +253,8 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onLoadFinished(Loader<AWSCredentials> loader, AWSCredentials awsCredentials) {
+        Log.d(TAG, "onLoadFinished");
+
         //AWSClientManagerをセット
         setClientManager(awsCredentials);
 
@@ -248,7 +269,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        //Loaderを破棄
+        getLoaderManager().destroyLoader(COGNITO_ASYNC_TASK_LOADER_ID);
     }
 
     /**
@@ -257,7 +279,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onLoaderReset(Loader<AWSCredentials> loader) {
-
+        Log.d(TAG, "onLoaderReset");
     }
 
 }
