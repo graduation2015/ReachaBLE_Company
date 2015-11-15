@@ -104,7 +104,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
             try {
-                String path = getPath(data.getData());
+                String path = FileUtility.getPath(getActivity(), data.getData());
                 setCoupon(path);
             } catch (URISyntaxException e) {
                 Toast.makeText(
@@ -161,14 +161,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         putJsonInfo();
     }
 
-    public List<String> getCategories() {
-        return categories;
-    }
-
-    public JsonManager getJsonManager() {
-        return jsonManager;
-    }
-
     /**
      * JSONファイルにJSONオブジェクトを追加/更新
      */
@@ -176,7 +168,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         CouponInfo info = new CouponInfo(getCategories());
         getJsonManager().putJsonObj(info);
     }
-
 
     /**
      * 選択されたクーポンをS3にアップロードする
@@ -222,6 +213,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /**
      * クーポンをセットする
+     *
      * @param path
      */
     private void setCoupon(String path) {
@@ -233,7 +225,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         setCouponPreview(getFilePath());
     }
 
-
     /**
      * 選択されたクーポン画像をプレビューにセット
      *
@@ -242,6 +233,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private void setCouponPreview(String path) {
         couponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
     }
+
 
     /**
      * SharedPreferencesに保存したクーポンのパスがある場合、プレビューにセットする
@@ -288,104 +280,15 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         return mFilePath;
     }
 
-    /**
-     * ファイルの絶対パスを取得
-     *
-     * @param uri
-     * @return
-     * @throws URISyntaxException
-     */
-    private String getPath(Uri uri) throws URISyntaxException {
-        final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;
-        String selection = null;
-        String[] selectionArgs = null;
-
-        if (needToCheckUri && DocumentsContract.isDocumentUri(getActivity(), uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-
-                uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("image".equals(type)) {
-                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                selection = "_id=?";
-                selectionArgs = new String[]{split[1]};
-            }
-        }
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {
-                    MediaStore.Images.Media.DATA
-            };
-
-            Cursor cursor = null;
-            try {
-                cursor = getActivity().getContentResolver()
-                        .query(uri, projection, selection, selectionArgs, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    public TransferUtility getTransferUtility() {
-        return mTransferUtility;
-    }
-
     public S3UploadManager getUploadManager() {
         return mUploadManager;
     }
 
-    /**
-     * ストレージフォルダのファイルか判定
-     *
-     * @param uri
-     * @return
-     */
-    public boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    public List<String> getCategories() {
+        return categories;
     }
 
-    /**
-     * ダウンロードフォルダのファイルか判定
-     *
-     * @param uri
-     * @return
-     */
-    public boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    public JsonManager getJsonManager() {
+        return jsonManager;
     }
-
-    /**
-     * メディアフォルダのファイルか判定
-     *
-     * @param uri
-     * @return
-     */
-    public boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
 }
