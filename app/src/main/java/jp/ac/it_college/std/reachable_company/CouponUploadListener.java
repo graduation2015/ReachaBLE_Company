@@ -11,14 +11,12 @@ public class CouponUploadListener implements TransferListener {
 
     private ProgressDialogFragment mDialogFragment;
     private Activity mActivity;
+    private String mFileName;
     private static final String TAG = "S3UploadListener";
 
-    /**
-     * コンストラクタ
-     * @param activity
-     */
-    public CouponUploadListener(Activity activity) {
+    public CouponUploadListener(Activity activity, String fileName) {
         this.mActivity = activity;
+        this.mFileName = fileName;
         setUpDialogFragment();
     }
 
@@ -44,10 +42,11 @@ public class CouponUploadListener implements TransferListener {
                 mDialogFragment.dismiss();
 
                 //Toast表示
-                Toast.makeText(mActivity, "Upload completed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "Upload completed : " + this.mFileName, Toast.LENGTH_SHORT).show();
                 break;
             default:
-                Toast.makeText(mActivity, "Upload failed.", Toast.LENGTH_SHORT).show();
+                mDialogFragment.dismiss();
+                Toast.makeText(mActivity, "Upload failed :" + this.mFileName, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

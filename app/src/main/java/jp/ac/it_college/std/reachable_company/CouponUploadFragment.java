@@ -2,21 +2,14 @@ package jp.ac.it_college.std.reachable_company;
 
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +40,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private JsonManager jsonManager;
     private List<String> categories = new ArrayList<>();
 
-    /* 選択されたファイルのパス */
-    private String mFilePath;
+    /* 選択されたクーポンファイルのパス */
+    private String mCouponFilePath;
 
     /* S3アップロード関連フィールド */
     private TransferUtility mTransferUtility;
@@ -174,17 +167,20 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void beginUpload() {
         //ファイルパスがnullの場合Toastを表示してメソッドを抜ける
-        if (getFilePath() == null) {
+        if (getCouponFilePath() == null) {
             Toast.makeText(getActivity(), "File has not been set.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //ファイルをアップロードする
-        File file = new File(getFilePath());
-        TransferObserver observer = getUploadManager().upload(file);
+        //クーポンファイルをアップロードする
+        File couponFile = new File(getCouponFilePath());
+        TransferObserver couponObserver = getUploadManager().upload(couponFile);
+        couponObserver.setTransferListener(new CouponUploadListener(getActivity(), couponFile.getName()));
 
-        //TransferListenerをセット
-        observer.setTransferListener(new CouponUploadListener(getActivity()));
+        //Jsonファイルをアップロードする
+        File jsonFile = jsonManager.getFile();
+        TransferObserver jsonObserver = getUploadManager().upload(jsonFile);
+        jsonObserver.setTransferListener(new CouponUploadListener(getActivity(), jsonFile.getName()));
     }
 
     /**
@@ -222,7 +218,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         //ファイルネームをセット
         setFileName(path);
         //プレビューに画像をセット
-        setCouponPreview(getFilePath());
+        setCouponPreview(getCouponFilePath());
     }
 
     /**
@@ -233,7 +229,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private void setCouponPreview(String path) {
         couponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
     }
-
 
     /**
      * SharedPreferencesに保存したクーポンのパスがある場合、プレビューにセットする
@@ -266,18 +261,18 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void setFilePath(String path) {
         //ファイルパスをセット
-        this.mFilePath = path;
+        this.mCouponFilePath = path;
 
         //SharedPreferencesにファイルパスをセット
         SharedPreferences prefs = getActivity()
                 .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.COUPON_FILE_PATH, mFilePath);
+        editor.putString(Constants.COUPON_FILE_PATH, mCouponFilePath);
         editor.apply();
     }
 
-    public String getFilePath() {
-        return mFilePath;
+    public String getCouponFilePath() {
+        return mCouponFilePath;
     }
 
     public S3UploadManager getUploadManager() {
