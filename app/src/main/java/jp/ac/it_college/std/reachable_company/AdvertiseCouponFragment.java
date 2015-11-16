@@ -1,7 +1,10 @@
 package jp.ac.it_college.std.reachable_company;
 
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,13 +19,17 @@ import android.widget.ToggleButton;
 
 
 public class AdvertiseCouponFragment extends Fragment
-        implements CompoundButton.OnCheckedChangeListener {
+        implements View.OnClickListener {
 
-    /** Views */
+    /* Bluetooth 関連フィールド */
+    private final int REQUEST_ENABLE_BT = 0x01;
+    private BluetoothAdapter mBluetoothAdapter;
+
+    /* Views */
     private ToggleButton mToggleAdvertise;
     private ImageView mCouponPreview;
 
-    /** BLE */
+    /* BLE */
     private Advertise advertise;
 
     @Override
@@ -38,6 +45,10 @@ public class AdvertiseCouponFragment extends Fragment
 
         //Advertiseのセットアップ
         setUpAdvertise();
+
+        //BluetoothAdapterを取得
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         return contentView;
     }
 
@@ -47,17 +58,17 @@ public class AdvertiseCouponFragment extends Fragment
 
     private void findViews(View contentView) {
         mToggleAdvertise = (ToggleButton) contentView.findViewById(R.id.toggle_advertise);
-        mToggleAdvertise.setOnCheckedChangeListener(this);
+        mToggleAdvertise.setOnClickListener(this);
 
         mCouponPreview = (ImageView) contentView.findViewById(R.id.img_coupon_preview);
     }
 
 
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        switch (compoundButton.getId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.toggle_advertise:
-                switchAdvertise(isChecked);
+                switchAdvertise(mToggleAdvertise.isChecked());
                 break;
         }
     }
@@ -67,10 +78,19 @@ public class AdvertiseCouponFragment extends Fragment
      * @param isAdvertise
      */
     private void switchAdvertise(boolean isAdvertise) {
-        if (isAdvertise) {
-            startAdvertise();
+        if (getBluetoothAdapter() == null) {
+            return;
+        }
+
+        //Bluetoothの有効/無効をチェック
+        if (getBluetoothAdapter().isEnabled()) {
+            if (isAdvertise) {
+                startAdvertise();
+            } else {
+                stopAdvertise();
+            }
         } else {
-            stopAdvertise();
+            setUpBluetooth();
         }
     }
 
@@ -105,5 +125,43 @@ public class AdvertiseCouponFragment extends Fragment
         SharedPreferences prefs = getActivity()
                 .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
         return prefs.getString(Constants.COUPON_FILE_PATH, null);
+    }
+
+    /**
+     * Bluetoothの有効化
+     */
+    private void setUpBluetooth() {
+        if (getBluetoothAdapter() == null) {
+            return;
+        }
+
+        if (!getBluetoothAdapter().isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ENABLE_BT) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+                    startAdvertise();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Toast.makeText(getActivity(), "CANCEL", Toast.LENGTH_SHORT).show();
+
+                    //ToggleボタンをOFFにする
+                    mToggleAdvertise.setChecked(false);
+                    break;
+            }
+        }
+    }
+
+    public BluetoothAdapter getBluetoothAdapter() {
+        return mBluetoothAdapter;
     }
 }

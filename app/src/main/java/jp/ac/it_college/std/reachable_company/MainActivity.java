@@ -86,10 +86,6 @@ public class MainActivity extends AppCompatActivity
             // AWSClientManagerを初期化
             initAWSClient();
         }
-
-        //Bluetoothを有効化
-        setUpBluetooth();
-
     }
 
     @Override
@@ -122,23 +118,6 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.container_content, fragment)
                     .commit();
         }
-    }
-
-    /**
-     * Bluetoothの有効化
-     */
-    private void setUpBluetooth() {
-        BluetoothAdapter bt = BluetoothAdapter.getDefaultAdapter();
-
-        if (bt == null) {
-            return;
-        }
-
-        if (!bt.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
     }
 
     /**
