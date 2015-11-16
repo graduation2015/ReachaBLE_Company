@@ -80,14 +80,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (getClientManager() == null) {
+            // AWSClientManagerを初期化
             initAWSClient();
         }
 
         //Bluetoothを有効化
         setUpBluetooth();
+
     }
 
     @Override
