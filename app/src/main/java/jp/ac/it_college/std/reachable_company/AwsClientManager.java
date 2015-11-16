@@ -8,13 +8,13 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-public class AWSClientManager {
+public class AwsClientManager {
 
     private AWSCredentials mCredentials;
     private AmazonS3Client mS3Client;
     private TransferUtility mTransferUtility;
 
-    public AWSClientManager(AWSCredentials credentials) {
+    public AwsClientManager(AWSCredentials credentials) {
         this.mCredentials = credentials;
     }
 

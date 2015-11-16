@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private CharSequence mTitle;
 
-    /* AWSClientManager 関連フィールド */
-    private AWSClientManager mClientManager;
+    /* AwsClientManager 関連フィールド */
+    private AwsClientManager mClientManager;
 
     /* ProgressDialogFragment 関連フィールド */
     private ProgressDialogFragment mDialogFragment;
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity
      * AWSClientManagerを返す
      * @return
      */
-    public AWSClientManager getClientManager() {
+    public AwsClientManager getClientManager() {
         return mClientManager;
     }
 
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
      * @param credentials
      */
     private void setClientManager(AWSCredentials credentials) {
-        mClientManager = new AWSClientManager(credentials);
+        mClientManager = new AwsClientManager(credentials);
     }
 
     /**
