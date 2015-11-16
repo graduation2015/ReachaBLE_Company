@@ -63,6 +63,13 @@ public class AdvertiseCouponFragment extends Fragment
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //Fragmentが破棄されるタイミングでAdvertise停止
+        stopAdvertise();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(getStateChangeReceiver(), getIntentFilter());
