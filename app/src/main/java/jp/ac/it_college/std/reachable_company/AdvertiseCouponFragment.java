@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ public class AdvertiseCouponFragment extends Fragment
 
     /* BLE */
     private Advertise advertise;
+    public static final int ADVERTISE_DELAY = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -182,7 +185,15 @@ public class AdvertiseCouponFragment extends Fragment
         if (requestCode == REQUEST_ENABLE_BT) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    startAdvertise();
+                    /* Bluetooth有効化直後にAdvertiseした場合に
+                    メッセージが発信されない現象を回避するため、数秒ディレイをかける*/
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Bluetooth有効化後、数秒待ってAdvertiseを開始する
+                            startAdvertise();
+                        }
+                    }, ADVERTISE_DELAY);
                     break;
                 case Activity.RESULT_CANCELED:
                     //ToggleボタンをOFFにする
