@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * AWSClientManagerを返す
+     * AWSClientManagerをセット
      * @param credentials
      */
     private void setClientManager(AWSCredentials credentials) {
