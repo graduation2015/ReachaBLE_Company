@@ -9,6 +9,9 @@ public class S3UploadManager {
     public static final String FOLDER_SUFFIX = "/";
     public static final String FILE_DELIMITER = ".";
     private final TransferUtility mTransferUtility;
+    private static final String OBJECT_KEY =
+            CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + CompanyInfo.COMPANY_ID;
+    private static final String JSON_FILE_EXTENSION = ".json";
 
     public S3UploadManager(TransferUtility transferUtility) {
         this.mTransferUtility = transferUtility;
@@ -24,8 +27,7 @@ public class S3UploadManager {
 
         TransferObserver observer = mTransferUtility.upload(
                 Constants.BUCKET_NAME,
-                CompanyInfo.COMPANY_ID + FOLDER_SUFFIX +
-                        CompanyInfo.COMPANY_ID + getExtension(file),
+                getKey(file),
                 file);
 
         return observer;
@@ -36,9 +38,23 @@ public class S3UploadManager {
      * @param file
      * @return
      */
-    private String getExtension(File file) {
+    private String getFileExtension(File file) {
         int index = file.getName().lastIndexOf(FILE_DELIMITER);
 
         return file.getName().substring(index);
+    }
+
+    /**
+     * ファイルの拡張子に応じたキー名を返す
+     * @param file
+     * @return
+     */
+    private String getKey(File file) {
+        String fileExtension = getFileExtension(file);
+        if (fileExtension.equals(JSON_FILE_EXTENSION)) {
+            return OBJECT_KEY + JSON_FILE_EXTENSION;
+        }
+
+        return OBJECT_KEY;
     }
 }
