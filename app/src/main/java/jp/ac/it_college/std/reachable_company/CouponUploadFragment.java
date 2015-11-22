@@ -213,7 +213,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * @param path
      */
     private void setCouponPreview(String path) {
-        mCouponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
+        getCouponPreview().setImageBitmap(BitmapFactory.decodeFile(path));
     }
 
     /**
@@ -293,5 +293,9 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
             mMultipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
         }
         return mMultipleChoiceDialog;
+    }
+
+    public ImageView getCouponPreview() {
+        return mCouponPreview;
     }
 }
