@@ -45,7 +45,7 @@ public class DrawerItemClickListener implements AdapterView.OnItemClickListener 
      * @param items
      */
     private void selectItem(PageItems items) {
-        Fragment fragment = PageFactory.getPageItem(items);
+        Fragment fragment = SideMenuItemsFactory.getPageItem(items);
         pageChange(fragment);
 
         mDrawerList.setItemChecked(items.ordinal(), true);

@@ -5,7 +5,7 @@ import android.app.Fragment;
 /**
  * PageItemsのファクトリークラス
  */
-public class PageFactory {
+public class SideMenuItemsFactory {
 
     /**
      * PageItemsの列挙子に応じたフラグメントを返す
