@@ -114,6 +114,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
             return;
         }
 
+        //TODO:ファイルとまとめてアップロードできるようにする
         //クーポンファイルをアップロードする
         File couponFile = new File(getCouponFilePath());
         TransferObserver couponObserver = getUploadManager().upload(couponFile);
