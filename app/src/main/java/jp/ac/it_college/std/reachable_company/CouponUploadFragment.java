@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -32,13 +31,13 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private static final int REQUEST_GALLERY = 0;
 
     /* Views */
-    private ImageView couponPreview;
-    private TextView lblFileName;
-    private ChoiceDialog multipleChoiceDialog;
+    private ImageView mCouponPreview;
+    private TextView mLblFileName;
+    private ChoiceDialog mMultipleChoiceDialog;
 
     /* カテゴリ用 */
-    private JsonManager jsonManager;
-    private List<String> categories = new ArrayList<>();
+    private JsonManager mJsonManager;
+    private List<String> mCategories = new ArrayList<>();
 
     /* 選択されたクーポンファイルのパス */
     private String mCouponFilePath;
@@ -63,14 +62,14 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void initSettings() {
         //ダイアログを取得
-        multipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
+        mMultipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
 
         //S3UploadManagerのインスタンス生成
         mUploadManager = new S3UploadManager(
                 AwsManager.getInstance(getActivity()).getTransferUtility());
 
         //JsonManagerを取得
-        jsonManager = new JsonManager(getActivity());
+        mJsonManager = new JsonManager(getActivity());
 
         //SharedPreferencesにクーポンのパスがある場合プレビューにセット
         setPreviousCoupon();
@@ -83,8 +82,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         contentView.findViewById(R.id.btn_coupon_select).setOnClickListener(this);
         contentView.findViewById(R.id.btn_coupon_upload).setOnClickListener(this);
         contentView.findViewById(R.id.btn_category_select).setOnClickListener(this);
-        couponPreview = (ImageView) contentView.findViewById(R.id.img_coupon_preview);
-        lblFileName = (TextView) contentView.findViewById(R.id.lbl_file_name);
+        mCouponPreview = (ImageView) contentView.findViewById(R.id.img_coupon_preview);
+        mLblFileName = (TextView) contentView.findViewById(R.id.lbl_file_name);
     }
 
     @Override
@@ -132,7 +131,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * カテゴリ選択ダイアログを表示する
      */
     private void showCategoryChoiceDialog() {
-        multipleChoiceDialog.show(getFragmentManager(), "multipleChoiceDialog");
+        mMultipleChoiceDialog.show(getFragmentManager(), "MultipleChoiceDialog");
     }
 
     /**
@@ -143,8 +142,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private void setCategories(Intent data) {
         List<String> checkedCategories =
                 data.getStringArrayListExtra(MultipleCategoryChoiceDialog.CHECKED_ITEMS);
-        categories.clear();
-        categories.addAll(checkedCategories);
+        mCategories.clear();
+        mCategories.addAll(checkedCategories);
 
         //JSONに書き込む
         putJsonInfo();
@@ -174,7 +173,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         couponObserver.setTransferListener(new CouponUploadListener(getActivity(), couponFile.getName()));
 
         //Jsonファイルをアップロードする
-        File jsonFile = jsonManager.getFile();
+        File jsonFile = mJsonManager.getFile();
         TransferObserver jsonObserver = getUploadManager().upload(jsonFile);
         jsonObserver.setTransferListener(new CouponUploadListener(getActivity(), jsonFile.getName()));
     }
@@ -223,7 +222,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * @param path
      */
     private void setCouponPreview(String path) {
-        couponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
+        mCouponPreview.setImageBitmap(BitmapFactory.decodeFile(path));
     }
 
     /**
@@ -243,7 +242,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     private void setFileName(String path) {
-        lblFileName.setText(getString(R.string.lbl_file_name) + extractFileName(path));
+        mLblFileName.setText(getString(R.string.lbl_file_name) + extractFileName(path));
     }
 
     private String extractFileName(String path) {
@@ -276,10 +275,10 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     public List<String> getCategories() {
-        return categories;
+        return mCategories;
     }
 
     public JsonManager getJsonManager() {
-        return jsonManager;
+        return mJsonManager;
     }
 }
