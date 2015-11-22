@@ -2,8 +2,6 @@ package jp.ac.it_college.std.reachable_company;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,18 +24,15 @@ public class MainActivity extends AppCompatActivity
     /** タグ */
     private static final String TAG = "tag_MainActivity";
 
-    /* Bluetooth 関連フィールド */
-    private final int REQUEST_ENABLE_BT = 0x01;
-
     /* DrawerLayout 関連フィールド */
-    private String[] mPlanetTitles;
+    private String[] mSideMenuTitles;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ArrayAdapter<String> mSideMenuArrayAdapter;
 
     /* Toolbar 関連フィールド */
     private Toolbar mToolbar;
-    private CharSequence mTitle;
 
     /* AwsClientManager 関連フィールド */
     private AwsClientManager mClientManager;
@@ -74,9 +69,12 @@ public class MainActivity extends AppCompatActivity
                 getString(R.string.dialog_title_credentials), getString(R.string.dialog_message_credentials));
         mHandler = new Handler(getMainLooper());
 
+        //ToolBarを設定
         setUpToolbar();
-        setUpDrawerLayout();
-
+        //DrawerListenerにDrawerToggleをセット
+        getDrawerLayout().setDrawerListener(getDrawerToggle());
+        //サイドメニューを設定
+        setUpDrawerList();
     }
 
     @Override
@@ -88,25 +86,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * Fragmentを切り替える
@@ -121,57 +100,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * DrawerLayoutをセットアップする
+     * サイドメニューを設定する
      */
-    private void setUpDrawerLayout() {
-        //レイアウトを取得
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //リストを取得
-        mDrawerList = (ListView) findViewById(R.id.side_menu_list);
-
-        //ページのタイトルを取得
-        mTitle = getTitle();
-
-        //ActionBarDrawerToggleを生成
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar
-                ,R.string.drawer_open, R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //ドロワーを開いた時に呼ばれる
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                //ドロワーを閉じた時に呼ばれる
-            }
-        };
-        //DrawerListenerにDrawerToggleをセット
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        //サイドメニューに表示するメニューをリソースから取得
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-
-        //サイドメニューリスト用アダプターをセット
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, mPlanetTitles);
-        mDrawerList.setAdapter(listAdapter);
-
-        //サイドメニューのonClickListenerをセット
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener(
-                this, mDrawerList, mDrawerLayout, mToolbar));
+    private void setUpDrawerList() {
+        //サイドメニュー用ArrayAdapterをセット
+        getDrawerList().setAdapter(getSideMenuArrayAdapter());
+        //サイドメニューのonItemClickListenerをセット
+        getDrawerList().setOnItemClickListener(new DrawerItemClickListener(
+                this, getDrawerList(), getDrawerLayout(), getToolbar(), getSideMenuTitles()));
     }
 
     /**
      * Toolbarをアクションバーとしてセットする
      */
     private void setUpToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(getToolbar());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
+
 
     /**
      * Credentialsを取得するAsyncTaskLoaderを実行する
@@ -196,23 +143,8 @@ public class MainActivity extends AppCompatActivity
         mClientManager = new AwsClientManager(credentials);
     }
 
-    /**
-     * Handlerを返す
-     * @return
-     */
-    private Handler getHandler() {
-        return mHandler;
-    }
-
-    /**
-     * SavedInstanceStateを返す
-     * @return
-     */
-    public Bundle getSavedInstanceState() {
-        return mSavedInstanceState;
-    }
-
     /* Implemented LoaderManager.LoaderCallbacks */
+
     /**
      * CognitoAsyncTaskLoaderをインスタンス化して返す
      * @param i
@@ -226,7 +158,6 @@ public class MainActivity extends AppCompatActivity
         mDialogFragment.show(getFragmentManager(), TAG);
         return new CognitoAsyncTaskLoader(this);
     }
-
     /**
      * onCreateLoaderで生成されたローダのロード完了時に呼び出される
      * @param loader
@@ -261,6 +192,89 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<AWSCredentials> loader) {
         Log.d(TAG, "onLoaderReset");
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        if (mDrawerLayout == null) {
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        }
+
+        return mDrawerLayout;
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        if (mDrawerToggle == null) {
+            mDrawerToggle = new DrawerToggle(
+                    this, getDrawerLayout(), getToolbar(), R.string.drawer_open, R.string.drawer_close);
+        }
+
+        return mDrawerToggle;
+    }
+
+    public Toolbar getToolbar() {
+        if (mToolbar == null) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        }
+
+        return mToolbar;
+    }
+
+    public String[] getSideMenuTitles() {
+        if (mSideMenuTitles == null) {
+            mSideMenuTitles = getResources().getStringArray(R.array.side_menu_titles);
+        }
+        return mSideMenuTitles;
+    }
+
+    public ListView getDrawerList() {
+        if (mDrawerList == null) {
+            mDrawerList = (ListView) findViewById(R.id.side_menu_list);
+        }
+        return mDrawerList;
+    }
+
+    public ArrayAdapter<String> getSideMenuArrayAdapter() {
+        if (mSideMenuArrayAdapter == null) {
+            mSideMenuArrayAdapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_list_item_1, getSideMenuTitles());
+        }
+        return mSideMenuArrayAdapter;
+    }
+
+    /**
+     * Handlerを返す
+     * @return
+     */
+    private Handler getHandler() {
+        return mHandler;
+    }
+
+    /**
+     * SavedInstanceStateを返す
+     * @return
+     */
+    public Bundle getSavedInstanceState() {
+        return mSavedInstanceState;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getDrawerToggle().syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getDrawerToggle().onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (getDrawerToggle().onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

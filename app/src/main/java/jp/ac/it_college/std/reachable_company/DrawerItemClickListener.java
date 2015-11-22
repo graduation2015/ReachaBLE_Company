@@ -15,7 +15,7 @@ public class DrawerItemClickListener implements AdapterView.OnItemClickListener 
 
     private Activity mActivity;
     private ListView mDrawerList;
-    private String[] mPlanetTitles;
+    private String[] mSideMenuTitles;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
 
@@ -27,12 +27,12 @@ public class DrawerItemClickListener implements AdapterView.OnItemClickListener 
      * @param toolbar
      */
     public DrawerItemClickListener(Activity activity, ListView drawerList,
-                                   DrawerLayout drawerLayout, Toolbar toolbar) {
+                                   DrawerLayout drawerLayout, Toolbar toolbar, String[] sideMenuTitles) {
         this.mActivity = activity;
         this.mDrawerList = drawerList;
         this.mDrawerLayout = drawerLayout;
         this.mToolbar = toolbar;
-        this.mPlanetTitles = mActivity.getResources().getStringArray(R.array.planets_array);
+        this.mSideMenuTitles = sideMenuTitles;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class DrawerItemClickListener implements AdapterView.OnItemClickListener 
         pageChange(fragment);
 
         mDrawerList.setItemChecked(items.ordinal(), true);
-        mToolbar.setTitle(mPlanetTitles[items.ordinal()]);
+        mToolbar.setTitle(mSideMenuTitles[items.ordinal()]);
         mDrawerLayout.closeDrawers();
     }
 
