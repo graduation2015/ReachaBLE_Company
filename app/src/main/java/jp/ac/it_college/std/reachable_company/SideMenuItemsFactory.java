@@ -12,7 +12,7 @@ public class SideMenuItemsFactory {
      * @param items
      * @return
      */
-    public static Fragment getPageItem(SideMenuItems items) {
+    public static Fragment getSideMenuItem(SideMenuItems items) {
         switch (items) {
             case ADVERTISE_COUPON:
                 return new AdvertiseCouponFragment();
