@@ -248,11 +248,19 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         //ファイルパスをセット
         this.mCouponFilePath = path;
 
+        //SharedPreferencesにクーポン画像のファイルパスを保存
+        savePrefs();
+    }
+
+    /**
+     * SharedPreferencesにクーポン画像のファイルパスを保存
+     */
+    private void savePrefs() {
         //SharedPreferencesにファイルパスをセット
         SharedPreferences prefs = getActivity()
                 .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.COUPON_FILE_PATH, mCouponFilePath);
+        editor.putString(Constants.COUPON_FILE_PATH, getCouponFilePath());
         editor.apply();
     }
 
