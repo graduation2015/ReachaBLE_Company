@@ -61,12 +61,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * 各種初期設定
      */
     private void initSettings() {
-        //ダイアログを取得
-        mMultipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
-
-        //JsonManagerを取得
-        mJsonManager = new JsonManager(getActivity());
-
         //SharedPreferencesにクーポンのパスがある場合プレビューにセット
         setPreviousCoupon();
     }
@@ -127,7 +121,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * カテゴリ選択ダイアログを表示する
      */
     private void showCategoryChoiceDialog() {
-        mMultipleChoiceDialog.show(getFragmentManager(), "MultipleChoiceDialog");
+        getMultipleChoiceDialog().show(getFragmentManager(), "MultipleChoiceDialog");
     }
 
     /**
@@ -279,6 +273,16 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     public JsonManager getJsonManager() {
+        if (mJsonManager == null) {
+            mJsonManager = new JsonManager(getActivity());
+        }
         return mJsonManager;
+    }
+
+    public ChoiceDialog getMultipleChoiceDialog() {
+        if (mMultipleChoiceDialog == null) {
+            mMultipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
+        }
+        return mMultipleChoiceDialog;
     }
 }
