@@ -44,7 +44,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private String mCouponFilePath;
 
     /* S3アップロード関連フィールド */
-    private TransferUtility mTransferUtility;
     private S3UploadManager mUploadManager;
 
 
@@ -66,12 +65,9 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         //ダイアログを取得
         multipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
 
-        //TransferUtilityを取得
-        mTransferUtility =
-                ((MainActivity) getActivity()).getClientManager().getTransferUtility(getActivity());
-
         //S3UploadManagerのインスタンス生成
-        mUploadManager = new S3UploadManager(mTransferUtility);
+        mUploadManager = new S3UploadManager(
+                AwsManager.getInstance(getActivity()).getTransferUtility());
 
         //JsonManagerを取得
         jsonManager = new JsonManager(getActivity());
