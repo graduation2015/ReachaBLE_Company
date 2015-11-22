@@ -204,7 +204,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         //ファイルネームをセット
         setFileName(path);
         //プレビューに画像をセット
-        setCouponPreview(getCouponFilePath());
+        setCouponPreview(path);
     }
 
     /**
@@ -226,9 +226,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         String path = prefs.getString(Constants.COUPON_FILE_PATH, null);
         if (path != null && !path.isEmpty()) {
             //SharedPreferencesにクーポンのパスが存在し、空じゃない場合クーポンをセット
-            setFilePath(path);
-            setFileName(path);
-            setCouponPreview(path);
+            setCoupon(path);
         }
     }
 
