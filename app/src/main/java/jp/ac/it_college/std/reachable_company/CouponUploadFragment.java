@@ -133,8 +133,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     private void setCategories(Intent data) {
         List<String> checkedCategories =
                 data.getStringArrayListExtra(MultipleCategoryChoiceDialog.CHECKED_ITEMS);
-        mCategories.clear();
-        mCategories.addAll(checkedCategories);
+        getCategories().clear();
+        getCategories().addAll(checkedCategories);
 
         //JSONに書き込む
         putJsonInfo();
