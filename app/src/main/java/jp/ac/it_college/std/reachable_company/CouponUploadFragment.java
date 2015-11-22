@@ -125,6 +125,11 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         jsonObserver.setTransferListener(new CouponUploadListener(getActivity(), jsonFile.getName()));
     }
 
+    /**
+     * ファイルパスからファイル名のみを抜き取る
+     * @param path
+     * @return
+     */
     private String extractFileName(String path) {
         return path.substring(path.lastIndexOf(FILE_DELIMITER) + 1);
     }
