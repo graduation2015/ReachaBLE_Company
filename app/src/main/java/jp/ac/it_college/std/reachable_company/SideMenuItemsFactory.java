@@ -3,16 +3,16 @@ package jp.ac.it_college.std.reachable_company;
 import android.app.Fragment;
 
 /**
- * PageItemsのファクトリークラス
+ * SideMenuItemsのファクトリークラス
  */
 public class SideMenuItemsFactory {
 
     /**
-     * PageItemsの列挙子に応じたフラグメントを返す
+     * SideMenuItemsの列挙子に応じたフラグメントを返す
      * @param items
      * @return
      */
-    public static Fragment getPageItem(PageItems items) {
+    public static Fragment getPageItem(SideMenuItems items) {
         switch (items) {
             case ADVERTISE_COUPON:
                 return new AdvertiseCouponFragment();

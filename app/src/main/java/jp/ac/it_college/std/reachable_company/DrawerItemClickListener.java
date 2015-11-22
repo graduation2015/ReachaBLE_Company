@@ -37,14 +37,14 @@ public class DrawerItemClickListener implements AdapterView.OnItemClickListener 
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        selectItem(PageItems.values()[i]);
+        selectItem(SideMenuItems.values()[i]);
     }
 
     /**
-     * PageItems列挙子に応じたページに切り替える
+     * SideMenuItems列挙子に応じたページに切り替える
      * @param items
      */
-    private void selectItem(PageItems items) {
+    private void selectItem(SideMenuItems items) {
         Fragment fragment = SideMenuItemsFactory.getPageItem(items);
         pageChange(fragment);
 
