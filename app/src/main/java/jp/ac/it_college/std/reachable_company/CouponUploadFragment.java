@@ -77,45 +77,16 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         mLblFileName = (TextView) contentView.findViewById(R.id.lbl_file_name);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
-            try {
-                String path = FileUtility.getPath(getActivity(), data.getData());
-                setCoupon(path);
-            } catch (URISyntaxException e) {
-                Toast.makeText(
-                        getActivity(),
-                        "Unable to get the file from the given URI.  See error log for details",
-                        Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        }
-
-        if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
-            switch (resultCode) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    setCategories(data);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_coupon_select:
-                couponSelect();
-                break;
-            case R.id.btn_coupon_upload:
-                beginUpload();
-                break;
-            case R.id.btn_category_select:
-                showCategoryChoiceDialog();
-                break;
-        }
+    /**
+     * SharedPreferencesにクーポン画像のファイルパスを保存
+     */
+    private void savePrefs() {
+        //SharedPreferencesにファイルパスをセット
+        SharedPreferences prefs = getActivity()
+                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.COUPON_FILE_PATH, getCouponFilePath());
+        editor.apply();
     }
 
     /**
@@ -123,21 +94,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      */
     private void showCategoryChoiceDialog() {
         getMultipleChoiceDialog().show(getFragmentManager(), "MultipleChoiceDialog");
-    }
-
-    /**
-     * ダイアログで選択したカテゴリリストをセットする
-     *
-     * @param data
-     */
-    private void setCategories(Intent data) {
-        List<String> checkedCategories =
-                data.getStringArrayListExtra(MultipleCategoryChoiceDialog.CHECKED_ITEMS);
-        getCategories().clear();
-        getCategories().addAll(checkedCategories);
-
-        //JSONに書き込む
-        putJsonInfo();
     }
 
     /**
@@ -169,6 +125,10 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         jsonObserver.setTransferListener(new CouponUploadListener(getActivity(), jsonFile.getName()));
     }
 
+    private String extractFileName(String path) {
+        return path.substring(path.lastIndexOf(FILE_DELIMITER) + 1);
+    }
+
     /**
      * クーポンを選択する
      */
@@ -191,6 +151,23 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         }
 
         startActivityForResult(intent, REQUEST_GALLERY);
+    }
+
+    /* ▼ Setter ▼ */
+
+    /**
+     * ダイアログで選択したカテゴリリストをセットする
+     *
+     * @param data
+     */
+    private void setCategories(Intent data) {
+        List<String> checkedCategories =
+                data.getStringArrayListExtra(MultipleCategoryChoiceDialog.CHECKED_ITEMS);
+        getCategories().clear();
+        getCategories().addAll(checkedCategories);
+
+        //JSONに書き込む
+        putJsonInfo();
     }
 
     /**
@@ -234,10 +211,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         mLblFileName.setText(getString(R.string.lbl_file_name) + extractFileName(path));
     }
 
-    private String extractFileName(String path) {
-        return path.substring(path.lastIndexOf(FILE_DELIMITER) + 1);
-    }
-
     /**
      * ファイルパスをセット
      *
@@ -251,17 +224,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         savePrefs();
     }
 
-    /**
-     * SharedPreferencesにクーポン画像のファイルパスを保存
-     */
-    private void savePrefs() {
-        //SharedPreferencesにファイルパスをセット
-        SharedPreferences prefs = getActivity()
-                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.COUPON_FILE_PATH, getCouponFilePath());
-        editor.apply();
-    }
+    /* ▼ Getter ▼ */
 
     public String getCouponFilePath() {
         return mCouponFilePath;
@@ -296,4 +259,46 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     public ImageView getCouponPreview() {
         return mCouponPreview;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
+            try {
+                String path = FileUtility.getPath(getActivity(), data.getData());
+                setCoupon(path);
+            } catch (URISyntaxException e) {
+                Toast.makeText(
+                        getActivity(),
+                        "Unable to get the file from the given URI.  See error log for details",
+                        Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+
+        if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
+            switch (resultCode) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    setCategories(data);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_coupon_select:
+                couponSelect();
+                break;
+            case R.id.btn_coupon_upload:
+                beginUpload();
+                break;
+            case R.id.btn_category_select:
+                showCategoryChoiceDialog();
+                break;
+        }
+    }
+
 }
