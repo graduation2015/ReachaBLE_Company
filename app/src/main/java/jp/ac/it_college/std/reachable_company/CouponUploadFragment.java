@@ -64,10 +64,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         //ダイアログを取得
         mMultipleChoiceDialog = ChoiceDialog.newInstance(this, new MultipleCategoryChoiceDialog());
 
-        //S3UploadManagerのインスタンス生成
-        mUploadManager = new S3UploadManager(
-                AwsManager.getInstance(getActivity()).getTransferUtility());
-
         //JsonManagerを取得
         mJsonManager = new JsonManager(getActivity());
 
@@ -271,6 +267,10 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     public S3UploadManager getUploadManager() {
+        if (mUploadManager == null) {
+            mUploadManager = new S3UploadManager(
+                    AwsManager.getInstance(getActivity()).getTransferUtility());
+        }
         return mUploadManager;
     }
 
