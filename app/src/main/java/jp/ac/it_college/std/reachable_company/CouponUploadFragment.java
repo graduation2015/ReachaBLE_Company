@@ -27,8 +27,9 @@ import java.util.List;
 
 public class CouponUploadFragment extends Fragment implements View.OnClickListener {
 
-    /* ギャラリー用の定数 */
+    /* 定数 */
     private static final int REQUEST_GALLERY = 0;
+    private static final String FILE_DELIMITER = "/";
 
     /* Views */
     private ImageView mCouponPreview;
@@ -236,7 +237,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     private String extractFileName(String path) {
-        return path.substring(path.lastIndexOf("/") + 1);
+        return path.substring(path.lastIndexOf(FILE_DELIMITER) + 1);
     }
 
     /**
