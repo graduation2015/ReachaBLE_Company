@@ -5,7 +5,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
 
-import jp.ac.it_college.std.reachable_company.CompanyInfo;
+import jp.ac.it_college.std.reachable_company.info.CompanyInfo;
 import jp.ac.it_college.std.reachable_company.Constants;
 
 public class S3UploadManager {

@@ -10,7 +10,7 @@ import android.os.Build;
 
 import java.util.Arrays;
 
-import jp.ac.it_college.std.reachable_company.CompanyInfo;
+import jp.ac.it_college.std.reachable_company.info.CompanyInfo;
 
 public class BLEServer extends BluetoothGattServerCallback {
 

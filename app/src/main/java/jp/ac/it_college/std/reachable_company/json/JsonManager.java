@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import jp.ac.it_college.std.reachable_company.CouponInfo;
+import jp.ac.it_college.std.reachable_company.info.CouponInfo;
 
 public class JsonManager {
 

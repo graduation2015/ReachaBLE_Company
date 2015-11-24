@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.info;
 
 public class CompanyInfo {
     public static final String COMPANY_ID = "company01";

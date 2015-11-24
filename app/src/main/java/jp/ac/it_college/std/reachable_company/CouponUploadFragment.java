@@ -28,6 +28,7 @@ import jp.ac.it_college.std.reachable_company.aws.AwsManager;
 import jp.ac.it_college.std.reachable_company.aws.S3UploadManager;
 import jp.ac.it_college.std.reachable_company.dialog.ChoiceDialog;
 import jp.ac.it_college.std.reachable_company.dialog.MultipleCategoryChoiceDialog;
+import jp.ac.it_college.std.reachable_company.info.CouponInfo;
 import jp.ac.it_college.std.reachable_company.json.JsonManager;
 
 
