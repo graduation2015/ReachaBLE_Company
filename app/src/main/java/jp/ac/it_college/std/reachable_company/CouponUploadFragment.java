@@ -279,7 +279,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
             try {
-                String path = FileUtility.getPath(getActivity(), data.getData());
+                String path = FileUtil.getPath(getActivity(), data.getData());
                 setCoupon(path);
             } catch (URISyntaxException e) {
                 Toast.makeText(

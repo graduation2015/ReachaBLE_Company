@@ -11,7 +11,7 @@ import android.provider.MediaStore;
 
 import java.net.URISyntaxException;
 
-public class FileUtility {
+public class FileUtil {
 
     /**
      * ファイルの絶対パスを取得
