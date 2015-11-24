@@ -30,6 +30,7 @@ import jp.ac.it_college.std.reachable_company.dialog.ChoiceDialog;
 import jp.ac.it_college.std.reachable_company.dialog.MultipleCategoryChoiceDialog;
 import jp.ac.it_college.std.reachable_company.info.CouponInfo;
 import jp.ac.it_college.std.reachable_company.json.JsonManager;
+import jp.ac.it_college.std.reachable_company.util.FileUtil;
 
 
 public class CouponUploadFragment extends Fragment implements View.OnClickListener {

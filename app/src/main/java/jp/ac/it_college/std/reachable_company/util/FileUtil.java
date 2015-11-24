@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.util;
 
 import android.content.ContentUris;
 import android.content.Context;
