@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.coupon;
 
 
 import android.app.Activity;
@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.it_college.std.reachable_company.Constants;
+import jp.ac.it_college.std.reachable_company.R;
 import jp.ac.it_college.std.reachable_company.aws.AwsManager;
 import jp.ac.it_college.std.reachable_company.aws.S3UploadManager;
 import jp.ac.it_college.std.reachable_company.dialog.ChoiceDialog;

@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.coupon;
 
 
 import android.app.Activity;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import jp.ac.it_college.std.reachable_company.Constants;
+import jp.ac.it_college.std.reachable_company.R;
 import jp.ac.it_college.std.reachable_company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.reachable_company.bluetooth.BluetoothStateChangeReceiver;
 import jp.ac.it_college.std.reachable_company.bluetooth.le.Advertise;

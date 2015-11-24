@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.coupon;
 
 import android.app.Activity;
 import android.util.Log;
@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
+import jp.ac.it_college.std.reachable_company.R;
 import jp.ac.it_college.std.reachable_company.dialog.ProgressDialogFragment;
 
 public class CouponUploadListener implements TransferListener {

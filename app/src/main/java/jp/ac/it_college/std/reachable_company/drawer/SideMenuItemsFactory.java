@@ -2,8 +2,8 @@ package jp.ac.it_college.std.reachable_company.drawer;
 
 import android.app.Fragment;
 
-import jp.ac.it_college.std.reachable_company.AdvertiseCouponFragment;
-import jp.ac.it_college.std.reachable_company.CouponUploadFragment;
+import jp.ac.it_college.std.reachable_company.coupon.AdvertiseCouponFragment;
+import jp.ac.it_college.std.reachable_company.coupon.CouponUploadFragment;
 
 /**
  * SideMenuItemsのファクトリークラス
