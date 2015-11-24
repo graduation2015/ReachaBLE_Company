@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +11,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import jp.ac.it_college.std.reachable_company.R;
+
 public class MultipleCategoryChoiceDialog extends ChoiceDialog {
 
     private ArrayList<String> checkedCategories = new ArrayList<>();
@@ -21,8 +23,8 @@ public class MultipleCategoryChoiceDialog extends ChoiceDialog {
         Bundle args = new Bundle();
         String[] items = context.getResources().getStringArray(R.array.categories);
         boolean[] checkedItems = new boolean[items.length];
-        args.putStringArray(MultipleCategoryChoiceDialog.ITEMS, items);
-        args.putBooleanArray(MultipleCategoryChoiceDialog.CHECKED_ITEMS, checkedItems);
+        args.putStringArray(ITEMS, items);
+        args.putBooleanArray(CHECKED_ITEMS, checkedItems);
 
         return args;
     }

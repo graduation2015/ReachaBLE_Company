@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
+import jp.ac.it_college.std.reachable_company.dialog.ProgressDialogFragment;
+
 public class CouponUploadListener implements TransferListener {
 
     private ProgressDialogFragment mDialogFragment;

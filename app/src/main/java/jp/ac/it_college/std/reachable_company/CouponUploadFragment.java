@@ -24,6 +24,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.it_college.std.reachable_company.dialog.ChoiceDialog;
+import jp.ac.it_college.std.reachable_company.dialog.MultipleCategoryChoiceDialog;
+
 
 public class CouponUploadFragment extends Fragment implements View.OnClickListener {
 

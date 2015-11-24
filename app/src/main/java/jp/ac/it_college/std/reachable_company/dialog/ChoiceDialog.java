@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
