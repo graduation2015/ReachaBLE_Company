@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.json;
 
 import android.content.Context;
 import android.os.Environment;
@@ -13,7 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+
+import jp.ac.it_college.std.reachable_company.CouponInfo;
 
 public class JsonManager {
 

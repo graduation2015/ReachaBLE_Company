@@ -26,6 +26,7 @@ import java.util.List;
 
 import jp.ac.it_college.std.reachable_company.dialog.ChoiceDialog;
 import jp.ac.it_college.std.reachable_company.dialog.MultipleCategoryChoiceDialog;
+import jp.ac.it_college.std.reachable_company.json.JsonManager;
 
 
 public class CouponUploadFragment extends Fragment implements View.OnClickListener {
