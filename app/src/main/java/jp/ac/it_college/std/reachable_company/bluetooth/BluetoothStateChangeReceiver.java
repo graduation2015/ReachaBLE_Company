@@ -1,10 +1,12 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+
+import jp.ac.it_college.std.reachable_company.bluetooth.BluetoothStateChangeListener;
 
 public class BluetoothStateChangeReceiver extends BroadcastReceiver {
     private final BluetoothStateChangeListener listener;

@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.bluetooth.le;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -13,7 +13,6 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
 import android.os.Build;
 import android.os.ParcelUuid;
-import android.widget.EditText;
 
 import java.util.UUID;
 

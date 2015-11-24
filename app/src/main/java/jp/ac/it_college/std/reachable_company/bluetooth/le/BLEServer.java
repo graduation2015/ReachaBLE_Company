@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.bluetooth.le;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothDevice;
@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothGattServerCallback;
 import android.os.Build;
 
 import java.util.Arrays;
+
+import jp.ac.it_college.std.reachable_company.CompanyInfo;
 
 public class BLEServer extends BluetoothGattServerCallback {
 

@@ -15,10 +15,13 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import jp.ac.it_college.std.reachable_company.bluetooth.BluetoothStateChangeListener;
+import jp.ac.it_college.std.reachable_company.bluetooth.BluetoothStateChangeReceiver;
+import jp.ac.it_college.std.reachable_company.bluetooth.le.Advertise;
 
 
 public class AdvertiseCouponFragment extends Fragment
