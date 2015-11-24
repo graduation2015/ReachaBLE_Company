@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.drawer;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import jp.ac.it_college.std.reachable_company.R;
 
 /**
  * DrawerLayoutのメニューアイテムがクリックされた時のイベントリスナークラス

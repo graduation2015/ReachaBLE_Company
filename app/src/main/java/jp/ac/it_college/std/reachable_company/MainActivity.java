@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import jp.ac.it_college.std.reachable_company.drawer.DrawerItemClickListener;
+import jp.ac.it_college.std.reachable_company.drawer.DrawerToggle;
+
 public class MainActivity extends AppCompatActivity {
 
     /** タグ */

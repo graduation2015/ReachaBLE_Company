@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.drawer;
 
 /**
  * サイドメニューに表示するアイテム用のEnumクラス
