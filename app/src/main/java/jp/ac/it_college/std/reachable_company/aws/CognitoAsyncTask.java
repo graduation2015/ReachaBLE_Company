@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.aws;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
+
+import jp.ac.it_college.std.reachable_company.Constants;
+import jp.ac.it_college.std.reachable_company.R;
 
 /**
  * Cognito経由でCredentialsを取得するAsyncTaskクラス

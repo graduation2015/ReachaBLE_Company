@@ -1,9 +1,12 @@
-package jp.ac.it_college.std.reachable_company;
+package jp.ac.it_college.std.reachable_company.aws;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
+
+import jp.ac.it_college.std.reachable_company.CompanyInfo;
+import jp.ac.it_college.std.reachable_company.Constants;
 
 public class S3UploadManager {
     public static final String FOLDER_SUFFIX = "/";
