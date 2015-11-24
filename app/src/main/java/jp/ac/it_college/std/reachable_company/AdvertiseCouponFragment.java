@@ -225,5 +225,7 @@ public class AdvertiseCouponFragment extends Fragment
     public void onBluetoothStateOff() {
         //ToggleボタンをOFFにする
         mToggleAdvertise.setChecked(false);
+        //Advertise停止
+        stopAdvertise();
     }
 }
