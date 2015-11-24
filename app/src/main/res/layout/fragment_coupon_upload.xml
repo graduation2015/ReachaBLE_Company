@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="jp.ac.it_college.std.ikemen.coupon.CouponUploadFragment">
+    tools:context="jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadFragment">
 
     <Button
         android:id="@+id/btn_coupon_select"
