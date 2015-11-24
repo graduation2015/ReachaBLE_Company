@@ -72,6 +72,8 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
      * 各種初期設定
      */
     private void initSettings() {
+        //JsonManagerを初期化
+        mJsonManager = new JsonManager(getActivity());
         //SharedPreferencesにクーポンのパスがある場合プレビューにセット
         setPreviousCoupon();
     }
@@ -259,9 +261,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     public JsonManager getJsonManager() {
-        if (mJsonManager == null) {
-            mJsonManager = new JsonManager(getActivity());
-        }
         return mJsonManager;
     }
 
