@@ -11,10 +11,11 @@ import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 public class S3UploadManager {
     public static final String FOLDER_SUFFIX = "/";
     public static final String FILE_DELIMITER = ".";
-    private final TransferUtility mTransferUtility;
     private static final String OBJECT_KEY =
             CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + CompanyInfo.COMPANY_ID;
     private static final String JSON_FILE_EXTENSION = ".json";
+
+    private final TransferUtility mTransferUtility;
 
     public S3UploadManager(TransferUtility transferUtility) {
         this.mTransferUtility = transferUtility;
@@ -28,7 +29,7 @@ public class S3UploadManager {
     public TransferObserver upload(File file) {
         // "企業ID/企業ID.拡張子" の形式でファイルをアップロードする
 
-        TransferObserver observer = mTransferUtility.upload(
+        TransferObserver observer = getTransferUtility().upload(
                 Constants.BUCKET_NAME,
                 getKey(file),
                 file);
@@ -59,5 +60,9 @@ public class S3UploadManager {
         }
 
         return OBJECT_KEY;
+    }
+
+    public TransferUtility getTransferUtility() {
+        return mTransferUtility;
     }
 }
