@@ -32,6 +32,7 @@ public class CouponUploadListener implements TransferListener {
                 mActivity.getString(R.string.dialog_message_coupon_upload));
     }
 
+    @Override
     public void onStateChanged(int i, TransferState transferState) {
         Log.d(TAG, "onStateChanged: " + String.valueOf(i));
 
