@@ -250,8 +250,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     public S3UploadManager getUploadManager() {
         if (mUploadManager == null) {
-            mUploadManager = new S3UploadManager(
-                    AwsManager.getInstance(getActivity()).getTransferUtility());
+            mUploadManager = new S3UploadManager(AwsManager.getTransferUtility(getActivity()));
         }
         return mUploadManager;
     }

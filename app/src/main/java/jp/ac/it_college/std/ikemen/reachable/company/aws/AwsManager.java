@@ -2,60 +2,45 @@ package jp.ac.it_college.std.ikemen.reachable.company.aws;
 
 import android.content.Context;
 
-import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-import java.util.concurrent.ExecutionException;
+import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 
 public class AwsManager {
-    private static AwsManager sInstance;
-    private AWSCredentials mCredentials;
-    private AmazonS3Client mS3Client;
-    private TransferUtility mTransferUtility;
-    private Context mContext;
+    private static CognitoCachingCredentialsProvider sCredProvider;
+    private static AmazonS3Client sS3Client;
+    private static TransferUtility sTransferUtility;
 
-    public static AwsManager getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new AwsManager(context);
+
+    private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
+        if (sCredProvider == null) {
+            sCredProvider = new CognitoCachingCredentialsProvider(
+                    context,
+                    Constants.IDENTITY_POOL_ID,
+                    Regions.AP_NORTHEAST_1
+            );
         }
-        return sInstance;
+
+        return sCredProvider;
     }
 
-    private AwsManager(Context context) {
-        this.mContext = context;
-    }
-
-    public AWSCredentials getCredentials() {
-        if (mCredentials == null) {
-            try {
-                //Cognitoを通してCredentialsを取得
-                mCredentials = new CognitoAsyncTask(getContext()).execute().get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+    public static AmazonS3Client getS3Client(Context context) {
+        if (sS3Client == null) {
+            sS3Client = new AmazonS3Client(getCredProvider(context));
+            sS3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_1));
         }
-        return mCredentials;
+        return sS3Client;
     }
 
-    public AmazonS3Client getS3Client() {
-        if (mS3Client == null) {
-            mS3Client = new AmazonS3Client(getCredentials());
-            mS3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_1));
+    public static TransferUtility getTransferUtility(Context context) {
+        if (sTransferUtility == null) {
+            sTransferUtility = new TransferUtility(getS3Client(context), context);
         }
-        return mS3Client;
+        return sTransferUtility;
     }
 
-    public TransferUtility getTransferUtility() {
-        if (mTransferUtility == null) {
-            mTransferUtility = new TransferUtility(getS3Client(), getContext());
-        }
-        return mTransferUtility;
-    }
-
-    public Context getContext() {
-        return mContext;
-    }
 }
