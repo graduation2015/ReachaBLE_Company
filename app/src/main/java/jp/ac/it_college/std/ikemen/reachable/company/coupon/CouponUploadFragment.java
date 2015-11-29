@@ -26,7 +26,7 @@ import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsManager;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.dialog.ChoiceDialog;
 import jp.ac.it_college.std.ikemen.reachable.company.dialog.MultipleCategoryChoiceDialog;
@@ -250,7 +250,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     public S3UploadManager getUploadManager() {
         if (mUploadManager == null) {
-            mUploadManager = new S3UploadManager(AwsManager.getTransferUtility(getActivity()));
+            mUploadManager = new S3UploadManager(AwsUtil.getTransferUtility(getActivity()));
         }
         return mUploadManager;
     }
