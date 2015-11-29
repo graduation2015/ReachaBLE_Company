@@ -9,9 +9,17 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import java.io.File;
 import java.net.URISyntaxException;
 
+import jp.ac.it_college.std.ikemen.reachable.company.info.CompanyInfo;
+
 public class FileUtil {
+    public static final String FOLDER_SUFFIX = "/";
+    public static final String FILE_DELIMITER = ".";
+    private static final String OBJECT_KEY =
+            CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + CompanyInfo.COMPANY_ID;
+    private static final String JSON_FILE_EXTENSION = ".json";
 
     /**
      * ファイルの絶対パスを取得
@@ -103,6 +111,31 @@ public class FileUtil {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * 渡されたファイルの拡張子を文字列で返す
+     * @param file
+     * @return
+     */
+    public static String getFileExtension(File file) {
+        int index = file.getName().lastIndexOf(FILE_DELIMITER);
+
+        return file.getName().substring(index);
+    }
+
+    /**
+     * ファイルの拡張子に応じたキー名を返す
+     * @param file
+     * @return
+     */
+    public static String getKey(File file) {
+        String fileExtension = getFileExtension(file);
+        if (fileExtension.equals(JSON_FILE_EXTENSION)) {
+            return OBJECT_KEY + JSON_FILE_EXTENSION;
+        }
+
+        return OBJECT_KEY;
     }
 
 }

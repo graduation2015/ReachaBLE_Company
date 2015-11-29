@@ -7,16 +7,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.info.CompanyInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
+import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class S3UploadManager {
-    public static final String FOLDER_SUFFIX = "/";
-    public static final String FILE_DELIMITER = ".";
-    private static final String OBJECT_KEY =
-            CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + CompanyInfo.COMPANY_ID;
-    private static final String JSON_FILE_EXTENSION = ".json";
-
     private final TransferUtility mTransferUtility;
 
     public S3UploadManager(TransferUtility transferUtility) {
@@ -33,7 +27,7 @@ public class S3UploadManager {
 
         TransferObserver observer = getTransferUtility().upload(
                 Constants.BUCKET_NAME,
-                getKey(file),
+                FileUtil.getKey(file),
                 file);
 
         return observer;
@@ -52,31 +46,6 @@ public class S3UploadManager {
         }
 
         return observers;
-    }
-
-    /**
-     * 渡されたファイルの拡張子を文字列で返す
-     * @param file
-     * @return
-     */
-    private String getFileExtension(File file) {
-        int index = file.getName().lastIndexOf(FILE_DELIMITER);
-
-        return file.getName().substring(index);
-    }
-
-    /**
-     * ファイルの拡張子に応じたキー名を返す
-     * @param file
-     * @return
-     */
-    private String getKey(File file) {
-        String fileExtension = getFileExtension(file);
-        if (fileExtension.equals(JSON_FILE_EXTENSION)) {
-            return OBJECT_KEY + JSON_FILE_EXTENSION;
-        }
-
-        return OBJECT_KEY;
     }
 
     public TransferUtility getTransferUtility() {
