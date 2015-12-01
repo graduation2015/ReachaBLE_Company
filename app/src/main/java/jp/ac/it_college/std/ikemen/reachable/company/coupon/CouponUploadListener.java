@@ -1,67 +1,87 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
-import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.dialog.ProgressDialogFragment;
+import jp.ac.it_college.std.ikemen.reachable.company.TransferStateListener;
 
 public class CouponUploadListener implements TransferListener {
 
-    private ProgressDialogFragment mDialogFragment;
-    private Activity mActivity;
+    private ProgressDialog mProgressDialog;
+    private Context mContext;
     private String mFileName;
+    private long progress;
+    private TransferStateListener mTransferStateListener;
     private static final String TAG = "S3UploadListener";
 
-    public CouponUploadListener(Activity activity, String fileName) {
-        this.mActivity = activity;
+    public CouponUploadListener(Context context, String fileName,
+                                ProgressDialog progressDialog) {
+        this.mContext = context;
         this.mFileName = fileName;
-        setUpDialogFragment();
-    }
-
-    /**
-     * ProgressDialogFragmentを設定
-     */
-    private void setUpDialogFragment() {
-        mDialogFragment = ProgressDialogFragment.newInstance(
-                mActivity.getString(R.string.dialog_title_coupon_upload),
-                mActivity.getString(R.string.dialog_message_coupon_upload));
+        this.mProgressDialog = progressDialog;
     }
 
     @Override
     public void onStateChanged(int i, TransferState transferState) {
-        Log.d(TAG, "onStateChanged: " + String.valueOf(i));
+        Log.d(TAG, "onStateChanged: " + transferState.name());
 
         switch (transferState) {
             case IN_PROGRESS:
-                // アップロード開始時にダイアログ表示
-                mDialogFragment.show(mActivity.getFragmentManager(), TAG);
+                Log.d(TAG, "Upload in progress : " + getFileName());
                 break;
             case COMPLETED:
-                // アップロード終了時にダイアログ非表示
-                mDialogFragment.dismiss();
+                Toast.makeText(
+                        getContext(), "Upload completed : " + getFileName(), Toast.LENGTH_SHORT).show();
 
-                //Toast表示
-                Toast.makeText(mActivity, "Upload completed : " + this.mFileName, Toast.LENGTH_SHORT).show();
+                if (getTransferStateListener() != null) {
+                    getTransferStateListener().onCompleted();
+                }
                 break;
             default:
-                mDialogFragment.dismiss();
-                Toast.makeText(mActivity, "Upload failed :" + this.mFileName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getContext(), "Upload failed : " + getFileName(), Toast.LENGTH_SHORT).show();
+
+                if (getTransferStateListener() != null) {
+                    getTransferStateListener().onFailed(getFileName());
+                }
                 break;
         }
     }
 
     @Override
-    public void onProgressChanged(int i, long l, long l1) {
-        Log.d(TAG, "onProgressChanged:");
+    public void onProgressChanged(int i, long bytesCurrent, long bytesTotal) {
+        Log.d(TAG, "onProgressChanged: " + getFileName() + " " + bytesCurrent + "/" + bytesTotal);
+        progress = bytesCurrent + getProgressDialog().getProgress() - progress;
+        getProgressDialog().setProgress((int) progress);
     }
 
     @Override
     public void onError(int i, Exception e) {
         Log.d(TAG, "Error during upload: " + i, e);
+    }
+
+    public ProgressDialog getProgressDialog() {
+        return mProgressDialog;
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public String getFileName() {
+        return mFileName;
+    }
+
+    public TransferStateListener getTransferStateListener() {
+        return mTransferStateListener;
+    }
+
+    public void setTransferStateListener(TransferStateListener listener) {
+        this.mTransferStateListener = listener;
     }
 }

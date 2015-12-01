@@ -1,5 +1,8 @@
 package jp.ac.it_college.std.ikemen.reachable.company.aws;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
@@ -8,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadListener;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class S3UploadManager {
@@ -22,7 +26,7 @@ public class S3UploadManager {
      * @param file
      * @return
      */
-    public TransferObserver upload(File file) {
+    private TransferObserver upload(File file) {
         // "企業ID/企業ID.拡張子" の形式でファイルをアップロードする
 
         TransferObserver observer = getTransferUtility().upload(
@@ -38,11 +42,16 @@ public class S3UploadManager {
      * @param files
      * @return
      */
-    public List<TransferObserver> uploadList(List<File> files) {
+    public List<TransferObserver> uploadList(
+            Context context, ProgressDialog progressDialog, List<File> files) {
         List<TransferObserver> observers = new ArrayList<>();
 
         for (File file : files) {
-            observers.add(upload(file));
+            TransferObserver observer = upload(file);
+            observer.setTransferListener(
+                    new CouponUploadListener(context, file.getName(), progressDialog));
+
+            observers.add(observer);
         }
 
         return observers;
