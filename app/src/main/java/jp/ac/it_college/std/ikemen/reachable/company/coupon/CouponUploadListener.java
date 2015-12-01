@@ -40,6 +40,8 @@ public class CouponUploadListener implements TransferListener {
             default:
                 Toast.makeText(
                         getContext(), "Upload failed : " + getFileName(), Toast.LENGTH_SHORT).show();
+                //TODO:アップロードが中断された場合の処理を実装する
+                getProgressDialog().cancel();
                 break;
         }
     }
