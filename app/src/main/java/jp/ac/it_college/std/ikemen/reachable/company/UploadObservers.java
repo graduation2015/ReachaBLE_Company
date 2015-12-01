@@ -5,7 +5,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UploadObservers implements TransferStateListener {
+public class UploadObservers {
     private int completed = 0;
     private List<TransferObserver> observers = new ArrayList<>();
 
@@ -29,17 +29,5 @@ public class UploadObservers implements TransferStateListener {
         }
 
         return total;
-    }
-
-    @Override
-    public void onCompleted() {
-        if (++completed == getObservers().size()) {
-
-        }
-    }
-
-    @Override
-    public void onFailed(String fileName) {
-
     }
 }

@@ -8,15 +8,12 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
-import jp.ac.it_college.std.ikemen.reachable.company.TransferStateListener;
-
 public class CouponUploadListener implements TransferListener {
 
     private ProgressDialog mProgressDialog;
     private Context mContext;
     private String mFileName;
     private long progress;
-    private TransferStateListener mTransferStateListener;
     private static final String TAG = "S3UploadListener";
 
     public CouponUploadListener(Context context, String fileName,
@@ -37,18 +34,10 @@ public class CouponUploadListener implements TransferListener {
             case COMPLETED:
                 Toast.makeText(
                         getContext(), "Upload completed : " + getFileName(), Toast.LENGTH_SHORT).show();
-
-                if (getTransferStateListener() != null) {
-                    getTransferStateListener().onCompleted();
-                }
                 break;
             default:
                 Toast.makeText(
                         getContext(), "Upload failed : " + getFileName(), Toast.LENGTH_SHORT).show();
-
-                if (getTransferStateListener() != null) {
-                    getTransferStateListener().onFailed(getFileName());
-                }
                 break;
         }
     }
@@ -77,11 +66,4 @@ public class CouponUploadListener implements TransferListener {
         return mFileName;
     }
 
-    public TransferStateListener getTransferStateListener() {
-        return mTransferStateListener;
-    }
-
-    public void setTransferStateListener(TransferStateListener listener) {
-        this.mTransferStateListener = listener;
-    }
 }
