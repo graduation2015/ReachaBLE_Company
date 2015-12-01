@@ -61,7 +61,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /* S3アップロード関連フィールド */
     private S3UploadManager mUploadManager;
-    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -133,21 +132,30 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
             return;
         }
 
+        //TODO: ProgressDialog生成にかかる処理コストが高すぎるので、再利用する方法を考える
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
+        progressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+
         //アップロードするファイルリスト
         List<File> files = Arrays.asList(new File(getCouponFilePath()), getJsonManager().getFile());
         //ファイルをアップロードする
         List<TransferObserver> observerList =
-                getUploadManager().uploadList(getActivity(), getProgressDialog(), files);
+                getUploadManager().uploadList(getActivity(), progressDialog, files);
         //UploadObserversを生成
         UploadObservers uploadObservers = new UploadObservers(observerList);
+
         //ProgressDialogの最大値にObserversの合計ファイルサイズをセット
-        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
+        progressDialog.setMax((int) uploadObservers.getBytesTotal());
         //ProgressDialogを表示
-        getProgressDialog().show();
+        progressDialog.show();
     }
 
     /**
      * ファイルパスからファイル名のみを抜き取る
+     *
      * @param path
      * @return
      */
@@ -280,17 +288,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     public ImageView getCouponPreview() {
         return mCouponPreview;
-    }
-
-    public ProgressDialog getProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-        }
-        return mProgressDialog;
     }
 
     @Override
