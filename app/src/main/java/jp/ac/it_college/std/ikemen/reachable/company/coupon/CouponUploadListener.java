@@ -2,6 +2,8 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,8 +15,8 @@ public class CouponUploadListener implements TransferListener {
     private ProgressDialog mProgressDialog;
     private Context mContext;
     private String mFileName;
-    private long progress;
     private static final String TAG = "S3UploadListener";
+    private static final long DISMISS_DELAY = 1000L;
 
     public CouponUploadListener(Context context, String fileName,
                                 ProgressDialog progressDialog) {
@@ -43,10 +45,14 @@ public class CouponUploadListener implements TransferListener {
     }
 
     @Override
-    public void onProgressChanged(int i, long bytesCurrent, long bytesTotal) {
-        Log.d(TAG, "onProgressChanged: " + getFileName() + " " + bytesCurrent + "/" + bytesTotal);
-        progress = bytesCurrent + getProgressDialog().getProgress() - progress;
-        getProgressDialog().setProgress((int) progress);
+    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+        Log.d(TAG, "onProgressChanged: id = " + id + " " + getFileName() + " " + bytesCurrent + "/" + bytesTotal);
+        getProgressDialog().setProgress((int) (getProgressDialog().getProgress() + bytesCurrent));
+        Log.d(TAG, "onProgressChanged: id = " + id + " progress = " + getProgressDialog().getProgress());
+
+        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
+            delayDismiss(getProgressDialog(), DISMISS_DELAY);
+        }
     }
 
     @Override
@@ -64,6 +70,19 @@ public class CouponUploadListener implements TransferListener {
 
     public String getFileName() {
         return mFileName;
+    }
+
+    /**
+     * ディレイをかけた後にProgressDialogを非表示にする
+     * @param progressDialog
+     */
+    private void delayDismiss(final ProgressDialog progressDialog, long delayMillis) {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, delayMillis);
     }
 
 }
