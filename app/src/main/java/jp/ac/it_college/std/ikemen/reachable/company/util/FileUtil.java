@@ -138,4 +138,14 @@ public class FileUtil {
         return OBJECT_KEY;
     }
 
+    /**
+     * ファイルパスからファイル名のみを抜き取る
+     * @param path
+     * @return
+     */
+    public static String extractFileName(String path) {
+        return path.substring(path.lastIndexOf(FOLDER_SUFFIX) + 1);
+    }
+
+
 }

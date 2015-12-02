@@ -45,7 +45,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /* 定数 */
     private static final int REQUEST_GALLERY = 0;
-    private static final String FILE_DELIMITER = "/";
 
     /* Views */
     private ImageView mCouponPreview;
@@ -154,16 +153,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     * ファイルパスからファイル名のみを抜き取る
-     *
-     * @param path
-     * @return
-     */
-    private String extractFileName(String path) {
-        return path.substring(path.lastIndexOf(FILE_DELIMITER) + 1);
-    }
-
-    /**
      * クーポンを選択する
      */
     private void couponSelect() {
@@ -242,7 +231,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     }
 
     private void setFileName(String path) {
-        mLblFileName.setText(getString(R.string.lbl_file_name) + extractFileName(path));
+        mLblFileName.setText(getString(R.string.lbl_file_name) + FileUtil.extractFileName(path));
     }
 
     /**
