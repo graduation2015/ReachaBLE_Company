@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadObservers {
-    private int completed = 0;
     private List<TransferObserver> observers = new ArrayList<>();
 
     public UploadObservers(List<TransferObserver> observers) {
