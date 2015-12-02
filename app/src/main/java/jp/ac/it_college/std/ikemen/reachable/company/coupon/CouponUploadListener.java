@@ -16,7 +16,7 @@ public class CouponUploadListener implements TransferListener {
     private Context mContext;
     private String mFileName;
     private static final String TAG = "S3UploadListener";
-    private static final long DISMISS_DELAY = 1000L;
+    private static final long HIDE_DELAY = 1000L;
 
     public CouponUploadListener(Context context, String fileName,
                                 ProgressDialog progressDialog) {
@@ -53,7 +53,7 @@ public class CouponUploadListener implements TransferListener {
         Log.d(TAG, "onProgressChanged: id = " + id + " progress = " + getProgressDialog().getProgress());
 
         if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            delayDismiss(getProgressDialog(), DISMISS_DELAY);
+            delayHide(getProgressDialog(), HIDE_DELAY);
         }
     }
 
@@ -78,11 +78,11 @@ public class CouponUploadListener implements TransferListener {
      * ディレイをかけた後にProgressDialogを非表示にする
      * @param progressDialog
      */
-    private void delayDismiss(final ProgressDialog progressDialog, long delayMillis) {
+    private void delayHide(final ProgressDialog progressDialog, long delayMillis) {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressDialog.dismiss();
+                progressDialog.hide();
             }
         }, delayMillis);
     }
