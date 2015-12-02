@@ -17,6 +17,7 @@ public class CouponUploadListener implements TransferListener {
     private String mFileName;
     private static final String TAG = "S3UploadListener";
     private static final long HIDE_DELAY = 1000L;
+    private long beforeProgress = 0;
 
     public CouponUploadListener(Context context, String fileName,
                                 ProgressDialog progressDialog) {
@@ -48,10 +49,19 @@ public class CouponUploadListener implements TransferListener {
 
     @Override
     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-        Log.d(TAG, "onProgressChanged: id = " + id + " " + getFileName() + " " + bytesCurrent + "/" + bytesTotal);
-        getProgressDialog().setProgress((int) (getProgressDialog().getProgress() + bytesCurrent));
-        Log.d(TAG, "onProgressChanged: id = " + id + " progress = " + getProgressDialog().getProgress());
+        Log.d(TAG, "onProgressChanged: id = "
+                + id + " " + getFileName() + " " + bytesCurrent + "/" + bytesTotal);
 
+        Log.d(TAG, "onProgressChanged: id = " + id + " beforeProgress = " + beforeProgress);
+
+        //ProgressDialogにアップロードの進捗をセット
+        long progress = getProgressDialog().getProgress() + bytesCurrent - beforeProgress;
+        beforeProgress = bytesCurrent;
+        getProgressDialog().setProgress((int) progress);
+
+        Log.d(TAG, "onProgressChanged: id = " + id + " progress = " + progress);
+
+        //進捗が100%になったらProgressDialogを非表示にする
         if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
             delayHide(getProgressDialog(), HIDE_DELAY);
         }
