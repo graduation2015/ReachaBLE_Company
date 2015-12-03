@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -35,7 +33,6 @@ import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.dialog.ChoiceDialog;
 import jp.ac.it_college.std.ikemen.reachable.company.dialog.MultipleCategoryChoiceDialog;
-import jp.ac.it_college.std.ikemen.reachable.company.dialog.ProgressDialogFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
@@ -60,7 +57,6 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
 
     /* S3アップロード関連フィールド */
     private S3UploadManager mUploadManager;
-    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -132,20 +128,19 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
             return;
         }
 
+        ProgressDialog progressDialog = createProgressDialog();
         //アップロードするファイルリスト
         List<File> files = Arrays.asList(new File(getCouponFilePath()), getJsonManager().getFile());
         //ファイルをアップロードする
         List<TransferObserver> observerList =
-                getUploadManager().uploadList(getProgressDialog(), files);
+                getUploadManager().uploadList(progressDialog, files);
         //UploadObserversを生成
         UploadObservers uploadObservers = new UploadObservers(observerList);
 
-        //ProgressDialogの最大値にObserversの合計ファイルサイズをセット
-        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
-        //ProgressDialogの初期値をセット
-        getProgressDialog().setProgress(0);
+        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
+        progressDialog.setMax((int) uploadObservers.getBytesTotal());
         //ProgressDialogを表示
-        getProgressDialog().show();
+        progressDialog.show();
     }
 
     /**
@@ -275,15 +270,18 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         return mCouponPreview;
     }
 
-    public ProgressDialog getProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-        }
-        return mProgressDialog;
+    /**
+     * ProgressDialogを生成して返す
+     * @return progressDialog
+     */
+    public ProgressDialog createProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
+        progressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgress(0);
+        return progressDialog;
     }
 
     @Override
