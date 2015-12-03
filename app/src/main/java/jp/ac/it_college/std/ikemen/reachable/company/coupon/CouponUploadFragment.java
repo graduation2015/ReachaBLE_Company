@@ -136,7 +136,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         List<File> files = Arrays.asList(new File(getCouponFilePath()), getJsonManager().getFile());
         //ファイルをアップロードする
         List<TransferObserver> observerList =
-                getUploadManager().uploadList(getActivity(), getProgressDialog(), files);
+                getUploadManager().uploadList(getProgressDialog(), files);
         //UploadObserversを生成
         UploadObservers uploadObservers = new UploadObservers(observerList);
 

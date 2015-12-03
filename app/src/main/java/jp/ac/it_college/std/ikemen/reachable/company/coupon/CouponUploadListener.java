@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -13,15 +12,12 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 public class CouponUploadListener implements TransferListener {
 
     private ProgressDialog mProgressDialog;
-    private Context mContext;
     private String mFileName;
     private static final String TAG = "S3UploadListener";
     private static final long HIDE_DELAY = 1000L;
     private long beforeProgress = 0;
 
-    public CouponUploadListener(Context context, String fileName,
-                                ProgressDialog progressDialog) {
-        this.mContext = context;
+    public CouponUploadListener(String fileName, ProgressDialog progressDialog) {
         this.mFileName = fileName;
         this.mProgressDialog = progressDialog;
     }
@@ -35,12 +31,10 @@ public class CouponUploadListener implements TransferListener {
                 Log.d(TAG, "Upload in progress : " + getFileName());
                 break;
             case COMPLETED:
-                Toast.makeText(
-                        getContext(), "Upload completed : " + getFileName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Upload completed : " + getFileName());
                 break;
             default:
-                Toast.makeText(
-                        getContext(), "Upload failed : " + getFileName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Upload failed : " + getFileName());
                 //TODO:アップロードが中断された場合の処理を実装する
                 getProgressDialog().cancel();
                 break;
@@ -74,10 +68,6 @@ public class CouponUploadListener implements TransferListener {
 
     public ProgressDialog getProgressDialog() {
         return mProgressDialog;
-    }
-
-    public Context getContext() {
-        return mContext;
     }
 
     public String getFileName() {

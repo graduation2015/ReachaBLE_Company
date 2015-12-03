@@ -42,14 +42,13 @@ public class S3UploadManager {
      * @param files
      * @return
      */
-    public List<TransferObserver> uploadList(
-            Context context, ProgressDialog progressDialog, List<File> files) {
+    public List<TransferObserver> uploadList(ProgressDialog progressDialog, List<File> files) {
         List<TransferObserver> observers = new ArrayList<>();
 
         for (File file : files) {
             TransferObserver observer = upload(file);
             observer.setTransferListener(
-                    new CouponUploadListener(context, file.getName(), progressDialog));
+                    new CouponUploadListener(file.getName(), progressDialog));
 
             observers.add(observer);
         }
