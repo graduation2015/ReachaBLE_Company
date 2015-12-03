@@ -39,7 +39,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 
 public class CouponUploadFragment extends Fragment
-        implements View.OnClickListener, DialogInterface.OnCancelListener {
+        implements View.OnClickListener, DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     /* 定数 */
     private static final int REQUEST_GALLERY = 0;
@@ -58,6 +58,7 @@ public class CouponUploadFragment extends Fragment
 
     /* S3アップロード関連フィールド */
     private S3UploadManager mUploadManager;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -129,19 +130,18 @@ public class CouponUploadFragment extends Fragment
             return;
         }
 
-        ProgressDialog progressDialog = createProgressDialog();
         //アップロードするファイルリスト
         List<File> files = Arrays.asList(new File(getCouponFilePath()), getJsonManager().getFile());
         //ファイルをアップロードする
         List<TransferObserver> observerList =
-                getUploadManager().uploadList(progressDialog, files);
+                getUploadManager().uploadList(getProgressDialog(), files);
         //UploadObserversを生成
         UploadObservers uploadObservers = new UploadObservers(observerList);
 
         //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
-        progressDialog.setMax((int) uploadObservers.getBytesTotal());
+        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
         //ProgressDialogを表示
-        progressDialog.show();
+        getProgressDialog().show();
     }
 
     /**
@@ -275,15 +275,18 @@ public class CouponUploadFragment extends Fragment
      * ProgressDialogを生成して返す
      * @return progressDialog
      */
-    public ProgressDialog createProgressDialog() {
-        ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-        progressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setCancelable(false);
-        progressDialog.setProgress(0);
-        progressDialog.setOnCancelListener(this);
-        return progressDialog;
+    public ProgressDialog getProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
+            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgress(0);
+            mProgressDialog.setOnCancelListener(this);
+            mProgressDialog.setOnDismissListener(this);
+        }
+        return mProgressDialog;
     }
 
     @Override
@@ -319,7 +322,7 @@ public class CouponUploadFragment extends Fragment
                 couponSelect();
                 break;
             case R.id.btn_coupon_upload:
-                beginUpload();
+            beginUpload();
                 break;
             case R.id.btn_category_select:
                 showCategoryChoiceDialog();
@@ -334,5 +337,15 @@ public class CouponUploadFragment extends Fragment
     @Override
     public void onCancel(DialogInterface dialogInterface) {
         Toast.makeText(getActivity(), "Upload failed.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
+            Toast.makeText(getActivity(), "Upload completed.", Toast.LENGTH_SHORT).show();
+
+            //ProgressDialogを破棄
+            mProgressDialog = null;
+        }
     }
 }
