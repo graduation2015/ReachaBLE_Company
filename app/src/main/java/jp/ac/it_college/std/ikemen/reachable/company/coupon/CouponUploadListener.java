@@ -34,7 +34,6 @@ public class CouponUploadListener implements TransferListener {
                 break;
             default:
                 Log.d(TAG, "Upload failed : " + getFileName());
-                //TODO:アップロードが中断された場合の処理を実装する
                 getProgressDialog().cancel();
                 break;
         }

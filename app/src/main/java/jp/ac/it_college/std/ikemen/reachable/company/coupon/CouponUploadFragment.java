@@ -38,7 +38,8 @@ import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 
-public class CouponUploadFragment extends Fragment implements View.OnClickListener {
+public class CouponUploadFragment extends Fragment
+        implements View.OnClickListener, DialogInterface.OnCancelListener {
 
     /* 定数 */
     private static final int REQUEST_GALLERY = 0;
@@ -281,6 +282,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(false);
         progressDialog.setProgress(0);
+        progressDialog.setOnCancelListener(this);
         return progressDialog;
     }
 
@@ -325,4 +327,12 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    /**
+     * ProgressDialogが中止されたタイミングで呼ばれる
+     * @param dialogInterface
+     */
+    @Override
+    public void onCancel(DialogInterface dialogInterface) {
+        Toast.makeText(getActivity(), "Upload failed.", Toast.LENGTH_SHORT).show();
+    }
 }
