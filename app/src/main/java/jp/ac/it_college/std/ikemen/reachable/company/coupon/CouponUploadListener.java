@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -14,7 +13,7 @@ public class CouponUploadListener implements TransferListener {
     private ProgressDialog mProgressDialog;
     private String mFileName;
     private static final String TAG = "S3UploadListener";
-    private static final long HIDE_DELAY = 1000L;
+    private static final long DISMISS_DELAY = 1000L;
     private long beforeProgress = 0;
 
     public CouponUploadListener(String fileName, ProgressDialog progressDialog) {
@@ -57,7 +56,7 @@ public class CouponUploadListener implements TransferListener {
 
         //進捗が100%になったらProgressDialogを非表示にする
         if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            delayHide(getProgressDialog(), HIDE_DELAY);
+            delayDismiss(getProgressDialog(), DISMISS_DELAY);
         }
     }
 
@@ -78,11 +77,11 @@ public class CouponUploadListener implements TransferListener {
      * ディレイをかけた後にProgressDialogを非表示にする
      * @param progressDialog
      */
-    private void delayHide(final ProgressDialog progressDialog, long delayMillis) {
+    private void delayDismiss(final ProgressDialog progressDialog, long delayMillis) {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         }, delayMillis);
     }
