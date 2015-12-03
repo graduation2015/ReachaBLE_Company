@@ -336,13 +336,15 @@ public class CouponUploadFragment extends Fragment
      */
     @Override
     public void onCancel(DialogInterface dialogInterface) {
-        Toast.makeText(getActivity(), "Upload failed.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                getActivity(), getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            Toast.makeText(getActivity(), "Upload completed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    getActivity(), getString(R.string.coupon_upload_completed), Toast.LENGTH_SHORT).show();
 
             //ProgressDialogを破棄
             mProgressDialog = null;

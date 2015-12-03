@@ -14,6 +14,8 @@
     <string name="toggle_start_advertise">Start advertise</string>
     <string name="toggle_stop_advertise">Stop advertise</string>
     <string name="btn_category_select">CategorySelect</string>
+    <string name="coupon_upload_completed">Upload completed.</string>
+    <string name="coupon_upload_failed">Upload failed.</string>
 
     <string-array name="side_menu_titles">
         <item>Coupon upload</item>
