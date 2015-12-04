@@ -29,5 +29,6 @@
         <item>Food</item>
     </string-array>
     <string name="title_activity_coupon_upload">CouponUploadActivity</string>
+    <string name="create_coupon">Create coupon</string>
 
 </resources>
