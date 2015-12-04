@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
+import jp.ac.it_college.std.ikemen.reachable.company.CouponUploadActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
@@ -294,6 +295,7 @@ public class CouponUploadFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
+/*
             try {
                 String path = FileUtil.getPath(getActivity(), data.getData());
                 setCoupon(path);
@@ -304,6 +306,9 @@ public class CouponUploadFragment extends Fragment
                         Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+*/
+            Intent intent = new Intent(getActivity(), CouponUploadActivity.class);
+            startActivity(intent);
         }
 
         if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
