@@ -295,7 +295,6 @@ public class CouponUploadFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
-/*
             try {
                 String path = FileUtil.getPath(getActivity(), data.getData());
                 setCoupon(path);
@@ -306,9 +305,6 @@ public class CouponUploadFragment extends Fragment
                         Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
-*/
-            Intent intent = new Intent(getActivity(), CouponUploadActivity.class);
-            startActivity(intent);
         }
 
         if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
