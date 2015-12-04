@@ -322,7 +322,7 @@ public class CouponUploadFragment extends Fragment
                 couponSelect();
                 break;
             case R.id.btn_coupon_upload:
-            beginUpload();
+                beginUpload();
                 break;
             case R.id.btn_category_select:
                 showCategoryChoiceDialog();
