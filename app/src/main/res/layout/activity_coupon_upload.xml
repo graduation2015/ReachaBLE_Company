@@ -14,5 +14,11 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
 
+    <ImageView
+        android:id="@+id/img_coupon_preview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/toolbar" />
+
 
 </RelativeLayout>

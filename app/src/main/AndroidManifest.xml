@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="jp.ac.it_college.std.ikemen.reachable.company" >
+    package="jp.ac.it_college.std.ikemen.reachable.company">
 
     <!-- Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -20,11 +20,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +39,7 @@
         <activity
             android:name=".CouponUploadActivity"
             android:label="@string/title_activity_coupon_upload"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jp.ac.it_college.std.ikemen.reachable.company.MainActivity" />
