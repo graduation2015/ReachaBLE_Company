@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/create_coupon"
-        app:navigationIcon="@drawable/ic_action_back"
         app:popupTheme="@style/Theme.AppCompat.Light"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
