@@ -3,6 +3,7 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,4 +36,10 @@ public class CouponUploadActivity extends AppCompatActivity {
         return mToolbar;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //SENDメニューを表示
+        getMenuInflater().inflate(R.menu.menu_coupon_upload, menu);
+        return true;
+    }
 }
