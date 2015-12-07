@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class CouponUploadFragment extends Fragment
 
     /* 定数 */
     private static final int REQUEST_GALLERY = 0;
+    public static final int CREATE_COUPON = 0x002;
 
     /* Views */
     private ImageView mCouponPreview;
@@ -60,6 +62,8 @@ public class CouponUploadFragment extends Fragment
     /* S3アップロード関連フィールド */
     private S3UploadManager mUploadManager;
     private ProgressDialog mProgressDialog;
+    private FloatingActionButton mFab;
+
 
 
     @Override
@@ -92,6 +96,9 @@ public class CouponUploadFragment extends Fragment
         contentView.findViewById(R.id.btn_category_select).setOnClickListener(this);
         mCouponPreview = (ImageView) contentView.findViewById(R.id.img_coupon_preview);
         mLblFileName = (TextView) contentView.findViewById(R.id.lbl_file_name);
+
+        mFab = (FloatingActionButton) contentView.findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
     }
 
     /**
@@ -290,11 +297,17 @@ public class CouponUploadFragment extends Fragment
         return mProgressDialog;
     }
 
+    public FloatingActionButton getFab() {
+        return mFab;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY) {
+/*
             try {
                 String path = FileUtil.getPath(getActivity(), data.getData());
                 setCoupon(path);
@@ -305,7 +318,19 @@ public class CouponUploadFragment extends Fragment
                         Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+*/
+
+                Intent intent = new Intent(getActivity(), CouponUploadActivity.class);
+                intent.setData(data.getData());
+                startActivityForResult(intent, CREATE_COUPON);
+            }
+
+            if (requestCode == CREATE_COUPON) {
+                Toast.makeText(getActivity(), "created", Toast.LENGTH_SHORT).show();
+            }
         }
+
+
 
         if (requestCode == MultipleCategoryChoiceDialog.REQUEST_ITEMS) {
             switch (resultCode) {
@@ -314,6 +339,7 @@ public class CouponUploadFragment extends Fragment
                     break;
             }
         }
+
     }
 
     @Override
@@ -327,6 +353,9 @@ public class CouponUploadFragment extends Fragment
                 break;
             case R.id.btn_category_select:
                 showCategoryChoiceDialog();
+                break;
+            case R.id.fab:
+                couponSelect();
                 break;
         }
     }
