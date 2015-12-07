@@ -30,5 +30,6 @@
     </string-array>
     <string name="title_activity_coupon_upload">CouponUploadActivity</string>
     <string name="create_coupon">Create coupon</string>
+    <string name="menu_send">Send</string>
 
 </resources>
