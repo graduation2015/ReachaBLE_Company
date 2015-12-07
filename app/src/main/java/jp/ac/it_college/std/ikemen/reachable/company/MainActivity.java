@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpToolbar() {
         setSupportActionBar(getToolbar());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     public DrawerLayout getDrawerLayout() {
