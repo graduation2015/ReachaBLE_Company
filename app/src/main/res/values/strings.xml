@@ -31,5 +31,9 @@
     <string name="title_activity_coupon_upload">CouponUploadActivity</string>
     <string name="create_coupon">Create coupon</string>
     <string name="menu_send">Send</string>
+    <string name="coupon_title_hint">Title</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="coupon_description_hint">Description</string>
+    <string name="coupon_tag_hint">Tag</string>
 
 </resources>
