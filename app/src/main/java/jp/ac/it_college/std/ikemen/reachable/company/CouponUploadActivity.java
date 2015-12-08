@@ -122,4 +122,8 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
         JsonManager manager = new JsonManager(this);
         manager.putJsonObj(couponInfo);
     }
+
+    private boolean validateTitle(String title) {
+        return title.length() > 0;
+    }
 }
