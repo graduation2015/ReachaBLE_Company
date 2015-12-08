@@ -13,8 +13,8 @@ public class CouponInfo {
     public static final String COMPANY_NAME = "companyName";
     public static final String ADDRESS = "address";
     public static final String CATEGORY = "category";
-    public static final String TITLE = "category";
-    public static final String DESCRIPTION = "category";
+    public static final String TITLE = "title";
+    public static final String DESCRIPTION = "description";
 
 
     public CouponInfo(List<String> category) {
