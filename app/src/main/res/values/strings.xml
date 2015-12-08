@@ -35,5 +35,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="coupon_description_hint">Description</string>
     <string name="coupon_tag_hint">Tag</string>
+    <string name="validate_title_error">Please enter a title.</string>
 
 </resources>

@@ -114,17 +114,48 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void putInfo() {
-        String title = getTitleWrapper().getEditText().getText().toString();
-        String description = getDescriptionWrapper().getEditText().getText().toString();
-        String tags = getTagsWrapper().getEditText().getText().toString();
+        //タイトルを取得
+        String title = trim(getTitleWrapper().getEditText().getText().toString());
+        //タイトルのバリデートチェック
+        if (!validateTitle(title)) {
+            getTitleWrapper().setError(getString(R.string.validate_title_error));
+            return;
+        } else {
+            getTitleWrapper().setError(null);
+            getTitleWrapper().setErrorEnabled(false);
+        }
+
+        //クーポンの説明を取得
+        String description = trim(getDescriptionWrapper().getEditText().getText().toString());
+
+        //クーポンのタグを取得
+        String tags = trim(getTagsWrapper().getEditText().getText().toString());
+        //タグをリストに変換
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
+        //CouponInfoインスタンスを生成
         CouponInfo couponInfo = new CouponInfo(title, description, tagsList);
+
+        //クーポンの情報をjsonに書き込む
         JsonManager manager = new JsonManager(this);
         manager.putJsonObj(couponInfo);
     }
 
+    /**
+     * 全角/半角スペースが前後にある文字列をトリムして返す
+     * @param value
+     * @return
+     */
+    private String trim(String value) {
+        return value.replaceAll("^[\\s　]*", "").replaceAll("[\\s　]*$", "");
+    }
+
+    /**
+     * クーポンタイトルをバリデーションする
+     * @param title
+     * @return
+     */
     private boolean validateTitle(String title) {
-        return title.length() > 0;
+        return !title.isEmpty();
     }
 }
