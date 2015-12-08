@@ -1,13 +1,13 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.graphics.BitmapFactory;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -22,9 +22,9 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
     /* Views */
     private Toolbar mToolbar;
     private ImageView mImageView;
-    private TextView mTitleView;
-    private TextView mDescriptionView;
-    private TextView mTagsView;
+    private TextInputLayout mTitleWrapper;
+    private TextInputLayout mDescriptionWrapper;
+    private TextInputLayout mTagsWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,31 +91,32 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    public TextView getTitleView() {
-        if (mTitleView == null) {
-            mTitleView = (TextView) findViewById(R.id.editText_coupon_title);
+    public TextInputLayout getTitleWrapper() {
+        if (mTitleWrapper == null) {
+            mTitleWrapper = (TextInputLayout) findViewById(R.id.textInputLayout_coupon_title);
         }
-        return mTitleView;
+        return mTitleWrapper;
     }
 
-    public TextView getDescriptionView() {
-        if (mDescriptionView == null) {
-            mDescriptionView = (TextView) findViewById(R.id.editText_coupon_description);
+    public TextInputLayout getDescriptionWrapper() {
+        if (mDescriptionWrapper == null) {
+            mDescriptionWrapper =
+                    (TextInputLayout) findViewById(R.id.textInputLayout_coupon_description);
         }
-        return mDescriptionView;
+        return mDescriptionWrapper;
     }
 
-    public TextView getTagsView() {
-        if (mTagsView == null) {
-            mTagsView = (TextView) findViewById(R.id.editText_coupon_tag);
+    public TextInputLayout getTagsWrapper() {
+        if (mTagsWrapper == null) {
+            mTagsWrapper = (TextInputLayout) findViewById(R.id.textInputLayout_coupon_tag);
         }
-        return mTagsView;
+        return mTagsWrapper;
     }
 
     private void putInfo() {
-        String title = getTitleView().getText().toString();
-        String description = getDescriptionView().getText().toString();
-        String tags = getTagsView().getText().toString();
+        String title = getTitleWrapper().getEditText().getText().toString();
+        String description = getDescriptionWrapper().getEditText().getText().toString();
+        String tags = getTagsWrapper().getEditText().getText().toString();
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
         CouponInfo couponInfo = new CouponInfo(title, description, tagsList);
