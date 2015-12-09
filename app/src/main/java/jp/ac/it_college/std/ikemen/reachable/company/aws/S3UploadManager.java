@@ -16,9 +16,17 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class S3UploadManager {
     private final TransferUtility mTransferUtility;
+    private final Context mContext;
+    private final List<File> mFileList;
 
     public S3UploadManager(TransferUtility transferUtility) {
+        this(null,transferUtility, null);
+    }
+
+    public S3UploadManager(Context context, TransferUtility transferUtility, List<File> fileList) {
+        this.mContext = context;
         this.mTransferUtility = transferUtility;
+        this.mFileList = fileList;
     }
 
     /**
@@ -58,5 +66,13 @@ public class S3UploadManager {
 
     public TransferUtility getTransferUtility() {
         return mTransferUtility;
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public List<File> getFileList() {
+        return mFileList;
     }
 }
