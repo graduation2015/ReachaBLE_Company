@@ -4,16 +4,12 @@
     <string name="toolbar_title">@string/app_name</string>
     <string name="drawer_open">Drawer open</string>
     <string name="drawer_close">Drawer close</string>
-    <string name="btn_coupon_select">CouponSelect</string>
-    <string name="btn_coupon_upload">Coupon Upload</string>
     <string name="dialog_title_credentials">Credentials</string>
     <string name="dialog_message_credentials">Getting credentials</string>
     <string name="dialog_title_coupon_upload">CouponUpload</string>
     <string name="dialog_message_coupon_upload">Coupon Uploading...</string>
-    <string name="lbl_file_name">"File name: "</string>
     <string name="toggle_start_advertise">Start advertise</string>
     <string name="toggle_stop_advertise">Stop advertise</string>
-    <string name="btn_category_select">CategorySelect</string>
     <string name="coupon_upload_completed">Upload completed.</string>
     <string name="coupon_upload_failed">Upload failed.</string>
 
@@ -32,7 +28,6 @@
     <string name="create_coupon">Create coupon</string>
     <string name="menu_send">Send</string>
     <string name="coupon_title_hint">Title</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="coupon_description_hint">Description</string>
     <string name="coupon_tag_hint">Tag</string>
     <string name="validate_title_error">Please enter a title.</string>
