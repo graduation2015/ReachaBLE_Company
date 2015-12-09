@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -273,6 +274,9 @@ public class CouponUploadActivity extends AppCompatActivity
      * S3バケットにクーポンを送信する
      */
     private void sendCoupon() {
+        //キーボードを非表示にする
+        hideKeyboard();
+
         if (putCouponInfo()) {
             //アップロードするファイルをリスト化
             List<File> files = Arrays.asList(new File(getCouponPath()), getJsonManager().getFile());
@@ -281,4 +285,14 @@ public class CouponUploadActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * キーボードを非表示にする
+     */
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                    view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 }
