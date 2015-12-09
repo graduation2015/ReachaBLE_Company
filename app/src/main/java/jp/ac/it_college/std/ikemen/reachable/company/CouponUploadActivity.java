@@ -13,13 +13,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
@@ -113,7 +118,7 @@ public class CouponUploadActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.menu_send:
                 //sendボタン押下時の処理
-                putCouponInfo();
+                sendCoupon();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -239,6 +244,41 @@ public class CouponUploadActivity extends AppCompatActivity
             //ProgressDialogを破棄
             mProgressDialog = null;
         }
-
     }
+
+    /**
+     * 選択されたクーポンをS3にアップロードする
+     * @param files アップロードするファイルのリスト
+     */
+    private void beginUpload(List<File> files) {
+        //ファイルパスがnullの場合Toastを表示してメソッドを抜ける
+        if (getCouponPath() == null) {
+            Toast.makeText(this, "File has not been set.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //アップロードを実行しObserverListを取得
+        List<TransferObserver> observerList = new S3UploadManager(
+                this, AwsUtil.getTransferUtility(this), files).execute(getProgressDialog());
+        //UploadObserversを生成
+        UploadObservers uploadObservers = new UploadObservers(observerList);
+
+        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
+        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
+        //ProgressDialogを表示
+        getProgressDialog().show();
+    }
+
+    /**
+     * S3バケットにクーポンを送信する
+     */
+    private void sendCoupon() {
+        if (putCouponInfo()) {
+            //アップロードするファイルをリスト化
+            List<File> files = Arrays.asList(new File(getCouponPath()), getJsonManager().getFile());
+            //S3バケットにアップロード
+            beginUpload(files);
+        }
+    }
+
 }
