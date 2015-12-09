@@ -37,6 +37,7 @@ public class CouponUploadActivity extends AppCompatActivity
     /* coupon */
     private String mCouponPath;
     private ProgressDialog mProgressDialog;
+    private JsonManager mJsonManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,9 @@ public class CouponUploadActivity extends AppCompatActivity
     private void initSettings() {
         setUpToolbar();
         setCouponPreview();
+
+        //JsonManagerのインスタンスを生成
+        mJsonManager = new JsonManager(this);
     }
 
     /**
@@ -91,6 +95,10 @@ public class CouponUploadActivity extends AppCompatActivity
 
     public void setCouponPath(String couponPath) {
         this.mCouponPath = couponPath;
+    }
+
+    public JsonManager getJsonManager() {
+        return mJsonManager;
     }
 
     @Override
@@ -162,9 +170,8 @@ public class CouponUploadActivity extends AppCompatActivity
         CouponInfo couponInfo = new CouponInfo(title, description, tagsList);
 
         //クーポンの情報をjsonに書き込む
-        JsonManager manager = new JsonManager(this);
         try {
-            manager.putJsonObj(couponInfo);
+            getJsonManager().putJsonObj(couponInfo);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             return false;
