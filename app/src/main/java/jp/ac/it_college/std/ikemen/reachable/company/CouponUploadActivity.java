@@ -30,6 +30,9 @@ public class CouponUploadActivity extends AppCompatActivity {
     private TextInputLayout mDescriptionWrapper;
     private TextInputLayout mTagsWrapper;
 
+    /* coupon */
+    private String mCouponPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,14 @@ public class CouponUploadActivity extends AppCompatActivity {
             mImageView = (ImageView) findViewById(R.id.img_coupon_preview);
         }
         return mImageView;
+    }
+
+    public String getCouponPath() {
+        return mCouponPath;
+    }
+
+    public void setCouponPath(String couponPath) {
+        this.mCouponPath = couponPath;
     }
 
     @Override
