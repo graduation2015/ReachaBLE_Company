@@ -25,7 +25,6 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,9 +108,9 @@ public class CouponUploadFragment extends Fragment
     private void savePrefs() {
         //SharedPreferencesにファイルパスをセット
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+                .getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(CouponInfo.COUPON_FILE_PATH, getCouponFilePath());
+        editor.putString(CouponInfo.FILE_PATH, getCouponFilePath());
         editor.apply();
     }
 
@@ -227,9 +226,9 @@ public class CouponUploadFragment extends Fragment
      */
     private void setPreviousCoupon() {
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+                .getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
 
-        String path = prefs.getString(CouponInfo.COUPON_FILE_PATH, null);
+        String path = prefs.getString(CouponInfo.FILE_PATH, null);
         if (path != null && !path.isEmpty()) {
             //SharedPreferencesにクーポンのパスが存在し、空じゃない場合クーポンをセット
             setCoupon(path);

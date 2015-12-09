@@ -10,7 +10,7 @@ public class CouponInfo {
     private final String description;
     private final List<String> category;
 
-    public static final String COUPON_FILE_PATH = "coupon_file_path";
+    public static final String FILE_PATH = "file_path";
     public static final String COMPANY_NAME = "companyName";
     public static final String ADDRESS = "address";
     public static final String CATEGORY = "category";

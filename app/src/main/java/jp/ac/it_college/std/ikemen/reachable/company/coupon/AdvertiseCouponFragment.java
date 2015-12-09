@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
@@ -166,8 +165,8 @@ public class AdvertiseCouponFragment extends Fragment
      */
     private String getCouponPath() {
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
-        return prefs.getString(CouponInfo.COUPON_FILE_PATH, null);
+                .getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
+        return prefs.getString(CouponInfo.FILE_PATH, null);
     }
 
     /**
