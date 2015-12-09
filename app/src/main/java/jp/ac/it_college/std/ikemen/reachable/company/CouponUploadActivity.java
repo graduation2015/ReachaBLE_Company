@@ -9,6 +9,9 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
@@ -141,7 +144,11 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
 
         //クーポンの情報をjsonに書き込む
         JsonManager manager = new JsonManager(this);
-        manager.putJsonObj(couponInfo);
+        try {
+            manager.putJsonObj(couponInfo);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

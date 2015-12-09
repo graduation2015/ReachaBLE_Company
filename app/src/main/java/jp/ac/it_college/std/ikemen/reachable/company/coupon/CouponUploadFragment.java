@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 
+import org.json.JSONException;
+
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +128,11 @@ public class CouponUploadFragment extends Fragment
      */
     private void putJsonInfo() {
         CouponInfo info = new CouponInfo(getCategories());
-        getJsonManager().putJsonObj(info);
+        try {
+            getJsonManager().putJsonObj(info);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

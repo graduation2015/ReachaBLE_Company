@@ -106,15 +106,11 @@ public class JsonManager {
      * JSONファイルにJSONオブジェクトを追加/更新
      * @param info
      */
-    public void putJsonObj(CouponInfo info) {
+    public void putJsonObj(CouponInfo info) throws IOException, JSONException {
         JSONObject rootObj = getJsonRootObject();
-        try {
-            FileOutputStream outputStream = new FileOutputStream(getFile(), false);
-            jsonDataWriter.writeJson(outputStream, rootObj, info);
-            outputStream.close();
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
+        FileOutputStream outputStream = new FileOutputStream(getFile(), false);
+        jsonDataWriter.writeJson(outputStream, rootObj, info);
+        outputStream.close();
     }
 
 }
