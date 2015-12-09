@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -20,7 +21,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
-public class CouponUploadActivity extends AppCompatActivity implements View.OnClickListener {
+public class CouponUploadActivity extends AppCompatActivity {
 
     /* Views */
     private Toolbar mToolbar;
@@ -40,8 +41,6 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
     private void initSettings() {
         setUpToolbar();
         setCouponPreview();
-
-        findViewById(R.id.btn_test_put_json).setOnClickListener(this);
     }
 
     /**
@@ -86,11 +85,13 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_test_put_json:
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_send:
                 putCouponInfo();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
