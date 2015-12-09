@@ -24,6 +24,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
+import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 
 public class AdvertiseCouponFragment extends Fragment
@@ -165,8 +166,8 @@ public class AdvertiseCouponFragment extends Fragment
      */
     private String getCouponPath() {
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
-        return prefs.getString(Constants.COUPON_FILE_PATH, null);
+                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+        return prefs.getString(CouponInfo.COUPON_FILE_PATH, null);
     }
 
     /**

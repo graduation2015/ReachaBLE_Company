@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 import jp.ac.it_college.std.ikemen.reachable.company.CouponUploadActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.UploadObservers;
@@ -110,9 +109,9 @@ public class CouponUploadFragment extends Fragment
     private void savePrefs() {
         //SharedPreferencesにファイルパスをセット
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.COUPON_FILE_PATH, getCouponFilePath());
+        editor.putString(CouponInfo.COUPON_FILE_PATH, getCouponFilePath());
         editor.apply();
     }
 
@@ -228,9 +227,9 @@ public class CouponUploadFragment extends Fragment
      */
     private void setPreviousCoupon() {
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(Constants.COUPON_FILE_PATH, Context.MODE_PRIVATE);
+                .getSharedPreferences(CouponInfo.COUPON_FILE_PATH, Context.MODE_PRIVATE);
 
-        String path = prefs.getString(Constants.COUPON_FILE_PATH, null);
+        String path = prefs.getString(CouponInfo.COUPON_FILE_PATH, null);
         if (path != null && !path.isEmpty()) {
             //SharedPreferencesにクーポンのパスが存在し、空じゃない場合クーポンをセット
             setCoupon(path);
