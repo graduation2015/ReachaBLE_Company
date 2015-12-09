@@ -50,14 +50,14 @@ public class CouponUploadActivity extends AppCompatActivity {
      * 選択されたクーポン画像をプレビューにセット
      */
     private void setCouponPreview() {
-        String path = null;
         try {
-            path = FileUtil.getPath(this, getIntent().getData());
+            String path = FileUtil.getPath(this, getIntent().getData());
+            setCouponPath(path);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        getImageView().setImageBitmap(BitmapFactory.decodeFile(path));
+        getImageView().setImageBitmap(BitmapFactory.decodeFile(getCouponPath()));
     }
 
 
