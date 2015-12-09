@@ -86,7 +86,7 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_test_put_json:
-                putInfo();
+                putCouponInfo();
                 break;
         }
     }
@@ -113,7 +113,10 @@ public class CouponUploadActivity extends AppCompatActivity implements View.OnCl
         return mTagsWrapper;
     }
 
-    private void putInfo() {
+    /**
+     * jsonファイルにクーポンの情報をセット
+     */
+    private void putCouponInfo() {
         //タイトルを取得
         String title = trim(getTitleWrapper().getEditText().getText().toString());
         //タイトルのバリデートチェック
