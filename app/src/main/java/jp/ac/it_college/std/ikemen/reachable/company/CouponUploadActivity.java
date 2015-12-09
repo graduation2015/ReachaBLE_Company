@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class CouponUploadActivity extends AppCompatActivity
     private String mCouponPath;
     private ProgressDialog mProgressDialog;
     private JsonManager mJsonManager;
+    private CouponInfo mCouponInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +103,14 @@ public class CouponUploadActivity extends AppCompatActivity
 
     public void setCouponPath(String couponPath) {
         this.mCouponPath = couponPath;
+    }
+
+    public CouponInfo getCouponInfo() {
+        return mCouponInfo;
+    }
+
+    public void setCouponInfo(CouponInfo couponInfo) {
+        this.mCouponInfo = couponInfo;
     }
 
     public JsonManager getJsonManager() {
@@ -172,12 +182,11 @@ public class CouponUploadActivity extends AppCompatActivity
         //タグをリストに変換
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
-        //CouponInfoインスタンスを生成
-        CouponInfo couponInfo = new CouponInfo(title, description, tagsList);
-
+        //CouponInfoインスタンスをセット
+        setCouponInfo(new CouponInfo(title, description, tagsList));
         //クーポンの情報をjsonに書き込む
         try {
-            getJsonManager().putJsonObj(couponInfo);
+            getJsonManager().putJsonObj(getCouponInfo());
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             return false;
@@ -244,7 +253,18 @@ public class CouponUploadActivity extends AppCompatActivity
 
             //ProgressDialogを破棄
             mProgressDialog = null;
+
+            //クーポンの情報をリザルトにセットして、Activityを破棄する
+            completeCreate();
         }
+    }
+
+    /**
+     * クーポンの情報をリザルトにセットし、Activityを破棄
+     */
+    private void completeCreate() {
+        setResult(RESULT_OK);
+        finish();
     }
 
     /**
