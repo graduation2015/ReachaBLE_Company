@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadFragment">
+    tools:context=".coupon.CouponPreviewFragment">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

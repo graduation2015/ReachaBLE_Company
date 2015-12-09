@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadFragment;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponPreviewFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerToggle;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container_content, new CouponUploadFragment())
+                    .replace(R.id.container_content, new CouponPreviewFragment())
                     .commit();
         }
 

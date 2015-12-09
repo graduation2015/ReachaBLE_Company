@@ -18,7 +18,7 @@
     <string name="coupon_upload_failed">Upload failed.</string>
 
     <string-array name="side_menu_titles">
-        <item>Coupon upload</item>
+        <item>Coupon preview</item>
         <item>Advertise coupon</item>
     </string-array>
 

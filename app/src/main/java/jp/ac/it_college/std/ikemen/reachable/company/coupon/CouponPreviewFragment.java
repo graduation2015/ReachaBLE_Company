@@ -19,7 +19,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 
-public class CouponUploadFragment extends Fragment implements View.OnClickListener {
+public class CouponPreviewFragment extends Fragment implements View.OnClickListener {
 
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
@@ -32,7 +32,7 @@ public class CouponUploadFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_coupon_upload, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_coupon_preview, container, false);
         findViews(contentView);
 
         //初期設定
