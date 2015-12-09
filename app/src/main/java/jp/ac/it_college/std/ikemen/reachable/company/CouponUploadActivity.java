@@ -1,5 +1,7 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -21,7 +24,8 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
-public class CouponUploadActivity extends AppCompatActivity {
+public class CouponUploadActivity extends AppCompatActivity
+        implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     /* Views */
     private Toolbar mToolbar;
@@ -32,6 +36,7 @@ public class CouponUploadActivity extends AppCompatActivity {
 
     /* coupon */
     private String mCouponPath;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,5 +189,49 @@ public class CouponUploadActivity extends AppCompatActivity {
      */
     private boolean validateTitle(String title) {
         return !title.isEmpty();
+    }
+
+    /**
+     * ProgressDialogを生成して返す
+     * @return progressDialog
+     */
+    public ProgressDialog getProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
+            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgress(0);
+            mProgressDialog.setOnCancelListener(this);
+            mProgressDialog.setOnDismissListener(this);
+        }
+        return mProgressDialog;
+    }
+
+    /**
+     * ProgressDialogが中止されたタイミングで呼ばれる
+     * @param dialog
+     */
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        Toast.makeText(
+                this, getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * ProgressDialogが破棄されたタイミングで呼ばれる
+     * @param dialog
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
+            Toast.makeText(
+                    this, getString(R.string.coupon_upload_completed), Toast.LENGTH_SHORT).show();
+
+            //ProgressDialogを破棄
+            mProgressDialog = null;
+        }
+
     }
 }
