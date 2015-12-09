@@ -54,6 +54,24 @@ public class CouponInfo {
         return category;
     }
 
+    /**
+     * カテゴリーリストをカンマ区切りの文字列にする
+     * @return
+     */
+    public String getCategoryToString() {
+        StringBuilder sb = new StringBuilder();
+        String separator = ",";
+
+        for (String str : getCategory()) {
+            if (sb.length() > 0) {
+                sb.append(separator);
+            }
+            sb.append(str);
+        }
+
+        return sb.toString();
+    }
+
     public String getTitle() {
         return title;
     }
