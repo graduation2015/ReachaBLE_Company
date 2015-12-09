@@ -1,8 +1,10 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -263,8 +265,29 @@ public class CouponUploadActivity extends AppCompatActivity
      * クーポンの情報をリザルトにセットし、Activityを破棄
      */
     private void completeCreate() {
+        savePrefs();
         setResult(RESULT_OK);
         finish();
+    }
+
+    /**
+     * haredPreferencesにクーポンの情報を保存
+     */
+    private void savePrefs() {
+        //SharedPreferencesにクーポンの情報をセット
+        SharedPreferences prefs = getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        //クーポンのファイルパス
+        editor.putString(CouponInfo.FILE_PATH, getCouponPath());
+        //クーポンのタイトル
+        editor.putString(CouponInfo.TITLE, getCouponInfo().getTitle());
+        //クーポンの説明
+        editor.putString(CouponInfo.DESCRIPTION, getCouponInfo().getDescription());
+        //クーポンのタグ
+        editor.putString(CouponInfo.CATEGORY, getCouponInfo().getCategoryToString());
+
+        //変更を確定
+        editor.apply();
     }
 
     /**
