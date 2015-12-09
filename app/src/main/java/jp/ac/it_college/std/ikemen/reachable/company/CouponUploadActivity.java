@@ -88,6 +88,7 @@ public class CouponUploadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_send:
+                //sendボタン押下時の処理
                 putCouponInfo();
                 return true;
             default:
@@ -119,14 +120,15 @@ public class CouponUploadActivity extends AppCompatActivity {
 
     /**
      * jsonファイルにクーポンの情報をセット
+     * @return jsonファイルに書き込みが完了したかどうかを返却
      */
-    private void putCouponInfo() {
+    private boolean putCouponInfo() {
         //タイトルを取得
         String title = trim(getTitleWrapper().getEditText().getText().toString());
         //タイトルのバリデートチェック
         if (!validateTitle(title)) {
             getTitleWrapper().setError(getString(R.string.validate_title_error));
-            return;
+            return false;
         } else {
             getTitleWrapper().setError(null);
             getTitleWrapper().setErrorEnabled(false);
@@ -149,7 +151,10 @@ public class CouponUploadActivity extends AppCompatActivity {
             manager.putJsonObj(couponInfo);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     /**
