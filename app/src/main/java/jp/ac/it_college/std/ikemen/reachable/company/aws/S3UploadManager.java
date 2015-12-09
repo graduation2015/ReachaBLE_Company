@@ -64,6 +64,15 @@ public class S3UploadManager {
         return observers;
     }
 
+    /**
+     * アップロードを実行
+     * @param progressDialog 進捗状況を表示するProgressDialog
+     * @return
+     */
+    public List<TransferObserver> execute(ProgressDialog progressDialog) {
+        return uploadList(progressDialog, getFileList());
+    }
+
     public TransferUtility getTransferUtility() {
         return mTransferUtility;
     }
