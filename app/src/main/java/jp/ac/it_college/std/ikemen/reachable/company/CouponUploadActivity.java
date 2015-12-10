@@ -275,7 +275,7 @@ public class CouponUploadActivity extends AppCompatActivity
      */
     private void savePrefs() {
         //SharedPreferencesにクーポンの情報をセット
-        SharedPreferences prefs = getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         //クーポンのファイルパス
         editor.putString(CouponInfo.FILE_PATH, getCouponPath());

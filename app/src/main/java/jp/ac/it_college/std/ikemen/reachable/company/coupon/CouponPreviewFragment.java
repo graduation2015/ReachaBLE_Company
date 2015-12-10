@@ -44,8 +44,8 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
      * 各種初期設定
      */
     private void initSettings() {
-        //SharedPreferencesにクーポンのパスがある場合プレビューにセット
-        setPreviousCoupon();
+        //SharedPreferencesにクーポンの情報がある場合プレビューにセット
+        setCoupon();
     }
 
     /**
@@ -85,11 +85,10 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     /**
      * SharedPreferencesに保存されているクーポンの情報をセット
      */
-    private void setPreviousCoupon() {
+    private void setCoupon() {
         SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
+                .getSharedPreferences(CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
 
-        String path = prefs.getString(CouponInfo.FILE_PATH, null);
     }
 
     public FloatingActionButton getFab() {
