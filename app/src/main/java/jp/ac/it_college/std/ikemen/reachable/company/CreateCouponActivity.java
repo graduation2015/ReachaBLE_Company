@@ -1,13 +1,12 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +33,9 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class CreateCouponActivity extends AppCompatActivity
         implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+
+    /* Constants */
+    public static final String CREATED_COUPON_DATA = "created_coupon_data";
 
     /* Views */
     private Toolbar mToolbar;
@@ -264,29 +266,8 @@ public class CreateCouponActivity extends AppCompatActivity
      * クーポンの情報をリザルトにセットし、Activityを破棄
      */
     private void completeCreate() {
-        savePrefs();
-        setResult(RESULT_OK);
+        setResult(RESULT_OK, new Intent().putExtra(CREATED_COUPON_DATA, getCouponInfo()));
         finish();
-    }
-
-    /**
-     * haredPreferencesにクーポンの情報を保存
-     */
-    private void savePrefs() {
-        //SharedPreferencesにクーポンの情報をセット
-        SharedPreferences prefs = getSharedPreferences(CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        //クーポンのファイルパス
-        editor.putString(CouponInfo.FILE_PATH, getCouponPath());
-        //クーポンのタイトル
-        editor.putString(CouponInfo.TITLE, getCouponInfo().getTitle());
-        //クーポンの説明
-        editor.putString(CouponInfo.DESCRIPTION, getCouponInfo().getDescription());
-        //クーポンのタグ
-        editor.putString(CouponInfo.CATEGORY, getCouponInfo().getCategoryToString());
-
-        //変更を確定
-        editor.apply();
     }
 
     /**
