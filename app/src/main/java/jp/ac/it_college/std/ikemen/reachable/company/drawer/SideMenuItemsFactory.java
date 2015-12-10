@@ -3,7 +3,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.drawer;
 import android.app.Fragment;
 
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.AdvertiseCouponFragment;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadFragment;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponPreviewFragment;
 
 /**
  * SideMenuItemsのファクトリークラス
@@ -19,9 +19,9 @@ public class SideMenuItemsFactory {
         switch (items) {
             case ADVERTISE_COUPON:
                 return new AdvertiseCouponFragment();
-            case COUPON_UPLOAD:
+            case COUPON_PREVIEW:
             default:
-                return new CouponUploadFragment();
+                return new CouponPreviewFragment();
         }
     }
 }
