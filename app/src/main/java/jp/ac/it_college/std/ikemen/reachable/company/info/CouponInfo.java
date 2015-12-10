@@ -1,8 +1,9 @@
 package jp.ac.it_college.std.ikemen.reachable.company.info;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CouponInfo {
+public class CouponInfo implements Serializable {
     private final String key;
     private final String companyName;
     private final String address;
