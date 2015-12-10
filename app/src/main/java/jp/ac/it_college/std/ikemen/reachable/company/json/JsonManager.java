@@ -2,7 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.json;
 
 import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class JsonManager {
         if (!file.exists()) {
             try {
                 jsonDataWriter.initJsonObj(file);
-                Toast.makeText(context, "JSON file was created", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "JSON file was created");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,7 +76,7 @@ public class JsonManager {
         File file = new File(context.getExternalFilesDir(dirType).getPath());
 
         if (!file.mkdirs()) {
-            Toast.makeText(context, "File already exists", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "File already exists");
         }
 
         return file;
