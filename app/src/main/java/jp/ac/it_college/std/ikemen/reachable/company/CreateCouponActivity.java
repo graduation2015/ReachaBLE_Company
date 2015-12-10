@@ -184,7 +184,7 @@ public class CreateCouponActivity extends AppCompatActivity
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
         //CouponInfoインスタンスをセット
-        setCouponInfo(new CouponInfo(title, description, tagsList));
+        setCouponInfo(new CouponInfo(getCouponPath(), title, description, tagsList));
         //クーポンの情報をjsonに書き込む
         try {
             getJsonManager().putJsonObj(getCouponInfo());
