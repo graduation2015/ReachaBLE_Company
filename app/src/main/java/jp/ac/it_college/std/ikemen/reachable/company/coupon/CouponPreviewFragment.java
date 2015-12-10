@@ -2,19 +2,21 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
@@ -29,8 +31,13 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     /* Views */
     private View mContentView;
     private FloatingActionButton mFab;
-    private RecyclerView mCouponList;
+    private RecyclerView mCouponListView;
 
+    /* Adapter */
+    private CouponListAdapter mCouponListAdapter;
+
+    /* Coupon */
+    private List<CouponInfo> mCouponInfoList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,11 +53,39 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
      * 各種初期設定
      */
     private void initSettings() {
-        //SharedPreferencesにクーポンの情報がある場合プレビューにセット
-        setCoupon();
+        //クーポンリストをセットアップ
+        setUpCouponListView();
 
         //FABのOnClickListenerをセット
         getFab().setOnClickListener(this);
+    }
+
+    /**
+     * クーポンリストをセットアップする
+     */
+    private void setUpCouponListView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        getCouponListView().setHasFixedSize(true);
+        getCouponListView().setLayoutManager(layoutManager);
+
+        getCouponListView().setAdapter(getCouponListAdapter());
+    }
+
+    public CouponListAdapter getCouponListAdapter() {
+        if (mCouponListAdapter == null) {
+            mCouponListAdapter = new CouponListAdapter(getCouponInfoList());
+        }
+        return mCouponListAdapter;
+    }
+
+    private List<CouponInfo> getCouponInfoList() {
+        if (mCouponInfoList == null) {
+            mCouponInfoList = new ArrayList<>();
+        }
+
+        return mCouponInfoList;
     }
 
     public View getContentView() {
@@ -64,11 +99,11 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         return mFab;
     }
 
-    public RecyclerView getCouponList() {
-        if (mCouponList == null) {
-            mCouponList = (RecyclerView) getContentView().findViewById(R.id.coupon_list);
+    public RecyclerView getCouponListView() {
+        if (mCouponListView == null) {
+            mCouponListView = (RecyclerView) getContentView().findViewById(R.id.coupon_list);
         }
-        return mCouponList;
+        return mCouponListView;
     }
 
     /**
@@ -95,14 +130,15 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         startActivityForResult(intent, REQUEST_GALLERY);
     }
 
-
     /**
-     * SharedPreferencesに保存されているクーポンの情報をセット
+     * クーポンリストにクーポンを追加する
+     * @param info 作成されたクーポン
      */
-    private void setCoupon() {
-        SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
-
+    private void addCoupon(CouponInfo info) {
+        //クーポンリストに追加
+        getCouponInfoList().add(info);
+        //変更を通知
+        getCouponListAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -117,7 +153,11 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
             }
 
             if (requestCode == CREATE_COUPON) {
-                Toast.makeText(getActivity(), "created", Toast.LENGTH_SHORT).show();
+                //作成されたクーポンの情報を取得
+                CouponInfo couponInfo = (CouponInfo) data.getSerializableExtra(
+                        CreateCouponActivity.CREATED_COUPON_DATA);
+                //クーポンをクーポンリストに追加
+                addCoupon(couponInfo);
             }
         }
     }
