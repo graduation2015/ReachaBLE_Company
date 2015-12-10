@@ -3,7 +3,6 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.TextInputLayout;
@@ -33,7 +32,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
-public class CouponUploadActivity extends AppCompatActivity
+public class CreateCouponActivity extends AppCompatActivity
         implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     /* Views */
@@ -52,7 +51,7 @@ public class CouponUploadActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coupon_upload);
+        setContentView(R.layout.activity_create_coupon);
 
         initSettings();
     }
@@ -122,7 +121,7 @@ public class CouponUploadActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //SENDメニューを表示
-        getMenuInflater().inflate(R.menu.menu_coupon_upload, menu);
+        getMenuInflater().inflate(R.menu.menu_send, menu);
         return true;
     }
 

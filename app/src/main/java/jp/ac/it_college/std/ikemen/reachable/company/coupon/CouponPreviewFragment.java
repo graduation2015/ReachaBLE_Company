@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponUploadActivity;
+import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
@@ -101,7 +101,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_GALLERY) {
-                Intent intent = new Intent(getActivity(), CouponUploadActivity.class);
+                Intent intent = new Intent(getActivity(), CreateCouponActivity.class);
                 intent.setData(data.getData());
                 startActivityForResult(intent, CREATE_COUPON);
             }
