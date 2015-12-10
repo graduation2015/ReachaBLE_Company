@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +27,19 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     public static final int CREATE_COUPON = 0x002;
 
     /* Views */
+    private View mContentView;
     private FloatingActionButton mFab;
+    private RecyclerView mCouponList;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_coupon_preview, container, false);
-        findViews(contentView);
+        mContentView = inflater.inflate(R.layout.fragment_coupon_preview, container, false);
 
         //初期設定
         initSettings();
-        return contentView;
+        return mContentView;
     }
 
     /**
@@ -46,16 +48,28 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     private void initSettings() {
         //SharedPreferencesにクーポンの情報がある場合プレビューにセット
         setCoupon();
+
+        //FABのOnClickListenerをセット
+        getFab().setOnClickListener(this);
     }
 
-    /**
-     * レイアウトからViewを取得する
-     */
-    private void findViews(View contentView) {
-        mFab = (FloatingActionButton) contentView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
+    public View getContentView() {
+        return mContentView;
     }
 
+    public FloatingActionButton getFab() {
+        if (mFab == null) {
+            mFab = (FloatingActionButton) getContentView().findViewById(R.id.fab);
+        }
+        return mFab;
+    }
+
+    public RecyclerView getCouponList() {
+        if (mCouponList == null) {
+            mCouponList = (RecyclerView) getContentView().findViewById(R.id.coupon_list);
+        }
+        return mCouponList;
+    }
 
     /**
      * クーポンを選択する
@@ -89,10 +103,6 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         SharedPreferences prefs = getActivity()
                 .getSharedPreferences(CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
 
-    }
-
-    public FloatingActionButton getFab() {
-        return mFab;
     }
 
     @Override
