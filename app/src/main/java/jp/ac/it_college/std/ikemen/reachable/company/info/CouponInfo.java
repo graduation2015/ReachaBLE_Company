@@ -19,11 +19,6 @@ public class CouponInfo {
     public static final String DESCRIPTION = "description";
 
 
-    public CouponInfo(List<String> category) {
-        this(CompanyInfo.COMPANY_ID, CompanyInfo.COMPANY_NAME,
-                CompanyInfo.COMPANY_ADDRESS, null, null, category);
-    }
-
     public CouponInfo(String title, String description, List<String> category) {
         this(CompanyInfo.COMPANY_ID, CompanyInfo.COMPANY_NAME,
                 CompanyInfo.COMPANY_ADDRESS, title, description, category);
