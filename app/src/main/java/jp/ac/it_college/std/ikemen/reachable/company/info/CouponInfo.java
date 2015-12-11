@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class CouponInfo implements Serializable {
-    private final String key;
-    private final String companyName;
-    private final String address;
+    private final CompanyInfo companyInfo;
     private final String filePath;
     private final String title;
     private final String description;
@@ -22,15 +20,14 @@ public class CouponInfo implements Serializable {
 
 
     public CouponInfo(String filePath, String title, String description, List<String> category) {
-        this(CompanyInfo.COMPANY_ID, CompanyInfo.COMPANY_NAME,
-                CompanyInfo.COMPANY_ADDRESS, filePath, title, description, category);
+        this(new CompanyInfo(
+                CompanyInfo.COMPANY_ID, CompanyInfo.COMPANY_NAME, CompanyInfo.COMPANY_ADDRESS),
+                filePath, title, description, category);
     }
 
-    public CouponInfo(String key, String companyName, String address, String filePath,
+    public CouponInfo(CompanyInfo companyInfo, String filePath,
                       String title, String description, List<String> category) {
-        this.key = key;
-        this.companyName = companyName;
-        this.address = address;
+        this.companyInfo = companyInfo;
         this.filePath = filePath;
         this.title = title;
         this.description = description;
@@ -38,15 +35,15 @@ public class CouponInfo implements Serializable {
     }
 
     public String getKey() {
-        return key;
+        return getCompanyInfo().getId();
     }
 
     public String getCompanyName() {
-        return companyName;
+        return getCompanyInfo().getName();
     }
 
     public String getAddress() {
-        return address;
+        return getCompanyInfo().getAddress();
     }
 
     public List<String> getCategory() {
@@ -81,5 +78,9 @@ public class CouponInfo implements Serializable {
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public CompanyInfo getCompanyInfo() {
+        return companyInfo;
     }
 }
