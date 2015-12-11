@@ -3,7 +3,9 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,8 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.amazonaws.com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
@@ -27,6 +33,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
+    public static final String COUPON_INFO_LIST = "coupon_info_list";
 
     /* Views */
     private View mContentView;
@@ -83,9 +90,22 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     private List<CouponInfo> getCouponInfoList() {
         if (mCouponInfoList == null) {
             mCouponInfoList = new ArrayList<>();
+
+            List<String> list = new ArrayList<>(getPrefInfoSet());
+            Gson gson = new Gson();
+
+            for (String info : list) {
+                mCouponInfoList.add(gson.fromJson(info, CouponInfo.class));
+            }
         }
 
         return mCouponInfoList;
+    }
+
+    private Set<String> getPrefInfoSet() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
+        return prefs.getStringSet(COUPON_INFO_LIST, new HashSet<String>());
     }
 
     public View getContentView() {
@@ -139,6 +159,30 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         getCouponInfoList().add(info);
         //変更を通知
         getCouponListAdapter().notifyDataSetChanged();
+    }
+
+    /**
+     * SharedPreferencesにクーポンのインスタンスを保存
+     * @param infoList 保存するクーポン情報リスト
+     */
+    private void saveCouponInstance(List<CouponInfo> infoList) {
+        Gson gson = new Gson();
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences(
+                CouponInfo.PREF_INFO, Context.MODE_PRIVATE).edit();
+        Set<String> instances = new HashSet<>();
+
+        for (CouponInfo info : infoList) {
+            instances.add(gson.toJson(info));
+        }
+
+        editor.putStringSet(COUPON_INFO_LIST, instances);
+        editor.apply();
+    }
+
+    @Override
+    public void onDestroyView() {
+        saveCouponInstance(getCouponInfoList());
+        super.onDestroyView();
     }
 
     @Override
