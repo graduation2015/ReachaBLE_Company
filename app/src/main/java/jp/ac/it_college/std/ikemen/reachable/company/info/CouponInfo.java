@@ -1,6 +1,8 @@
 package jp.ac.it_college.std.ikemen.reachable.company.info;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CouponInfo implements Serializable {
@@ -9,6 +11,7 @@ public class CouponInfo implements Serializable {
     private final String title;
     private final String description;
     private final List<String> category;
+    private final Date creationDate;
 
     public static final String PREF_INFO = "pref_info";
     public static final String FILE_PATH = "file_path";
@@ -17,6 +20,8 @@ public class CouponInfo implements Serializable {
     public static final String CATEGORY = "category";
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
+
+    public static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd HH:mm:ss";
 
 
     public CouponInfo(String filePath, String title, String description, List<String> category) {
@@ -32,6 +37,7 @@ public class CouponInfo implements Serializable {
         this.title = title;
         this.description = description;
         this.category = category;
+        this.creationDate = new Date(System.currentTimeMillis());
     }
 
     public String getKey() {
@@ -82,5 +88,17 @@ public class CouponInfo implements Serializable {
 
     public CompanyInfo getCompanyInfo() {
         return companyInfo;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * フォーマットされた作成日を返す
+     * @return yyyy/MM/dd HH:mm:ss 形式の文字列
+     */
+    public String getFormattedCreationDate() {
+        return new SimpleDateFormat(DATE_FORMAT_PATTERN).format(getCreationDate());
     }
 }
