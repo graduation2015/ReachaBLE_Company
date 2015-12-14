@@ -104,6 +104,10 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         return mCouponInfoList;
     }
 
+    /**
+     * SharedPreferencesに保存されているクーポンリストを取得
+     * @return 保存されているクーポンリスト
+     */
     private Set<String> getPrefInfoSet() {
         SharedPreferences prefs = getActivity().getSharedPreferences(
                 CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
@@ -138,7 +142,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * クーポンを選択する
+     * クーポンをギャラリーから選択する
      */
     private void couponSelect() {
         Intent intent = new Intent();
@@ -192,6 +196,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onDestroyView() {
+        //フラグメントが破棄されるタイミングでクーポンリストを保存する
         saveCouponInstance(getCouponInfoList());
         super.onDestroyView();
     }
@@ -221,6 +226,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
+                //FABボタン押下時の処理
                 couponSelect();
                 break;
         }
