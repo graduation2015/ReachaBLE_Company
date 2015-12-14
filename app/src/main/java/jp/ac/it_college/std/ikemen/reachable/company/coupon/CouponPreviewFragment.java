@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amazonaws.com.google.gson.Gson;
 
@@ -39,6 +40,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     private View mContentView;
     private FloatingActionButton mFab;
     private RecyclerView mCouponListView;
+    private TextView mEmptyView;
 
     /* Adapter */
     private CouponListAdapter mCouponListAdapter;
@@ -117,6 +119,13 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
             mFab = (FloatingActionButton) getContentView().findViewById(R.id.fab);
         }
         return mFab;
+    }
+
+    public TextView getEmptyView() {
+        if (mEmptyView == null) {
+            mEmptyView = (TextView) getContentView().findViewById(R.id.txt_no_coupon_data);
+        }
+        return mEmptyView;
     }
 
     public RecyclerView getCouponListView() {
