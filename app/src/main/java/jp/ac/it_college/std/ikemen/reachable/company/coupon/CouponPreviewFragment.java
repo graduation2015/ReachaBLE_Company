@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.com.google.gson.Gson;
 
@@ -26,10 +27,13 @@ import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
+import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 
 
-public class CouponPreviewFragment extends Fragment implements View.OnClickListener {
+public class CouponPreviewFragment extends Fragment
+        implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener {
 
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
@@ -80,6 +84,14 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
         getCouponListView().setLayoutManager(layoutManager);
 
         getCouponListView().setAdapter(getCouponListAdapter());
+        getCouponListView().setItemAnimator(new SlideInDownAnimator());
+        getCouponListView().getItemAnimator().setAddDuration(500);
+        getCouponListView().getItemAnimator().setChangeDuration(500);
+        getCouponListView().getItemAnimator().setMoveDuration(500);
+        getCouponListView().getItemAnimator().setRemoveDuration(500);
+
+        getCouponListView().addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), this));
     }
 
     public CouponListAdapter getCouponListAdapter() {
@@ -170,12 +182,13 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
      * @param info 作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
-        //クーポンリストを空にする
-        getCouponInfoList().clear();
+        List<CouponInfo> list = getCouponInfoList();
         //クーポンリストに追加
-        getCouponInfoList().add(info);
+        list.add(info);
         //変更を通知
-        getCouponListAdapter().notifyDataSetChanged();
+        getCouponListAdapter().notifyItemInserted(list.size() - 1);
+        getCouponListView().scrollToPosition(list.size() - 1);
+        saveCouponInstance(list);
     }
 
     /**
@@ -194,13 +207,6 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
 
         editor.putStringSet(COUPON_INFO_LIST, instances);
         editor.apply();
-    }
-
-    @Override
-    public void onDestroyView() {
-        //フラグメントが破棄されるタイミングでクーポンリストを保存する
-        saveCouponInstance(getCouponInfoList());
-        super.onDestroyView();
     }
 
     @Override
@@ -232,5 +238,15 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
                 couponSelect();
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        //クーポンリストのアイテムクリック時の処理
+        Toast.makeText(getActivity(), "position = " + position, Toast.LENGTH_SHORT).show();
+        getCouponInfoList().remove(position);
+
+        getCouponListAdapter().notifyItemRemoved(position);
+        saveCouponInstance(getCouponInfoList());
     }
 }
