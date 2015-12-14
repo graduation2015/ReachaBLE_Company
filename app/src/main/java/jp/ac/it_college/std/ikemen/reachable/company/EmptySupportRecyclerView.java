@@ -6,6 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * リストが空の際に表示するメッセージに対応したRecyclerViewクラス
+ */
 public class EmptySupportRecyclerView extends RecyclerView {
     private View emptyView;
 
