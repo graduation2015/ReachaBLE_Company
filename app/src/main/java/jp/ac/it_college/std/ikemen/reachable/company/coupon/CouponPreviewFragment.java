@@ -170,6 +170,8 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
      * @param info 作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
+        //クーポンリストを空にする
+        getCouponInfoList().clear();
         //クーポンリストに追加
         getCouponInfoList().add(info);
         //変更を通知
