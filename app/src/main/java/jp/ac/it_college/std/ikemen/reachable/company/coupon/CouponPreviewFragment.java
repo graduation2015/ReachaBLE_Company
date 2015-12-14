@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import java.util.Set;
 
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
+import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
@@ -39,7 +39,7 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
     /* Views */
     private View mContentView;
     private FloatingActionButton mFab;
-    private RecyclerView mCouponListView;
+    private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
 
     /* Adapter */
@@ -123,14 +123,16 @@ public class CouponPreviewFragment extends Fragment implements View.OnClickListe
 
     public TextView getEmptyView() {
         if (mEmptyView == null) {
-            mEmptyView = (TextView) getContentView().findViewById(R.id.txt_no_coupon_data);
+            mEmptyView = (TextView) getContentView().findViewById(R.id.txt_empty_view);
         }
         return mEmptyView;
     }
 
-    public RecyclerView getCouponListView() {
+    public EmptySupportRecyclerView getCouponListView() {
         if (mCouponListView == null) {
-            mCouponListView = (RecyclerView) getContentView().findViewById(R.id.coupon_list);
+            mCouponListView = (EmptySupportRecyclerView) getContentView().findViewById(R.id.coupon_list);
+            //リストが空の際に表示するViewをセット
+            mCouponListView.setEmptyView(getEmptyView());
         }
         return mCouponListView;
     }
