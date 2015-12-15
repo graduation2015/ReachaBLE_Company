@@ -29,6 +29,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 
 
@@ -39,6 +40,7 @@ public class CouponPreviewFragment extends Fragment
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
     public static final String COUPON_INFO_LIST = "coupon_info_list";
+    public static final long ANIM_DURATION = 800L;
 
     /* Views */
     private View mContentView;
@@ -77,19 +79,25 @@ public class CouponPreviewFragment extends Fragment
      * クーポンリストをセットアップする
      */
     private void setUpCouponListView() {
+        //LayoutManager設定
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        getCouponListView().setHasFixedSize(true);
         getCouponListView().setLayoutManager(layoutManager);
 
-        getCouponListView().setAdapter(getCouponListAdapter());
-        getCouponListView().setItemAnimator(new SlideInDownAnimator());
-        getCouponListView().getItemAnimator().setAddDuration(1000);
-        getCouponListView().getItemAnimator().setChangeDuration(1000);
-        getCouponListView().getItemAnimator().setMoveDuration(1000);
-        getCouponListView().getItemAnimator().setRemoveDuration(1000);
+        //表示するアイテムのサイズを固定化
+        getCouponListView().setHasFixedSize(true);
 
+        //アダプターをセット
+        getCouponListView().setAdapter(getCouponListAdapter());
+
+        //クーポン追加/更新時のアニメーションをセット
+        getCouponListView().setItemAnimator(new SlideInDownAnimator());
+        getCouponListView().getItemAnimator().setAddDuration(ANIM_DURATION);
+        getCouponListView().getItemAnimator().setChangeDuration(ANIM_DURATION);
+        getCouponListView().getItemAnimator().setMoveDuration(ANIM_DURATION);
+        getCouponListView().getItemAnimator().setRemoveDuration(ANIM_DURATION);
+
+        //クーポンアイテムクリック時のリスナーをセット
         getCouponListView().addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), this));
     }
