@@ -31,5 +31,6 @@
     <string name="coupon_description_hint">Description</string>
     <string name="coupon_tag_hint">Tag</string>
     <string name="validate_title_error">Please enter a title.</string>
+    <string name="no_coupon_data">Coupon has not yet been registered.</string>
 
 </resources>
