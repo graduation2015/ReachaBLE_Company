@@ -30,16 +30,35 @@
                 android:scaleType="centerInside"
                 />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/txt_title"
+            <LinearLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textSize="14sp"
-                android:textColor="#FFF"
+                android:orientation="vertical"
                 android:layout_alignBottom="@id/img_coupon_pic"
-                android:background="#80000000"
-                />
+                android:background="#80000000">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_creation_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#FFF"
+                    />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#FFF"
+                    />
+
+            </LinearLayout>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/txt_description"
@@ -47,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:textSize="14sp"
-                android:layout_below="@id/txt_title"
+                android:layout_below="@id/header"
                 />
 
             <android.support.v7.widget.AppCompatTextView
