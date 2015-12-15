@@ -85,10 +85,10 @@ public class CouponPreviewFragment extends Fragment
 
         getCouponListView().setAdapter(getCouponListAdapter());
         getCouponListView().setItemAnimator(new SlideInDownAnimator());
-        getCouponListView().getItemAnimator().setAddDuration(500);
-        getCouponListView().getItemAnimator().setChangeDuration(500);
-        getCouponListView().getItemAnimator().setMoveDuration(500);
-        getCouponListView().getItemAnimator().setRemoveDuration(500);
+        getCouponListView().getItemAnimator().setAddDuration(1000);
+        getCouponListView().getItemAnimator().setChangeDuration(1000);
+        getCouponListView().getItemAnimator().setMoveDuration(1000);
+        getCouponListView().getItemAnimator().setRemoveDuration(1000);
 
         getCouponListView().addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), this));
@@ -182,13 +182,14 @@ public class CouponPreviewFragment extends Fragment
      * @param info 作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
-        List<CouponInfo> list = getCouponInfoList();
+        getCouponInfoList().clear();
+        getCouponListAdapter().notifyItemRemoved(0);
+
         //クーポンリストに追加
-        list.add(info);
+        getCouponInfoList().add(info);
         //変更を通知
-        getCouponListAdapter().notifyItemInserted(list.size() - 1);
-        getCouponListView().scrollToPosition(list.size() - 1);
-        saveCouponInstance(list);
+        getCouponListAdapter().notifyItemInserted(0);
+        saveCouponInstance(getCouponInfoList());
     }
 
     /**
