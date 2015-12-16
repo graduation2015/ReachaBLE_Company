@@ -13,6 +13,8 @@ import android.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -66,18 +68,16 @@ public class AdvertiseCouponFragment extends Fragment
         setUpBluetooth();
 
         getToggleAdvertise().setOnClickListener(this);
+
+        //ツールバーにメニューを表示する
+        setHasOptionsMenu(true);
     }
 
-    private void setUpBluetooth() {
-        //BluetoothAdapterを取得
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        //BluetoothStateChangeReceiverを初期化
-        mStateChangeReceiver =
-                new BluetoothStateChangeReceiver(this);
-
-        //Bluetoothの状態変化を受け取るIntentFilterを生成
-        mIntentFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //スイッチメニューをインフレート
+        inflater.inflate(R.menu.menu_advertise_switch, menu);
     }
 
     @Override
@@ -103,11 +103,6 @@ public class AdvertiseCouponFragment extends Fragment
         super.onPause();
         getActivity().unregisterReceiver(getStateChangeReceiver());
     }
-
-    public View getContentView() {
-        return mContentView;
-    }
-
 
     @Override
     public void onClick(View view) {
@@ -162,6 +157,18 @@ public class AdvertiseCouponFragment extends Fragment
      */
     private void setCouponPreview() {
         getCouponPreview().setImageBitmap(BitmapFactory.decodeFile(getCouponPath()));
+    }
+
+    private void setUpBluetooth() {
+        //BluetoothAdapterを取得
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        //BluetoothStateChangeReceiverを初期化
+        mStateChangeReceiver =
+                new BluetoothStateChangeReceiver(this);
+
+        //Bluetoothの状態変化を受け取るIntentFilterを生成
+        mIntentFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
     }
 
     /**
@@ -237,6 +244,10 @@ public class AdvertiseCouponFragment extends Fragment
             mCouponPreview = (ImageView) getContentView().findViewById(R.id.img_coupon_preview);
         }
         return mCouponPreview;
+    }
+
+    public View getContentView() {
+        return mContentView;
     }
 
     public Advertise getAdvertise() {
