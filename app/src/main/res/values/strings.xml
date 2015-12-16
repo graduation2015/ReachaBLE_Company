@@ -29,8 +29,9 @@
     <string name="menu_send">Send</string>
     <string name="coupon_title_hint">Title</string>
     <string name="coupon_description_hint">Description</string>
-    <string name="coupon_tag_hint">Tag</string>
+    <string name="coupon_tag_hint">Tag(Space delimited)</string>
     <string name="validate_title_error">Please enter a title.</string>
     <string name="no_coupon_data">Coupon has not yet been registered.</string>
+    <string name="txt_tag_clause">Tag:</string>
 
 </resources>

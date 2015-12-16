@@ -35,6 +35,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         holder.mTitleView.setText(info.getTitle());
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
+        holder.mCreationDate.setText(info.getFormattedCreationDate());
     }
 
     @Override
@@ -51,6 +52,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         protected AppCompatTextView mTitleView;
         protected AppCompatTextView mDescriptionView;
         protected AppCompatTextView mTagsView;
+        protected AppCompatTextView mCreationDate;
 
         public CouponViewHolder(View itemView) {
             super(itemView);
@@ -58,6 +60,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
             mTitleView = (AppCompatTextView) itemView.findViewById(R.id.txt_title);
             mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);
             mTagsView = (AppCompatTextView) itemView.findViewById(R.id.txt_tags);
+            mCreationDate = (AppCompatTextView) itemView.findViewById(R.id.txt_creation_date);
         }
     }
 }

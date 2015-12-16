@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CouponInfo implements Serializable {
     private final CompanyInfo companyInfo;
@@ -21,7 +22,7 @@ public class CouponInfo implements Serializable {
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
 
-    public static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd HH:mm:ss";
+    public static final String DATE_FORMAT_PATTERN = "yyyy年MM月dd日";
 
 
     public CouponInfo(String filePath, String title, String description, List<String> category) {
@@ -96,9 +97,9 @@ public class CouponInfo implements Serializable {
 
     /**
      * フォーマットされた作成日を返す
-     * @return yyyy/MM/dd HH:mm:ss 形式の文字列
+     * @return yyyy年MM月dd日 形式の文字列
      */
     public String getFormattedCreationDate() {
-        return new SimpleDateFormat(DATE_FORMAT_PATTERN).format(getCreationDate());
+        return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.JAPAN).format(getCreationDate());
     }
 }
