@@ -33,5 +33,8 @@
     <string name="validate_title_error">Please enter a title.</string>
     <string name="no_coupon_data">Coupon has not yet been registered.</string>
     <string name="txt_tag_clause">Tag:</string>
+    <string name="toolbar_advertise">ADVERTISE</string>
+    <string name="switch_advertise_on">ON</string>
+    <string name="switch_advertise_off">OFF</string>
 
 </resources>
