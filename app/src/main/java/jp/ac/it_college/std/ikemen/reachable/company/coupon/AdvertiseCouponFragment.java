@@ -56,6 +56,7 @@ public class AdvertiseCouponFragment extends Fragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
 
+        //Advertiseクラスのインスタンスを生成
         mAdvertise = new Advertise();
 
         //Bluetoothをセットアップ
@@ -148,6 +149,9 @@ public class AdvertiseCouponFragment extends Fragment
         }
     }
 
+    /**
+     * Bluetooth関連のフィールドを初期化する
+     */
     private void setUpBluetooth() {
         //BluetoothAdapterを取得
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -181,6 +185,7 @@ public class AdvertiseCouponFragment extends Fragment
         if (requestCode == REQUEST_ENABLE_BT) {
             switch (resultCode) {
                 case Activity.RESULT_OK: //Bluetooth有効化を許可した場合
+                    //数秒ディレイをかけてAdvertiseを開始する
                     delayAdvertise();
                     break;
             }
@@ -232,7 +237,7 @@ public class AdvertiseCouponFragment extends Fragment
      */
     @Override
     public void onBluetoothStateOff() {
-        //ToggleボタンをOFFにする
+        //AdvertiseSwitchをOFFにする
         getAdvertiseSwitch().setChecked(false);
     }
 }
