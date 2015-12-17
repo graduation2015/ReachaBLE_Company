@@ -113,18 +113,20 @@ public class AdvertiseCouponFragment extends Fragment
      */
     private void switchAdvertise(boolean isAdvertise) {
         if (getBluetoothAdapter() == null) {
+            //AdvertiseSwitchをOFFにする
+            getAdvertiseSwitch().setChecked(false);
+            return;
+        } else if (!getBluetoothAdapter().isEnabled()) {
+            //AdvertiseSwitchをOFFにする
+            getAdvertiseSwitch().setChecked(false);
+            enableBluetooth();
             return;
         }
 
-        //Bluetoothの有効/無効をチェック
-        if (getBluetoothAdapter().isEnabled()) {
-            if (isAdvertise) {
-                startAdvertise();
-            } else {
-                stopAdvertise();
-            }
+        if (isAdvertise) {
+            startAdvertise();
         } else {
-            enableBluetooth();
+            stopAdvertise();
         }
     }
 
@@ -181,10 +183,6 @@ public class AdvertiseCouponFragment extends Fragment
                 case Activity.RESULT_OK: //Bluetooth有効化を許可した場合
                     delayAdvertise();
                     break;
-                case Activity.RESULT_CANCELED: //Bluetooth有効化を許可しなかった場合
-                    //ToggleボタンをOFFにする
-                    getAdvertiseSwitch().setChecked(false);
-                    break;
             }
         }
     }
@@ -193,6 +191,9 @@ public class AdvertiseCouponFragment extends Fragment
      * 数秒ディレイをかけた後にAdvertiseを開始する
      */
     private void delayAdvertise() {
+        //AdvertiseSwitchをONにする
+        getAdvertiseSwitch().setChecked(true);
+
         //有効化直後にAdvertiseした場合にメッセージが発信されない現象を回避するため、数秒ディレイをかける
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
