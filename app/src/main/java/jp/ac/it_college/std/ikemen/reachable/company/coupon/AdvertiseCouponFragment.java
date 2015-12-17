@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +10,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,7 @@ public class AdvertiseCouponFragment extends Fragment
     private ToggleButton mToggleAdvertise;
     private ImageView mCouponPreview;
     private View mContentView;
+    private SwitchCompat mAdvertiseSwitch;
 
     /* BLE */
     private Advertise mAdvertise;
@@ -59,6 +61,9 @@ public class AdvertiseCouponFragment extends Fragment
      * 初期設定を実行
      */
     private void initSettings() {
+        //ツールバーにメニューを表示する
+        setHasOptionsMenu(true);
+
         //クーポンのプレビューを表示
         setCouponPreview();
 
@@ -68,9 +73,6 @@ public class AdvertiseCouponFragment extends Fragment
         setUpBluetooth();
 
         getToggleAdvertise().setOnClickListener(this);
-
-        //ツールバーにメニューを表示する
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -78,6 +80,8 @@ public class AdvertiseCouponFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         //スイッチメニューをインフレート
         inflater.inflate(R.menu.menu_advertise_switch, menu);
+        mAdvertiseSwitch = (SwitchCompat) menu.findItem(R.id.menu_advertise_switch).getActionView();
+        mAdvertiseSwitch.setOnClickListener(this);
     }
 
     @Override
@@ -109,6 +113,9 @@ public class AdvertiseCouponFragment extends Fragment
         switch (view.getId()) {
             case R.id.toggle_advertise:
                 switchAdvertise(getToggleAdvertise().isChecked());
+                break;
+            case R.id.switch_advertise:
+                switchAdvertise(getAdvertiseSwitch().isChecked());
                 break;
         }
     }
@@ -252,6 +259,10 @@ public class AdvertiseCouponFragment extends Fragment
 
     public Advertise getAdvertise() {
         return mAdvertise;
+    }
+
+    public SwitchCompat getAdvertiseSwitch() {
+        return mAdvertiseSwitch;
     }
 
     /**
