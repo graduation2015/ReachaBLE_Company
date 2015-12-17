@@ -4,11 +4,8 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,14 +15,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ToggleButton;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
-import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 
 public class AdvertiseCouponFragment extends Fragment
@@ -38,8 +32,6 @@ public class AdvertiseCouponFragment extends Fragment
     private IntentFilter mIntentFilter;
 
     /* Views */
-    private ToggleButton mToggleAdvertise;
-    private ImageView mCouponPreview;
     private View mContentView;
     private SwitchCompat mAdvertiseSwitch;
 
@@ -64,15 +56,10 @@ public class AdvertiseCouponFragment extends Fragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
 
-        //クーポンのプレビューを表示
-        setCouponPreview();
-
         mAdvertise = new Advertise();
 
         //Bluetoothをセットアップ
         setUpBluetooth();
-
-        getToggleAdvertise().setOnClickListener(this);
     }
 
     @Override
@@ -81,40 +68,40 @@ public class AdvertiseCouponFragment extends Fragment
         //スイッチメニューをインフレート
         inflater.inflate(R.menu.menu_advertise_switch, menu);
         mAdvertiseSwitch = (SwitchCompat) menu.findItem(R.id.menu_advertise_switch).getActionView();
+        //クリックリスナーをセット
         mAdvertiseSwitch.setOnClickListener(this);
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         //Fragmentが破棄されるタイミングでAdvertise停止
         stopAdvertise();
+        super.onDestroyView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //Bluetoothの状態を監視するレシーバを登録する
         getActivity().registerReceiver(getStateChangeReceiver(), getIntentFilter());
 
-        //フラグメント表示時にBluetoothが無効の場合ToggleButtonをOffにする
-        if (!getBluetoothAdapter().isEnabled()) {
-            getToggleAdvertise().setChecked(false);
+        //フラグメント表示時にBluetoothが無効の場合AdvertiseSwitchをOffにする
+        if (!getBluetoothAdapter().isEnabled() && getAdvertiseSwitch() != null) {
+            getAdvertiseSwitch().setChecked(false);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        //Bluetoothの状態を監視するレシーバを登録解除する
         getActivity().unregisterReceiver(getStateChangeReceiver());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.toggle_advertise:
-                switchAdvertise(getToggleAdvertise().isChecked());
-                break;
-            case R.id.switch_advertise:
+            case R.id.switch_advertise: //AdvertiseSwitch押下時の処理
                 switchAdvertise(getAdvertiseSwitch().isChecked());
                 break;
         }
@@ -159,13 +146,6 @@ public class AdvertiseCouponFragment extends Fragment
         }
     }
 
-    /**
-     * クーポンをプレビューにセットする
-     */
-    private void setCouponPreview() {
-        getCouponPreview().setImageBitmap(BitmapFactory.decodeFile(getCouponPath()));
-    }
-
     private void setUpBluetooth() {
         //BluetoothAdapterを取得
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -176,16 +156,6 @@ public class AdvertiseCouponFragment extends Fragment
 
         //Bluetoothの状態変化を受け取るIntentFilterを生成
         mIntentFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-    }
-
-    /**
-     * クーポンのパスを返す
-     * @return
-     */
-    private String getCouponPath() {
-        SharedPreferences prefs = getActivity()
-                .getSharedPreferences(CouponInfo.FILE_PATH, Context.MODE_PRIVATE);
-        return prefs.getString(CouponInfo.FILE_PATH, null);
     }
 
     /**
@@ -208,23 +178,28 @@ public class AdvertiseCouponFragment extends Fragment
 
         if (requestCode == REQUEST_ENABLE_BT) {
             switch (resultCode) {
-                case Activity.RESULT_OK:
-                    /* Bluetooth有効化直後にAdvertiseした場合に
-                    メッセージが発信されない現象を回避するため、数秒ディレイをかける*/
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Bluetooth有効化後、数秒待ってAdvertiseを開始する
-                            startAdvertise();
-                        }
-                    }, ADVERTISE_DELAY);
+                case Activity.RESULT_OK: //Bluetooth有効化を許可した場合
+                    delayAdvertise();
                     break;
-                case Activity.RESULT_CANCELED:
+                case Activity.RESULT_CANCELED: //Bluetooth有効化を許可しなかった場合
                     //ToggleボタンをOFFにする
-                    getToggleAdvertise().setChecked(false);
+                    getAdvertiseSwitch().setChecked(false);
                     break;
             }
         }
+    }
+
+    /**
+     * 数秒ディレイをかけた後にAdvertiseを開始する
+     */
+    private void delayAdvertise() {
+        //有効化直後にAdvertiseした場合にメッセージが発信されない現象を回避するため、数秒ディレイをかける
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAdvertise();
+            }
+        }, ADVERTISE_DELAY);
     }
 
     public BluetoothAdapter getBluetoothAdapter() {
@@ -237,20 +212,6 @@ public class AdvertiseCouponFragment extends Fragment
 
     public IntentFilter getIntentFilter() {
         return mIntentFilter;
-    }
-
-    public ToggleButton getToggleAdvertise() {
-        if (mToggleAdvertise == null) {
-            mToggleAdvertise = (ToggleButton) getContentView().findViewById(R.id.toggle_advertise);
-        }
-        return mToggleAdvertise;
-    }
-
-    public ImageView getCouponPreview() {
-        if (mCouponPreview == null) {
-            mCouponPreview = (ImageView) getContentView().findViewById(R.id.img_coupon_preview);
-        }
-        return mCouponPreview;
     }
 
     public View getContentView() {
@@ -271,6 +232,6 @@ public class AdvertiseCouponFragment extends Fragment
     @Override
     public void onBluetoothStateOff() {
         //ToggleボタンをOFFにする
-        getToggleAdvertise().setChecked(false);
+        getAdvertiseSwitch().setChecked(false);
     }
 }
