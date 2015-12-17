@@ -27,7 +27,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
 public class AdvertiseCouponFragment extends BaseCouponFragment
         implements View.OnClickListener, BluetoothStateChangeListener {
 
-    /* Bluetooth 関連フィールド */
+    /* Bluetooth */
     private final int REQUEST_ENABLE_BT = 0x01;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothStateChangeReceiver mStateChangeReceiver;
@@ -38,7 +38,6 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
     private SwitchCompat mAdvertiseSwitch;
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
-
 
     /* BLE */
     private Advertise mAdvertise;
@@ -81,6 +80,28 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
         mAdvertiseSwitch = (SwitchCompat) menu.findItem(R.id.menu_advertise_switch).getActionView();
         //クリックリスナーをセット
         mAdvertiseSwitch.setOnClickListener(this);
+
+        //有効化チェック
+        checkAdvertise(mAdvertiseSwitch);
+    }
+
+    /**
+     * クーポンの有無に応じてAdvertiseSwitchの状態を切り替える
+     * @param advertiseSwitch ツールバーのAdvertiseSwitch
+     */
+    private void checkAdvertise(SwitchCompat advertiseSwitch) {
+        //クーポンリストが空の場合、AdvertiseSwitchを無効化する
+        if (isCouponEmpty()) {
+            advertiseSwitch.setEnabled(false);
+        }
+    }
+
+    /**
+     * クーポンリストが空かどうかをチェック
+     * @return クーポンリストが空の場合trueを返す
+     */
+    private boolean isCouponEmpty() {
+        return getCouponInfoList().isEmpty();
     }
 
     @Override
