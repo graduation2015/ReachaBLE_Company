@@ -22,7 +22,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateCha
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
 
 
-public class AdvertiseCouponFragment extends Fragment
+public class AdvertiseCouponFragment extends BaseCouponFragment
         implements View.OnClickListener, BluetoothStateChangeListener {
 
     /* Bluetooth 関連フィールド */
