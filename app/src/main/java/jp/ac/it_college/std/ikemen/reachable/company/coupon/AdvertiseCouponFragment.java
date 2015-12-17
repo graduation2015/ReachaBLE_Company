@@ -2,7 +2,6 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,7 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
@@ -34,6 +36,9 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
     /* Views */
     private View mContentView;
     private SwitchCompat mAdvertiseSwitch;
+    private EmptySupportRecyclerView mCouponListView;
+    private TextView mEmptyView;
+
 
     /* BLE */
     private Advertise mAdvertise;
@@ -61,6 +66,11 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
 
         //Bluetoothをセットアップ
         setUpBluetooth();
+
+        //クーポンリストのアダプターをセット
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList()));
+        //クーポンリストをセットアップ
+        setUpCouponListView(getCouponListView());
     }
 
     @Override
@@ -231,6 +241,23 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
     public SwitchCompat getAdvertiseSwitch() {
         return mAdvertiseSwitch;
     }
+
+    public TextView getEmptyView() {
+        if (mEmptyView == null) {
+            mEmptyView = (TextView) getContentView().findViewById(R.id.txt_empty_view);
+        }
+        return mEmptyView;
+    }
+
+    public EmptySupportRecyclerView getCouponListView() {
+        if (mCouponListView == null) {
+            mCouponListView = (EmptySupportRecyclerView) getContentView().findViewById(R.id.coupon_list);
+            //リストが空の際に表示するViewをセット
+            mCouponListView.setEmptyView(getEmptyView());
+        }
+        return mCouponListView;
+    }
+
 
     /**
      * BluetoothがOFFになった時に呼ばれる
