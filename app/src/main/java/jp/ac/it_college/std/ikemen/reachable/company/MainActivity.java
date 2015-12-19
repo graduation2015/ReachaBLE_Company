@@ -1,32 +1,31 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.AdvertiseCouponFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponPreviewFragment;
-import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerToggle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    /** タグ */
+    /* Constants */
     private static final String TAG = "tag_MainActivity";
 
-    /* DrawerLayout 関連フィールド */
-    private String[] mSideMenuTitles;
-    private ListView mDrawerList;
+    /* DrawerLayout */
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayAdapter<String> mSideMenuArrayAdapter;
+    private NavigationView mNavigationView;
 
-    /* Toolbar 関連フィールド */
+    /* Toolbar */
     private Toolbar mToolbar;
 
     @Override
@@ -52,19 +51,10 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         //DrawerListenerにDrawerToggleをセット
         getDrawerLayout().setDrawerListener(getDrawerToggle());
-        //サイドメニューを設定
-        setUpDrawerList();
-    }
-
-    /**
-     * サイドメニューを設定する
-     */
-    private void setUpDrawerList() {
-        //サイドメニュー用ArrayAdapterをセット
-        getDrawerList().setAdapter(getSideMenuArrayAdapter());
-        //サイドメニューのonItemClickListenerをセット
-        getDrawerList().setOnItemClickListener(new DrawerItemClickListener(
-                this, getDrawerList(), getDrawerLayout(), getToolbar(), getSideMenuTitles()));
+        //NavigationViewのメニューアイテムクリック時のリスナーをセット
+        getNavigationView().setNavigationItemSelectedListener(this);
+        //NavigationViewのデフォルトのチェックアイテムをセット
+        getNavigationView().setCheckedItem(R.id.menu_select_coupon);
     }
 
     /**
@@ -99,26 +89,12 @@ public class MainActivity extends AppCompatActivity {
         return mToolbar;
     }
 
-    public String[] getSideMenuTitles() {
-        if (mSideMenuTitles == null) {
-            mSideMenuTitles = getResources().getStringArray(R.array.side_menu_titles);
+    public NavigationView getNavigationView() {
+        if (mNavigationView == null) {
+            mNavigationView = (NavigationView) findViewById(R.id.navigationView);
         }
-        return mSideMenuTitles;
-    }
 
-    public ListView getDrawerList() {
-        if (mDrawerList == null) {
-            mDrawerList = (ListView) findViewById(R.id.side_menu_list);
-        }
-        return mDrawerList;
-    }
-
-    public ArrayAdapter<String> getSideMenuArrayAdapter() {
-        if (mSideMenuArrayAdapter == null) {
-            mSideMenuArrayAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_list_item_1, getSideMenuTitles());
-        }
-        return mSideMenuArrayAdapter;
+        return mNavigationView;
     }
 
     @Override
@@ -141,4 +117,30 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //NavigationViewのメニューアイテム押下時の処理
+        switch (item.getItemId()) {
+            case R.id.menu_select_coupon:
+                changeFragment(new CouponPreviewFragment());
+                break;
+            case R.id.menu_advertise_coupon:
+                changeFragment(new AdvertiseCouponFragment());
+                break;
+        }
+        //DrawerLayoutを閉じる
+        getDrawerLayout().closeDrawers();
+
+        return true;
+    }
+
+    /**
+     * フラグメントを変更する
+     * @param destination 変更先のフラグメント
+     */
+    private void changeFragment(Fragment destination) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_content, destination)
+                .commit();
+    }
 }
