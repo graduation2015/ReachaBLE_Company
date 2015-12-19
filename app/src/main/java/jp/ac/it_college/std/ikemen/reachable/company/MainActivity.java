@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     /* DrawerLayout */
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private NavigationView mNavigationView;
 
     /* Toolbar */
     private Toolbar mToolbar;
@@ -78,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return mToolbar;
+    }
+
+    public NavigationView getNavigationView() {
+        if (mNavigationView == null) {
+            mNavigationView = (NavigationView) findViewById(R.id.navigationView);
+        }
+
+        return mNavigationView;
     }
 
     @Override
