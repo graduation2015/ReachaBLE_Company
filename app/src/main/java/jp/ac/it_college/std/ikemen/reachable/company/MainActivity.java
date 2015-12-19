@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,10 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.AdvertiseCouponFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponPreviewFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerToggle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     /* Constants */
     private static final String TAG = "tag_MainActivity";
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         //DrawerListenerにDrawerToggleをセット
         getDrawerLayout().setDrawerListener(getDrawerToggle());
+        //NavigationViewのメニューアイテムクリック時のリスナーをセット
+        getNavigationView().setNavigationItemSelectedListener(this);
+        //NavigationViewのデフォルトのチェックアイテムをセット
+        getNavigationView().setCheckedItem(R.id.menu_select_coupon);
     }
 
     /**
@@ -110,4 +117,30 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //NavigationViewのメニューアイテム押下時の処理
+        switch (item.getItemId()) {
+            case R.id.menu_select_coupon:
+                changeFragment(new CouponPreviewFragment());
+                break;
+            case R.id.menu_advertise_coupon:
+                changeFragment(new AdvertiseCouponFragment());
+                break;
+        }
+        //DrawerLayoutを閉じる
+        getDrawerLayout().closeDrawers();
+
+        return true;
+    }
+
+    /**
+     * フラグメントを変更する
+     * @param destination 変更先のフラグメント
+     */
+    private void changeFragment(Fragment destination) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_content, destination)
+                .commit();
+    }
 }
