@@ -36,5 +36,9 @@
     <string name="toolbar_advertise">ADVERTISE</string>
     <string name="switch_advertise_on">ON</string>
     <string name="switch_advertise_off">OFF</string>
+    <string name="menu_title_coupon_select">Coupon select</string>
+    <string name="menu_title_advertise_coupon">Advertise coupon</string>
+    <string name="menu_title_about">About</string>
+    <string name="menu_title_settings">Settings</string>
 
 </resources>

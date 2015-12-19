@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/menu_main"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_select_coupon"
+            android:title="@string/menu_title_coupon_select"
+            android:icon="@android:drawable/ic_menu_gallery" />
+
+        <item
+            android:id="@+id/menu_advertise_coupon"
+            android:title="@string/menu_title_advertise_coupon"
+            android:icon="@drawable/ic_action_bluetooth_searching" />
+    </group>
+
+    <group
+        android:id="@+id/menu_other"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_settings"
+            android:title="@string/menu_title_settings"
+            android:icon="@drawable/ic_action_settings" />
+        <item
+            android:id="@+id/menu_about"
+            android:title="@string/menu_title_about"
+            android:icon="@drawable/ic_action_about"
+            />
+    </group>
+</menu>
