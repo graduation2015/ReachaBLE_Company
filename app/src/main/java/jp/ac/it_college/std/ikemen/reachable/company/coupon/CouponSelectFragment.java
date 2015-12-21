@@ -127,15 +127,10 @@ public class CouponSelectFragment extends BaseCouponFragment
      * @param info 作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
-        //クーポンリストを空にする
-        getCouponInfoList().clear();
-        //削除をアダプターに通知
-        getCouponListAdapter().notifyItemRemoved(0);
-
         //クーポンリストにクーポンを追加
         getCouponInfoList().add(info);
         //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(0);
+        getCouponListAdapter().notifyItemInserted(getCouponInfoList().size() - 1);
 
         //クーポンリストをSharedPreferencesに保存
         saveCouponInstance(getCouponInfoList());
