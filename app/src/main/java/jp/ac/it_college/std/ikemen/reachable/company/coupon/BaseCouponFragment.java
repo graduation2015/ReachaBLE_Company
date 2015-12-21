@@ -15,7 +15,7 @@ import java.util.Set;
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
 
 /**
  * クーポンリストを表示するFragmentのベースクラス
@@ -49,7 +49,7 @@ public class BaseCouponFragment extends Fragment {
         couponListView.setAdapter(getCouponListAdapter());
 
         //クーポン追加/更新時のアニメーションをセット
-        couponListView.setItemAnimator(new SlideInDownAnimator());
+        couponListView.setItemAnimator(new OvershootInRightAnimator());
         couponListView.getItemAnimator().setAddDuration(COUPON_ANIM_DURATION);
         couponListView.getItemAnimator().setChangeDuration(COUPON_ANIM_DURATION);
         couponListView.getItemAnimator().setMoveDuration(COUPON_ANIM_DURATION);
