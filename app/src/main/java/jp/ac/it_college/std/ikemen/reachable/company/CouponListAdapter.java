@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -106,6 +107,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         protected AppCompatTextView mDescriptionView;
         protected AppCompatTextView mTagsView;
         protected AppCompatTextView mCreationDate;
+        protected AppCompatButton mAdvertiseButton;
+        protected AppCompatButton mDeleteButton;
 
         public CouponViewHolder(View itemView) {
             super(itemView);
@@ -114,6 +117,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
             mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);
             mTagsView = (AppCompatTextView) itemView.findViewById(R.id.txt_tags);
             mCreationDate = (AppCompatTextView) itemView.findViewById(R.id.txt_creation_date);
+            mAdvertiseButton = (AppCompatButton) itemView.findViewById(R.id.btn_advertise);
+            mDeleteButton = (AppCompatButton) itemView.findViewById(R.id.btn_delete);
         }
     }
 }
