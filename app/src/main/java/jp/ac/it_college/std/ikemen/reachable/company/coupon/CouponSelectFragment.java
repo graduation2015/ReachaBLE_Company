@@ -30,7 +30,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 /**
  * クーポンを登録画面のFragmentクラス
  */
-public class CouponPreviewFragment extends BaseCouponFragment
+public class CouponSelectFragment extends BaseCouponFragment
         implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener {
 
     /* Constants */
@@ -47,7 +47,7 @@ public class CouponPreviewFragment extends BaseCouponFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.fragment_coupon_preview, container, false);
+        mContentView = inflater.inflate(R.layout.fragment_coupon_select, container, false);
 
         //初期設定
         initSettings();
