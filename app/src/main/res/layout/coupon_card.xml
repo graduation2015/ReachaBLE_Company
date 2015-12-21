@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 />
 
             <LinearLayout
