@@ -132,6 +132,9 @@ public class CouponSelectFragment extends BaseCouponFragment
         //追加をアダプターに通知
         getCouponListAdapter().notifyItemInserted(getCouponInfoList().size() - 1);
 
+        //追加したクーポンまでスクロールする
+        getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
+
         //クーポンリストをSharedPreferencesに保存
         saveCouponInstance(getCouponInfoList());
     }
