@@ -30,6 +30,7 @@
         android:src="@drawable/ic_add_black_18dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        app:fabSize="normal"/>
+        app:fabSize="normal"
+        app:backgroundTint="@color/primary" />
 
 </RelativeLayout>
