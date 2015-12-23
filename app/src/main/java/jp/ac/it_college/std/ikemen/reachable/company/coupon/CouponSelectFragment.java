@@ -27,7 +27,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**
- * クーポンを登録画面のFragmentクラス
+ * クーポン登録画面のFragmentクラス
  */
 public class CouponSelectFragment extends BaseCouponFragment
         implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener {
@@ -123,7 +123,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストにクーポンを追加する
-     * @param info 作成されたクーポン
+     * @param info クーポン作成画面で作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
