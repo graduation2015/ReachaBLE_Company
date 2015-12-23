@@ -22,7 +22,7 @@ public class CouponInfo implements Serializable {
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
 
-    public static final String DATE_FORMAT_PATTERN = "yyyy年MM月dd日";
+    public static final String DATE_FORMAT_PATTERN = "MMMM dd, yyyy";
 
 
     public CouponInfo(String filePath, String title, String description, List<String> category) {
@@ -97,7 +97,7 @@ public class CouponInfo implements Serializable {
 
     /**
      * フォーマットされた作成日を返す
-     * @return yyyy年MM月dd日 形式の文字列
+     * @return MMMM dd, yyyy 形式の文字列
      */
     public String getFormattedCreationDate() {
         return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.JAPAN).format(getCreationDate());
