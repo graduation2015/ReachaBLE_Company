@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazonaws.com.google.gson.Gson;
 
@@ -191,10 +190,21 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         //クーポンリストのアイテムクリック時の処理
-        Toast.makeText(getActivity(), "position = " + position, Toast.LENGTH_SHORT).show();
-        getCouponInfoList().remove(position);
+    }
 
+    @Override
+    public void onAdvertiseClick(View view, int position) {
+        //ADVERTISEボタン押下時の処理
+    }
+
+    @Override
+    public void onDeleteClick(View view, int position) {
+        /* DELETEボタン押下時の処理 */
+        //クーポンを削除
+        getCouponInfoList().remove(position);
+        //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
+        //クーポンリストを保存
         saveCouponInstance(getCouponInfoList());
     }
 }
