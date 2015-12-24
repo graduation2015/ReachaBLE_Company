@@ -22,6 +22,7 @@ import java.util.Set;
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
@@ -30,7 +31,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
  * クーポン登録画面のFragmentクラス
  */
 public class CouponSelectFragment extends BaseCouponFragment
-        implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener {
+        implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener, OnActionClickListener {
 
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
@@ -58,7 +59,7 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void initSettings() {
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList()));
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), this));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
@@ -190,6 +191,11 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         //クーポンリストのアイテムクリック時の処理
+    }
+
+    @Override
+    public void onItemLongPress(View view, int position) {
+        //クーポンアイテム長押し時の処理
     }
 
     @Override

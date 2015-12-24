@@ -13,15 +13,21 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
-public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder>{
+public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder> {
 
     private static final int BITMAP_HEIGHT_SIZE = 200;
     private static final int BITMAP_WIDTH_SIZE = 200;
 
     private List<CouponInfo> mCouponInfoList;
+    private OnActionClickListener mActionClickListener;
 
     public CouponListAdapter(List<CouponInfo> couponInfoList) {
+        this(couponInfoList, null);
+    }
+
+    public CouponListAdapter(List<CouponInfo> couponInfoList, OnActionClickListener actionClickListener) {
         this.mCouponInfoList = couponInfoList;
+        this.mActionClickListener = actionClickListener;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
     }
 
     @Override
-    public void onBindViewHolder(CouponViewHolder holder, int position) {
+    public void onBindViewHolder(final CouponViewHolder holder, int position) {
         CouponInfo info = getCouponInfoList().get(position);
         holder.mCouponPic.setImageBitmap(FileUtil.decodeSampledBitmapFromFile(
                 info.getFilePath(), BITMAP_WIDTH_SIZE, BITMAP_HEIGHT_SIZE));
@@ -41,6 +47,26 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
+
+        if (mActionClickListener != null) {
+            if (holder.mAdvertiseButton != null) {
+                holder.mAdvertiseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mActionClickListener.onAdvertiseClick(holder.mAdvertiseButton, holder.getAdapterPosition());
+                    }
+                });
+            }
+
+            if (holder.mDeleteButton != null) {
+                holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mActionClickListener.onDeleteClick(holder.mDeleteButton, holder.getAdapterPosition());
+                    }
+                });
+            }
+        }
     }
 
     @Override
