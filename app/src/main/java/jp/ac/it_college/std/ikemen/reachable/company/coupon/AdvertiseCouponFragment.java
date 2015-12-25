@@ -67,8 +67,7 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
         setUpBluetooth();
 
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(
-                getCouponInfoList(CouponSelectFragment.PREF_SELECTED_COUPON)));
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(PREF_SELECTED_COUPON)));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
     }
@@ -102,7 +101,7 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
      * @return クーポンリストが空の場合trueを返す
      */
     private boolean isCouponEmpty() {
-        return getCouponInfoList(CouponSelectFragment.PREF_SELECTED_COUPON).isEmpty();
+        return getCouponInfoList(PREF_SELECTED_COUPON).isEmpty();
     }
 
     @Override

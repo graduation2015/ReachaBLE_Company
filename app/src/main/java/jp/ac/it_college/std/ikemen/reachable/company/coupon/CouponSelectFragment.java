@@ -37,7 +37,6 @@ public class CouponSelectFragment extends BaseCouponFragment
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
-    public static final String PREF_SELECTED_COUPON = "pref_selected_coupon";
 
     /* Views */
     private View mContentView;
