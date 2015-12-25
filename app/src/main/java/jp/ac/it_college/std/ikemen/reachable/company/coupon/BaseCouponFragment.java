@@ -24,7 +24,7 @@ public class BaseCouponFragment extends Fragment {
 
     /* Constants */
     public static final long COUPON_ANIM_DURATION = 800L;
-    public static final String PREF_COUPON_INFO_LIST = "coupon_info_list";
+    public static final String PREF_SAVED_COUPON_INFO_LIST = "saved_coupon_info_list";
 
     /* Coupon */
     private List<CouponInfo> mCouponInfoList;
@@ -71,7 +71,7 @@ public class BaseCouponFragment extends Fragment {
         if (mCouponInfoList == null) {
             mCouponInfoList = new ArrayList<>();
 
-            List<String> list = new ArrayList<>(getPrefCouponInfoSet(PREF_COUPON_INFO_LIST));
+            List<String> list = new ArrayList<>(getPrefCouponInfoSet(PREF_SAVED_COUPON_INFO_LIST));
             Gson gson = new Gson();
 
             for (String info : list) {

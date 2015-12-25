@@ -138,7 +138,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
 
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -218,6 +218,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
-        saveCouponInstance(getCouponInfoList(), PREF_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 }
