@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.amazonaws.com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
+    public static final String PREF_SELECTED_COUPON = "pref_selected_coupon";
 
     /* Views */
     private View mContentView;
@@ -136,14 +138,15 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
 
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList());
+        saveCouponInstance(getCouponInfoList(), PREF_COUPON_INFO_LIST);
     }
 
     /**
      * SharedPreferencesにクーポンのインスタンスを保存
      * @param infoList 保存するクーポン情報リスト
+     * @param key SharedPreferencesに保存する際のキー名
      */
-    private void saveCouponInstance(List<CouponInfo> infoList) {
+    private void saveCouponInstance(List<CouponInfo> infoList, String key) {
         Gson gson = new Gson();
         SharedPreferences.Editor editor = getActivity().getSharedPreferences(
                 CouponInfo.PREF_INFO, Context.MODE_PRIVATE).edit();
@@ -153,7 +156,7 @@ public class CouponSelectFragment extends BaseCouponFragment
             instances.add(gson.toJson(info));
         }
 
-        editor.putStringSet(PREF_COUPON_INFO_LIST, instances);
+        editor.putStringSet(key, instances);
         editor.apply();
     }
 
@@ -200,7 +203,11 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     @Override
     public void onAdvertiseClick(View view, int position) {
-        //ADVERTISEボタン押下時の処理
+        /* ADVERTISEボタン押下時の処理 */
+
+        //選択されたクーポンを保存
+        List<CouponInfo> selectedList = Arrays.asList(getCouponInfoList().get(position));
+        saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
     }
 
     @Override
@@ -211,6 +218,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
-        saveCouponInstance(getCouponInfoList());
+        saveCouponInstance(getCouponInfoList(), PREF_COUPON_INFO_LIST);
     }
 }
