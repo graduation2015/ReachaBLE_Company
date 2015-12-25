@@ -24,7 +24,7 @@ public class BaseCouponFragment extends Fragment {
 
     /* Constants */
     public static final long COUPON_ANIM_DURATION = 800L;
-    public static final String PREF_SAVED_COUPON_INFO_LIST = "saved_coupon_info_list";
+    public static final String PREF_SAVED_COUPON_INFO_LIST = "pref_saved_coupon_info_list";
     public static final String PREF_SELECTED_COUPON = "pref_selected_coupon";
 
 
