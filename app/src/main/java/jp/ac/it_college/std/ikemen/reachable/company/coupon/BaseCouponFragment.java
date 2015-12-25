@@ -67,11 +67,16 @@ public class BaseCouponFragment extends Fragment {
         return prefs.getStringSet(key, new HashSet<String>());
     }
 
-    protected List<CouponInfo> getCouponInfoList() {
+    /**
+     * SharedPreferencesに保存されているクーポンリストを返す
+     * @param key 取得するクーポンリストのキー名
+     * @return 指定されたキー名のクーポンリスト
+     */
+    protected List<CouponInfo> getCouponInfoList(String key) {
         if (mCouponInfoList == null) {
             mCouponInfoList = new ArrayList<>();
 
-            List<String> list = new ArrayList<>(getPrefCouponInfoSet(PREF_SAVED_COUPON_INFO_LIST));
+            List<String> list = new ArrayList<>(getPrefCouponInfoSet(key));
             Gson gson = new Gson();
 
             for (String info : list) {

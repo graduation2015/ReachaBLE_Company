@@ -61,7 +61,8 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void initSettings() {
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), this));
+        setCouponListAdapter(
+                new CouponListAdapter(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), this));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
@@ -130,15 +131,17 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
-        getCouponInfoList().add(info);
+        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).add(info);
         //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(getCouponInfoList().size() - 1);
+        getCouponListAdapter().notifyItemInserted(
+                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).size() - 1);
 
         //追加したクーポンまでスクロールする
         getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
 
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(
+                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -206,7 +209,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         /* ADVERTISEボタン押下時の処理 */
 
         //選択されたクーポンを保存
-        List<CouponInfo> selectedList = Arrays.asList(getCouponInfoList().get(position));
+        List<CouponInfo> selectedList = Arrays.asList(
+                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position));
         saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
     }
 
@@ -214,10 +218,10 @@ public class CouponSelectFragment extends BaseCouponFragment
     public void onDeleteClick(View view, int position) {
         /* DELETEボタン押下時の処理 */
         //クーポンを削除
-        getCouponInfoList().remove(position);
+        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(position);
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
     }
 }
