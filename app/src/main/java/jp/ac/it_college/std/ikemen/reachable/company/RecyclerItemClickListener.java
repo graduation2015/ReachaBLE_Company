@@ -26,8 +26,10 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
         mChildView = view.findChildViewUnder(e.getX(), e.getY());
         // タッチした箇所のViewのポジションを取得
         mChildViewPosition = view.getChildAdapterPosition(mChildView);
+        // タッチした箇所のViewのonTouchEventを発生させる
+        mGestureDetector.onTouchEvent(e);
 
-        return mGestureDetector.onTouchEvent(e);
+        return false;
     }
 
     @Override
