@@ -39,7 +39,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
     }
 
     @Override
-    public void onBindViewHolder(final CouponViewHolder holder, int position) {
+    public void onBindViewHolder(CouponViewHolder holder, int position) {
         CouponInfo info = getCouponInfoList().get(position);
         holder.mCouponPic.setImageBitmap(FileUtil.decodeSampledBitmapFromFile(
                 info.getFilePath(), BITMAP_WIDTH_SIZE, BITMAP_HEIGHT_SIZE));
@@ -48,25 +48,16 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
 
-        if (mActionClickListener != null) {
-            if (holder.mAdvertiseButton != null) {
-                holder.mAdvertiseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mActionClickListener.onAdvertiseClick(holder.mAdvertiseButton, holder.getAdapterPosition());
-                    }
-                });
-            }
-
-            if (holder.mDeleteButton != null) {
-                holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mActionClickListener.onDeleteClick(holder.mDeleteButton, holder.getAdapterPosition());
-                    }
-                });
-            }
+        if (holder.mAdvertiseButton != null) {
+            holder.mAdvertiseButton.setOnClickListener(
+                    new OnActionClickHandler(holder, mActionClickListener));
         }
+
+        if (holder.mDeleteButton != null) {
+            holder.mDeleteButton.setOnClickListener(
+                    new OnActionClickHandler(holder, mActionClickListener));
+        }
+
     }
 
     @Override
