@@ -83,15 +83,10 @@ public class BaseCouponFragment extends Fragment {
     }
 
     protected CouponListAdapter getCouponListAdapter() {
-        if (mCouponListAdapter == null) {
-            mCouponListAdapter = new CouponListAdapter(getCouponInfoList());
-        }
         return mCouponListAdapter;
     }
 
     protected void setCouponListAdapter(CouponListAdapter adapter) {
-        if (adapter != null) {
-            this.mCouponListAdapter = adapter;
-        }
+        this.mCouponListAdapter = adapter;
     }
 }
