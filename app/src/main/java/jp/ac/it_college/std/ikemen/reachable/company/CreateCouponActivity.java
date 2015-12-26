@@ -17,10 +17,8 @@ import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 
-import org.json.JSONException;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +26,6 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class CreateCouponActivity extends AppCompatActivity
@@ -47,7 +44,6 @@ public class CreateCouponActivity extends AppCompatActivity
     /* coupon */
     private String mCouponPath;
     private ProgressDialog mProgressDialog;
-    private JsonManager mJsonManager;
     private CouponInfo mCouponInfo;
 
     @Override
@@ -61,9 +57,6 @@ public class CreateCouponActivity extends AppCompatActivity
     private void initSettings() {
         setUpToolbar();
         setCouponPreview();
-
-        //JsonManagerのインスタンスを生成
-        mJsonManager = new JsonManager(this);
     }
 
     /**
@@ -114,10 +107,6 @@ public class CreateCouponActivity extends AppCompatActivity
 
     public void setCouponInfo(CouponInfo couponInfo) {
         this.mCouponInfo = couponInfo;
-    }
-
-    public JsonManager getJsonManager() {
-        return mJsonManager;
     }
 
     @Override
@@ -187,13 +176,6 @@ public class CreateCouponActivity extends AppCompatActivity
 
         //CouponInfoインスタンスをセット
         setCouponInfo(new CouponInfo(getCouponPath(), title, description, tagsList));
-        //クーポンの情報をjsonに書き込む
-        try {
-            getJsonManager().putJsonObj(getCouponInfo());
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
 
         return true;
     }
@@ -301,10 +283,7 @@ public class CreateCouponActivity extends AppCompatActivity
         hideKeyboard();
 
         if (putCouponInfo()) {
-            //アップロードするファイルをリスト化
-            List<File> files = Arrays.asList(new File(getCouponPath()), getJsonManager().getFile());
-            //S3バケットにアップロード
-            beginUpload(files);
+            completeCreate();
         }
     }
 
