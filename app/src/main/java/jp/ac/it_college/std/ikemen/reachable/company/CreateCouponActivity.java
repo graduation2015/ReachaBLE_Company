@@ -111,8 +111,8 @@ public class CreateCouponActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //SENDメニューを表示
-        getMenuInflater().inflate(R.menu.menu_send, menu);
+        //ツールバーメニューを表示
+        getMenuInflater().inflate(R.menu.create_coupon, menu);
         return true;
     }
 
