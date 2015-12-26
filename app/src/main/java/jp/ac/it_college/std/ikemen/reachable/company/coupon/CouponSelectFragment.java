@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.amazonaws.com.google.gson.Gson;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +30,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 
 /**
  * クーポン登録画面のFragmentクラス
@@ -43,6 +47,9 @@ public class CouponSelectFragment extends BaseCouponFragment
     private FloatingActionButton mFab;
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
+
+    /* json */
+    private JsonManager mJsonManager;
 
 
     @Override
@@ -71,6 +78,9 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         //FABのOnClickListenerをセット
         getFab().setOnClickListener(this);
+
+        //JsonManagerのインスタンスを生成
+        mJsonManager = new JsonManager(getActivity());
     }
 
     public View getContentView() {
@@ -98,6 +108,10 @@ public class CouponSelectFragment extends BaseCouponFragment
             mCouponListView.setEmptyView(getEmptyView());
         }
         return mCouponListView;
+    }
+
+    public JsonManager getJsonManager() {
+        return mJsonManager;
     }
 
     /**
@@ -206,11 +220,17 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onAdvertiseClick(View view, int position) {
         /* ADVERTISEボタン押下時の処理 */
+        //選択されたクーポンを取得
+        CouponInfo info = getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position);
 
-        //選択されたクーポンを保存
-        List<CouponInfo> selectedList = Arrays.asList(
-                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position));
-        saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
+        //選択されたクーポンをJSONファイルに書き込む
+        if (putCouponToJson(info)) {
+            //選択されたクーポンを保存
+            List<CouponInfo> selectedList = Arrays.asList(info);
+            saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
+        } else {
+            //JSONへの書き込みが失敗した時の処理
+        }
     }
 
     @Override
@@ -222,5 +242,21 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
         saveCouponInstance(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
+    }
+
+    /**
+     * クーポンの情報をjsonに書き込む
+     * @param info 書き込むクーポン
+     * @return 書き込みが成功した場合はtrueを返す
+     */
+    private boolean putCouponToJson(CouponInfo info) {
+        try {
+            getJsonManager().putJsonObj(info);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return  true;
     }
 }
