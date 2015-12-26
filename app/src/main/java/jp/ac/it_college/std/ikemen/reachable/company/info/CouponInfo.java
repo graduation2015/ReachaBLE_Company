@@ -100,6 +100,6 @@ public class CouponInfo implements Serializable {
      * @return MMMM dd, yyyy 形式の文字列
      */
     public String getFormattedCreationDate() {
-        return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.JAPAN).format(getCreationDate());
+        return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.US).format(getCreationDate());
     }
 }
