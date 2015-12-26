@@ -121,7 +121,7 @@ public class CreateCouponActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.menu_send:
                 //sendボタン押下時の処理
-                sendCoupon();
+                createCoupon();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -151,8 +151,8 @@ public class CreateCouponActivity extends AppCompatActivity
     }
 
     /**
-     * jsonファイルにクーポンの情報をセット
-     * @return jsonファイルに書き込みが完了したかどうかを返却
+     * クーポンの情報をセット
+     * @return クーポン情報がセットできた場合にtrueを返す
      */
     private boolean putCouponInfo() {
         //タイトルを取得
@@ -276,13 +276,15 @@ public class CreateCouponActivity extends AppCompatActivity
     }
 
     /**
-     * S3バケットにクーポンを送信する
+     * クーポンを作成する
      */
-    private void sendCoupon() {
+    private void createCoupon() {
         //キーボードを非表示にする
         hideKeyboard();
 
+        //クーポン情報をセットする
         if (putCouponInfo()) {
+            //正常にセットできた場合、クーポン作成を終了する
             completeCreate();
         }
     }
