@@ -348,6 +348,9 @@ public class CouponSelectFragment extends BaseCouponFragment
         //FragmentにTransitionをセット
         destination.setEnterTransition(transitionSet);
 
+        //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
+        ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
+
         //Fragmentを切り替える
         ((MainActivity) getActivity()).changeFragment(destination);
     }
