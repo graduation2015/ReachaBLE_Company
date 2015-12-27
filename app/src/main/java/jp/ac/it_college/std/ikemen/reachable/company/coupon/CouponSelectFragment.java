@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +35,7 @@ import java.util.Set;
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
@@ -320,13 +325,31 @@ public class CouponSelectFragment extends BaseCouponFragment
             List<CouponInfo> selectedList = Arrays.asList(mSelectedCoupon);
             saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
 
-
             //クーポン宣伝画面に切り替える
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container_content, new AdvertiseCouponFragment())
-                    .commit();
+            changeFragment(new AdvertiseCouponFragment());
         }
 
+    }
+
+    /**
+     * Fragmentをアニメーションしながら遷移させる
+     * @param destination 遷移先のFragment
+     */
+    private void changeFragment(Fragment destination) {
+        //TransitionSetを設定
+        TransitionSet transitionSet = new TransitionSet();
+        //Slideアニメーションを使用
+        Slide slide = new Slide();
+        //画面右からスライドするように設定
+        slide.setSlideEdge(Gravity.END);
+        //TransitionSetにTransitionを追加
+        transitionSet.addTransition(slide);
+
+        //FragmentにTransitionをセット
+        destination.setEnterTransition(transitionSet);
+
+        //Fragmentを切り替える
+        ((MainActivity) getActivity()).changeFragment(destination);
     }
 
     /**

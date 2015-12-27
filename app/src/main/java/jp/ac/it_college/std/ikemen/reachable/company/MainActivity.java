@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
      * フラグメントを変更する
      * @param destination 変更先のフラグメント
      */
-    private void changeFragment(Fragment destination) {
+    public void changeFragment(Fragment destination) {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_content, destination)
                 .commit();
