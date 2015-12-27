@@ -56,9 +56,11 @@ public class CouponSelectFragment extends BaseCouponFragment
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
 
-    /* json */
+    /* Json */
     private JsonManager mJsonManager;
 
+    /* Coupon */
+    private CouponInfo mSelectedCoupon;
     private ProgressDialog mProgressDialog;
 
 
@@ -231,15 +233,12 @@ public class CouponSelectFragment extends BaseCouponFragment
     public void onAdvertiseClick(View view, int position) {
         /* ADVERTISEボタン押下時の処理 */
         //選択されたクーポンを取得
-        CouponInfo info = getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position);
+        mSelectedCoupon = getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position);
 
         //選択されたクーポンをJSONファイルに書き込む
-        if (putCouponToJson(info)) {
-            //選択されたクーポンを保存
-            List<CouponInfo> selectedList = Arrays.asList(info);
-            saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
-
-            File couponFile = new File(info.getFilePath());
+        if (putCouponToJson(mSelectedCoupon)) {
+            //書き込みが成功した場合クーポンファイルをS3にアップロードする
+            File couponFile = new File(mSelectedCoupon.getFilePath());
             List<File> fileList = Arrays.asList(couponFile, getJsonManager().getFile());
             beginUpload(fileList);
         } else {
@@ -308,13 +307,19 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     @Override
     public void onDismiss(DialogInterface dialog) {
-        //ProgressDialogの進捗が最大の場合
+        //クーポンアップロード完了後の処理
         if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
+            //アップロード完了を通知するToastを表示
             Toast.makeText(
                     getActivity(), getString(R.string.coupon_upload_completed), Toast.LENGTH_SHORT).show();
 
             //ProgressDialogを破棄
             mProgressDialog = null;
+
+            //選択されたクーポンを保存
+            List<CouponInfo> selectedList = Arrays.asList(mSelectedCoupon);
+            saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
+
 
             //クーポン宣伝画面に切り替える
             getFragmentManager().beginTransaction()
