@@ -54,6 +54,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
+    private static final int ITEM_DELETED = -1;
 
     /* Views */
     private View mContentView;
@@ -234,9 +235,17 @@ public class CouponSelectFragment extends BaseCouponFragment
         //クーポンアイテム長押し時の処理
     }
 
+    /**
+     * ADVERTISEボタン押下時に呼ばれる
+     * @param view クリックされたボタンのView
+     * @param position 選択されたクーポンのインデックス
+     */
     @Override
     public void onAdvertiseClick(View view, int position) {
-        /* ADVERTISEボタン押下時の処理 */
+        if (position == ITEM_DELETED) {
+            //選択されたクーポンが既にリストにない場合は処理を実行せずにメソッドを抜ける
+            return;
+        }
         //選択されたクーポンを取得
         mSelectedCoupon = getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position);
 
@@ -251,9 +260,19 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
     }
 
+    /**
+     * DELETEボタン押下時に呼ばれる
+     * @param view クリックされたボタンのView
+     * @param position 選択されたクーポンのインデックス
+     */
     @Override
     public void onDeleteClick(View view, int position) {
         /* DELETEボタン押下時の処理 */
+        if (position == ITEM_DELETED) {
+            //選択されたクーポンが既にリストにない場合は処理を実行せずにメソッドを抜ける
+            return;
+        }
+
         //クーポンを削除
         getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(position);
         //削除をアダプターに通知
