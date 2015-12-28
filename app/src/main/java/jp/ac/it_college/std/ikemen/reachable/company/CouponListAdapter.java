@@ -20,20 +20,23 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
 
     private List<CouponInfo> mCouponInfoList;
     private OnActionClickListener mActionClickListener;
+    private int mLayoutResource;
 
     public CouponListAdapter(List<CouponInfo> couponInfoList) {
-        this(couponInfoList, null);
+        this(couponInfoList, R.layout.coupon_card_advertise, null);
     }
 
-    public CouponListAdapter(List<CouponInfo> couponInfoList, OnActionClickListener actionClickListener) {
+    public CouponListAdapter(List<CouponInfo> couponInfoList,
+                             int layoutResource, OnActionClickListener actionClickListener) {
         this.mCouponInfoList = couponInfoList;
+        this.mLayoutResource = layoutResource;
         this.mActionClickListener = actionClickListener;
     }
 
     @Override
     public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.coupon_card, parent, false);
+                .inflate(mLayoutResource, parent, false);
 
         return new CouponViewHolder(itemView);
     }

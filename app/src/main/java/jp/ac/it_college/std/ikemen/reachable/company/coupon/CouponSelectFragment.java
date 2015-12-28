@@ -84,8 +84,8 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void initSettings() {
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(
-                new CouponListAdapter(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), this));
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST),
+                R.layout.coupon_card, this));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
