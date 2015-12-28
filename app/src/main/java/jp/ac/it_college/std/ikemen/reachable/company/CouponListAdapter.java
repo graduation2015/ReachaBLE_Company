@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -7,20 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder> {
-
-    private static final int BITMAP_HEIGHT_SIZE = 200;
-    private static final int BITMAP_WIDTH_SIZE = 200;
 
     private List<CouponInfo> mCouponInfoList;
     private OnActionClickListener mActionClickListener;
     private int mLayoutResource;
+    private BitmapCache mBitmapCache;
 
     public CouponListAdapter(List<CouponInfo> couponInfoList) {
         this(couponInfoList, R.layout.coupon_card_advertise, null);
@@ -31,6 +30,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         this.mCouponInfoList = couponInfoList;
         this.mLayoutResource = layoutResource;
         this.mActionClickListener = actionClickListener;
+        this.mBitmapCache = new BitmapCache();
     }
 
     @Override
@@ -44,8 +44,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
     @Override
     public void onBindViewHolder(CouponViewHolder holder, int position) {
         CouponInfo info = getCouponInfoList().get(position);
-        holder.mCouponPic.setImageBitmap(FileUtil.decodeSampledBitmapFromFile(
-                info.getFilePath(), BITMAP_WIDTH_SIZE, BITMAP_HEIGHT_SIZE));
+        //Bitmapの読み込みを非同期で行う
+        loadBitmap(info.getFilePath(), holder.mCouponPic);
+
         holder.mTitleView.setText(info.getTitle());
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
@@ -59,6 +60,22 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         if (holder.mDeleteButton != null) {
             holder.mDeleteButton.setOnClickListener(
                     new OnActionClickHandler(holder, mActionClickListener));
+        }
+
+    }
+
+    /**
+     * Bitmapの読み込みをAsyncTaskクラスで実行する
+     * @param filePath 画像のファイルパス
+     * @param imageView 画像をセットするImageView
+     */
+    private void loadBitmap(String filePath, ImageView imageView) {
+        final Bitmap bitmap = mBitmapCache.getBitmapFromMemCache(filePath);
+
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        } else {
+            new BitmapWorkerTask(imageView, mBitmapCache).execute(filePath);
         }
 
     }
