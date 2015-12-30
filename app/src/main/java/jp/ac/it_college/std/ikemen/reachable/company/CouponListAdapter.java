@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
@@ -17,6 +18,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder> {
 
     private List<CouponInfo> mCouponInfoList;
+    private List<CouponInfo> mFilteredCouponList;
     private OnActionClickListener mActionClickListener;
     private int mLayoutResource;
     private BitmapCache mBitmapCache;
@@ -31,6 +33,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         this.mLayoutResource = layoutResource;
         this.mActionClickListener = actionClickListener;
         this.mBitmapCache = new BitmapCache();
+        this.mFilteredCouponList = mCouponInfoList;
     }
 
     @Override
@@ -80,6 +83,16 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
 
     }
 
+    /**
+     * RecyclerViewに表示するクーポンリストを切り替える
+     * @param infoList RecyclerViewに表示するクーポンリスト
+     */
+    public void replaceList(List<CouponInfo> infoList) {
+        mCouponInfoList = new ArrayList<>();
+        mCouponInfoList.addAll(infoList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return getCouponInfoList().size();
@@ -87,6 +100,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
 
     public List<CouponInfo> getCouponInfoList() {
         return mCouponInfoList;
+    }
+
+    public List<CouponInfo> getFilteredCouponList() {
+        return mFilteredCouponList;
     }
 
     class CouponViewHolder extends RecyclerView.ViewHolder {
