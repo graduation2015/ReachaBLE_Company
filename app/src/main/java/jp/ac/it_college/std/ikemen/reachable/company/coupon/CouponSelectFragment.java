@@ -11,10 +11,13 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.SearchView;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -61,6 +64,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     private FloatingActionButton mFab;
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
+    private SearchView mSearchView;
 
     /* Json */
     private JsonManager mJsonManager;
@@ -84,6 +88,8 @@ public class CouponSelectFragment extends BaseCouponFragment
      * 各種初期設定
      */
     private void initSettings() {
+        //ツールバーにメニューを表示する
+        setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
         setCouponListAdapter(new CouponListAdapter(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST),
                 R.layout.coupon_card, this));
@@ -99,6 +105,12 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         //JsonManagerのインスタンスを生成
         mJsonManager = new JsonManager(getActivity());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search, menu);
+        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
     }
 
     public View getContentView() {
