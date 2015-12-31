@@ -205,11 +205,12 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void deleteCoupon(List<CouponInfo> infoList, int position) {
         //クーポンを削除
-        infoList.remove(position);
+        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(infoList.get(position));
+        getCouponListAdapter().getCouponInfoList().remove(position);
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
-        saveCouponInstance(infoList, PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -311,7 +312,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
 
         //クーポンを削除
-        deleteCoupon(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), position);
+        deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
     }
 
     /**
