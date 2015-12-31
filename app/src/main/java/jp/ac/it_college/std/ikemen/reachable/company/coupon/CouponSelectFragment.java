@@ -205,8 +205,9 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void deleteCoupon(List<CouponInfo> infoList, int position) {
         //クーポンを削除
-        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(infoList.get(position));
-        getCouponListAdapter().getCouponInfoList().remove(position);
+        CouponInfo target = infoList.get(position);
+        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(target);
+        getCouponListAdapter().getCouponInfoList().remove(target);
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
