@@ -432,7 +432,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     public boolean onMenuItemActionCollapse(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-                //クーポンリストの内容を元に戻す
+                //クーポンリストのアイテムを元に戻す
                 getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
                 break;
         }
@@ -447,8 +447,12 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
+        //クーポンリストのアイテムを元に戻す
         getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+        //フィルターの実行
         getCouponListAdapter().getFilter().filter(query);
+        //RecyclerViewを一番上までスクロールする
+        getCouponListView().scrollToPosition(0);
         return true;
     }
 
