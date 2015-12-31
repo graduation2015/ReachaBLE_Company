@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.info;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -101,5 +102,18 @@ public class CouponInfo implements Serializable {
      */
     public String getFormattedCreationDate() {
         return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.US).format(getCreationDate());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        List<String> strings = Arrays.asList(getTitle(), getDescription(), getCategoryToString());
+
+        for (String str : strings) {
+            builder.append(str);
+            builder.append("\n");
+        }
+
+        return builder.toString();
     }
 }
