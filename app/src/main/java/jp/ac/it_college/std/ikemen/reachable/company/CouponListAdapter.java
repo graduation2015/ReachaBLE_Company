@@ -8,17 +8,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponFilter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
-public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder> {
+public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder>
+        implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
-    private List<CouponInfo> mFilteredCouponList;
     private OnActionClickListener mActionClickListener;
     private int mLayoutResource;
     private BitmapCache mBitmapCache;
@@ -33,7 +36,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         this.mLayoutResource = layoutResource;
         this.mActionClickListener = actionClickListener;
         this.mBitmapCache = new BitmapCache();
-        this.mFilteredCouponList = mCouponInfoList;
     }
 
     @Override
@@ -88,8 +90,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
      * @param infoList RecyclerViewに表示するクーポンリスト
      */
     public void replaceList(List<CouponInfo> infoList) {
-        mCouponInfoList = new ArrayList<>();
-        mCouponInfoList.addAll(infoList);
+        mCouponInfoList = new ArrayList<>(infoList);
         notifyDataSetChanged();
     }
 
@@ -102,8 +103,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         return mCouponInfoList;
     }
 
-    public List<CouponInfo> getFilteredCouponList() {
-        return mFilteredCouponList;
+    @Override
+    public Filter getFilter() {
+        return new CouponFilter(this, getCouponInfoList());
     }
 
     class CouponViewHolder extends RecyclerView.ViewHolder {

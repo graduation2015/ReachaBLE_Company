@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.transition.Slide;
 import android.transition.TransitionSet;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -52,7 +54,9 @@ import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
  * クーポン登録画面のFragmentクラス
  */
 public class CouponSelectFragment extends BaseCouponFragment
-        implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener, OnActionClickListener, DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+        implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener,
+        OnActionClickListener, DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
+        MenuItemCompat.OnActionExpandListener, SearchView.OnQueryTextListener {
 
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
@@ -110,7 +114,13 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search, menu);
-        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        MenuItem item = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) item.getActionView();
+
+        //SearchView開閉時のリスナーをセットする
+        MenuItemCompat.setOnActionExpandListener(item, this);
+        //SearchViewにキーワードが入力された時のリスナーをセットする
+        mSearchView.setOnQueryTextListener(this);
     }
 
     public View getContentView() {
@@ -403,4 +413,52 @@ public class CouponSelectFragment extends BaseCouponFragment
         getProgressDialog().show();
     }
 
+    /**
+     * ツールバーのメニューアイテムが開かれた際に呼ばれる
+     * @param item OnActionExpandListenerにセットされたメニューアイテム
+     * @return メニューアイテムが開かれた際の処理を実行する場合はtrueを返す
+     */
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    /**
+     * ツールバーのメニューアイテムが閉じられた際に呼ばれる
+     * @param item OnActionExpandListenerにセットされたメニューアイテム
+     * @return メニューアイテムが閉じられた際の処理を実行する場合はtrueを返す
+     */
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                //クーポンリストの内容を元に戻す
+                getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * SearchViewでエンターボタンが押された際に呼ばれる
+     * @param query SearchViewに入力されたテキスト
+     * @return 処理を実行する場合はtrue
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+        getCouponListAdapter().getFilter().filter(query);
+        return true;
+    }
+
+    /**
+     * SearchViewにテキストが入力される度に呼ばれる
+     * @param newText SearchViewに入力されたテキスト
+     * @return 処理を実行する場合はtrue
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 }
