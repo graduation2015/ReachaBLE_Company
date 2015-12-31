@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 
@@ -19,6 +17,7 @@ import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
+import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
 public class CreateCouponActivity extends AppCompatActivity {
 
@@ -202,7 +201,7 @@ public class CreateCouponActivity extends AppCompatActivity {
      */
     private void createCoupon() {
         //キーボードを非表示にする
-        hideKeyboard();
+        Utils.hideKeyboard(this);
 
         //クーポン情報をセットする
         if (putCouponInfo()) {
@@ -211,14 +210,4 @@ public class CreateCouponActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * キーボードを非表示にする
-     */
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-        if (view != null) {
-            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                    view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 }
