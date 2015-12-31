@@ -199,6 +199,20 @@ public class CouponSelectFragment extends BaseCouponFragment
     }
 
     /**
+     * クーポンリストからクーポンを削除する
+     * @param infoList 削除対象のクーポンがあるクーポンリスト
+     * @param position 削除するクーポンのインデックス
+     */
+    private void deleteCoupon(List<CouponInfo> infoList, int position) {
+        //クーポンを削除
+        infoList.remove(position);
+        //削除をアダプターに通知
+        getCouponListAdapter().notifyItemRemoved(position);
+        //クーポンリストを保存
+        saveCouponInstance(infoList, PREF_SAVED_COUPON_INFO_LIST);
+    }
+
+    /**
      * SharedPreferencesにクーポンのインスタンスを保存
      * @param infoList 保存するクーポン情報リスト
      * @param key SharedPreferencesに保存する際のキー名
@@ -297,11 +311,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
 
         //クーポンを削除
-        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(position);
-        //削除をアダプターに通知
-        getCouponListAdapter().notifyItemRemoved(position);
-        //クーポンリストを保存
-        saveCouponInstance(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
+        deleteCoupon(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), position);
     }
 
     /**
