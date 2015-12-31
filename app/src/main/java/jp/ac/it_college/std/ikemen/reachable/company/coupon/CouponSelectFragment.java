@@ -435,6 +435,8 @@ public class CouponSelectFragment extends BaseCouponFragment
             case R.id.menu_search:
                 //クーポンリストのアイテムを元に戻す
                 getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+                //EmptyViewのテキストを戻す
+                getEmptyView().setText(getString(R.string.no_coupon_data));
                 break;
         }
 
@@ -456,6 +458,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().scrollToPosition(0);
         //ソフトウェアキーボードを非表示にする
         Utils.hideKeyboard(getActivity());
+        //EmptyViewにクーポンが見つからなかった際のメッセージをセット
+        getEmptyView().setText(getString(R.string.coupon_not_found, query));
         return true;
     }
 

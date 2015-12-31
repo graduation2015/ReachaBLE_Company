@@ -43,5 +43,6 @@
     <string name="btn_advertise">ADVERTISE</string>
     <string name="btn_delete">DELETE</string>
     <string name="menu_title_search">Search</string>
+    <string name="coupon_not_found">No results found for \"%1$s\".</string>
 
 </resources>
