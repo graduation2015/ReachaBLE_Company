@@ -49,6 +49,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
+import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
 /**
  * クーポン登録画面のFragmentクラス
@@ -453,6 +454,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListAdapter().getFilter().filter(query);
         //RecyclerViewを一番上までスクロールする
         getCouponListView().scrollToPosition(0);
+        //ソフトウェアキーボードを非表示にする
+        Utils.hideKeyboard(getActivity());
         return true;
     }
 
