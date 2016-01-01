@@ -96,8 +96,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST),
-                R.layout.coupon_card, this));
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), R.layout.coupon_card, this));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
@@ -197,17 +196,16 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
-        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).add(info);
+        getCouponInfoList().add(info);
         //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(
-                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).size() - 1);
+        getCouponListAdapter().notifyItemInserted(getCouponInfoList().size() - 1);
 
         //追加したクーポンまでスクロールする
         getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
 
         //クーポンリストをSharedPreferencesに保存
         saveCouponInstance(
-                getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
+                getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -218,12 +216,12 @@ public class CouponSelectFragment extends BaseCouponFragment
     private void deleteCoupon(List<CouponInfo> infoList, int position) {
         //クーポンを削除
         CouponInfo target = infoList.get(position);
-        getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).remove(target);
+        getCouponInfoList().remove(target);
         getCouponListAdapter().getCouponInfoList().remove(target);
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
-        saveCouponInstance(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -298,7 +296,7 @@ public class CouponSelectFragment extends BaseCouponFragment
             return;
         }
         //選択されたクーポンを取得
-        mSelectedCoupon = getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST).get(position);
+        mSelectedCoupon = getCouponInfoList().get(position);
 
         //選択されたクーポンをJSONファイルに書き込む
         if (putCouponToJson(mSelectedCoupon)) {
@@ -389,7 +387,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
             //選択されたクーポンを保存
             List<CouponInfo> selectedList = Arrays.asList(mSelectedCoupon);
-            saveCouponInstance(selectedList, PREF_SELECTED_COUPON);
+            saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
 
             //クーポン宣伝画面に切り替える
             changeFragment(new AdvertiseCouponFragment());
@@ -465,7 +463,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         switch (item.getItemId()) {
             case R.id.menu_search:
                 //クーポンリストのアイテムを元に戻す
-                getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+                getCouponListAdapter().replaceList(getCouponInfoList());
                 //EmptyViewのテキストを戻す
                 getEmptyView().setText(getString(R.string.no_coupon_data));
                 //FABを表示する
@@ -484,7 +482,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public boolean onQueryTextSubmit(String query) {
         //クーポンリストのアイテムを元に戻す
-        getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
+        getCouponListAdapter().replaceList(getCouponInfoList());
         //フィルターの実行
         getCouponListAdapter().getFilter().filter(query);
         //RecyclerViewを一番上までスクロールする

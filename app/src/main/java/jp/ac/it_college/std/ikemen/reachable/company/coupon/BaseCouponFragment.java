@@ -25,11 +25,12 @@ public class BaseCouponFragment extends Fragment {
     /* Constants */
     public static final long COUPON_ANIM_DURATION = 800L;
     public static final String PREF_SAVED_COUPON_INFO_LIST = "pref_saved_coupon_info_list";
-    public static final String PREF_SELECTED_COUPON = "pref_selected_coupon";
+    public static final String PREF_ADVERTISE_COUPON_LIST = "pref_advertise_coupon_list";
 
 
     /* Coupon */
     private List<CouponInfo> mCouponInfoList;
+    private List<CouponInfo> mSelectedCouponList;
 
     /* Adapter */
     private CouponListAdapter mCouponListAdapter;
@@ -59,11 +60,11 @@ public class BaseCouponFragment extends Fragment {
     }
 
     /**
-     * SharedPreferencesに保存されているクーポンリストを取得
+     * SharedPreferencesに保存されているクーポン情報を取得
      * @param key SharedPreferencesから取得する値のキー名
-     * @return 保存されているクーポンリスト
+     * @return 保存されているクーポン情報のStringSet
      */
-    protected Set<String> getPrefCouponInfoSet(String key) {
+    private Set<String> getPrefCouponInfoSet(String key) {
         SharedPreferences prefs = getActivity().getSharedPreferences(
                 CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
         return prefs.getStringSet(key, new HashSet<String>());
@@ -71,22 +72,43 @@ public class BaseCouponFragment extends Fragment {
 
     /**
      * SharedPreferencesに保存されているクーポンリストを返す
-     * @param key 取得するクーポンリストのキー名
      * @return 指定されたキー名のクーポンリスト
      */
-    protected List<CouponInfo> getCouponInfoList(String key) {
+    protected List<CouponInfo> getCouponInfoList() {
         if (mCouponInfoList == null) {
-            mCouponInfoList = new ArrayList<>();
-
-            List<String> list = new ArrayList<>(getPrefCouponInfoSet(key));
-            Gson gson = new Gson();
-
-            for (String info : list) {
-                mCouponInfoList.add(gson.fromJson(info, CouponInfo.class));
-            }
+            mCouponInfoList = getPrefInfoList(PREF_SAVED_COUPON_INFO_LIST);
         }
 
         return mCouponInfoList;
+    }
+
+    /**
+     * 宣伝対象のクーポンリストを取得
+     * @return SharedPreferencesに保存されている宣伝対象のクーポンリストを返す
+     */
+    protected List<CouponInfo> getAdvertiseCouponList() {
+        if (mSelectedCouponList == null) {
+            mSelectedCouponList = getPrefInfoList(PREF_ADVERTISE_COUPON_LIST);
+        }
+
+        return mSelectedCouponList;
+    }
+
+    /**
+     * SharedPreferencesに保存されているクーポン情報からリストを生成して返す
+     * @param key 取得するクーポンリストのキー名
+     * @return keyで指定されたクーポンリストを返す
+     */
+    private List<CouponInfo> getPrefInfoList(String key) {
+        List<String> prefList = new ArrayList<>(getPrefCouponInfoSet(key));
+        List<CouponInfo> result = new ArrayList<>();
+
+        Gson gson = new Gson();
+        for (String info : prefList) {
+            result.add(gson.fromJson(info, CouponInfo.class));
+        }
+
+        return result;
     }
 
     protected CouponListAdapter getCouponListAdapter() {
