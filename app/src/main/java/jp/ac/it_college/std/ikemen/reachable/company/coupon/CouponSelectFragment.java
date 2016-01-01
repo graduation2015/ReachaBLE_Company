@@ -469,10 +469,13 @@ public class CouponSelectFragment extends BaseCouponFragment
             case R.id.menu_search:
                 //クーポンリストのアイテムを元に戻す
                 getCouponListAdapter().replaceList(getCouponInfoList());
-                //EmptyViewのテキストを戻す
-                getEmptyView().setText(getString(R.string.no_coupon_data));
                 //FABを表示する
                 getFab().show();
+
+                if (isAdded()) {
+                    //EmptyViewのテキストを戻す
+                    getEmptyView().setText(getString(R.string.no_coupon_data));
+                }
                 break;
         }
 
