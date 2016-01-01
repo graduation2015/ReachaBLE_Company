@@ -195,12 +195,14 @@ public class CouponSelectFragment extends BaseCouponFragment
      * @param info クーポン作成画面で作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
+        int position = getCouponListAdapter().getItemCount();
         //クーポンリストにクーポンを追加
-        getCouponListAdapter().getCouponInfoList().add(info);
+        getCouponListAdapter().getCouponInfoList().add(position, info);
         //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(getCouponListAdapter().getItemCount());
+        getCouponListAdapter().notifyItemInserted(position);
         //追加したクーポンまでスクロールする
-        getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
+        getCouponListView().getLayoutManager()
+                .smoothScrollToPosition(getCouponListView(), null, position);
         //クーポンリストをSharedPreferencesに保存
         saveCouponInstance(getCouponListAdapter().getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
