@@ -36,8 +36,6 @@
         app:fabSize="normal"
         app:backgroundTint="@color/primary"
         app:layout_anchor="@id/coupon_list"
-        app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="jp.ac.it_college.std.ikemen.reachable.company.ScrollFabBehavior"
-        />
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
