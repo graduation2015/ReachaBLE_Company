@@ -196,16 +196,13 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
-        getCouponInfoList().add(info);
+        getCouponListAdapter().getCouponInfoList().add(info);
         //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(getCouponInfoList().size() - 1);
-
+        getCouponListAdapter().notifyItemInserted(getCouponListAdapter().getItemCount());
         //追加したクーポンまでスクロールする
         getCouponListView().scrollToPosition(getCouponListAdapter().getItemCount() - 1);
-
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(
-                getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponListAdapter().getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
