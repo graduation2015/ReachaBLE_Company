@@ -115,13 +115,25 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search, menu);
-        MenuItem item = menu.findItem(R.id.menu_search);
+        final MenuItem item = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) item.getActionView();
 
         //SearchView開閉時のリスナーをセットする
         MenuItemCompat.setOnActionExpandListener(item, this);
         //SearchViewにキーワードが入力された時のリスナーをセットする
         mSearchView.setOnQueryTextListener(this);
+
+        mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    //SearchViewからフォーカスが外れた際にメニューを閉じる
+                    item.collapseActionView();
+                }
+            }
+        });
+
+
     }
 
     public View getContentView() {
