@@ -80,6 +80,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         } else {
+            imageView.setImageResource(R.drawable.placeholder);
             new BitmapWorkerTask(imageView, mBitmapCache).execute(filePath);
         }
 
