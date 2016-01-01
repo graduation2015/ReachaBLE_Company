@@ -433,6 +433,13 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                //FABを非表示にする
+                getFab().hide();
+                break;
+        }
+
         return true;
     }
 
@@ -449,6 +456,8 @@ public class CouponSelectFragment extends BaseCouponFragment
                 getCouponListAdapter().replaceList(getCouponInfoList(PREF_SAVED_COUPON_INFO_LIST));
                 //EmptyViewのテキストを戻す
                 getEmptyView().setText(getString(R.string.no_coupon_data));
+                //FABを表示する
+                getFab().show();
                 break;
         }
 
