@@ -293,7 +293,7 @@ public class CouponSelectFragment extends BaseCouponFragment
             return;
         }
         //選択されたクーポンを取得
-        mSelectedCoupon = getCouponInfoList().get(position);
+        mSelectedCoupon = getCouponListAdapter().getCouponInfoList().get(position);
 
         //選択されたクーポンをJSONファイルに書き込む
         if (putCouponToJson(mSelectedCoupon)) {
@@ -382,14 +382,22 @@ public class CouponSelectFragment extends BaseCouponFragment
             //ProgressDialogを破棄
             mProgressDialog = null;
 
-            //選択されたクーポンを保存
-            List<CouponInfo> selectedList = Arrays.asList(mSelectedCoupon);
-            saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
-
-            //クーポン宣伝画面に切り替える
-            changeFragment(new AdvertiseCouponFragment());
+            // クーポンアップロード後に宣伝用のクーポンを保存する
+            saveAdvertiseCoupon(mSelectedCoupon);
         }
+    }
 
+    /**
+     * クーポンアップロード後に宣伝用のクーポンを保存する
+     * @param selectedCoupon 選択されたクーポン
+     */
+    private void saveAdvertiseCoupon(CouponInfo selectedCoupon) {
+        //選択されたクーポンを保存
+        List<CouponInfo> selectedList = Arrays.asList(selectedCoupon);
+        saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
+
+        //クーポン宣伝画面に切り替える
+        changeFragment(new AdvertiseCouponFragment());
     }
 
     /**
