@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.graphics.Bitmap;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -18,30 +17,24 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponFilter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
+/**
+ * RecyclerViewに表示するアイテムを管理するアダプタークラス
+ */
 public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder>
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
-    private OnActionClickListener mActionClickListener;
-    private int mLayoutResource;
     private BitmapCache mBitmapCache;
 
     public CouponAdapter(List<CouponInfo> couponInfoList) {
-        this(couponInfoList, R.layout.coupon_card_advertise, null);
-    }
-
-    public CouponAdapter(List<CouponInfo> couponInfoList,
-                         int layoutResource, OnActionClickListener actionClickListener) {
         this.mCouponInfoList = couponInfoList;
-        this.mLayoutResource = layoutResource;
-        this.mActionClickListener = actionClickListener;
         this.mBitmapCache = new BitmapCache();
     }
 
     @Override
     public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(mLayoutResource, parent, false);
+                .inflate(R.layout.coupon_card_advertise, parent, false);
 
         return new CouponViewHolder(itemView);
     }
@@ -56,17 +49,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
-
-        if (holder.mAdvertiseButton != null) {
-            holder.mAdvertiseButton.setOnClickListener(
-                    new OnActionClickHandler(holder, mActionClickListener));
-        }
-
-        if (holder.mDeleteButton != null) {
-            holder.mDeleteButton.setOnClickListener(
-                    new OnActionClickHandler(holder, mActionClickListener));
-        }
-
     }
 
     /**
@@ -109,14 +91,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         return new CouponFilter(this, getCouponInfoList());
     }
 
-    class CouponViewHolder extends RecyclerView.ViewHolder {
+    protected class CouponViewHolder extends RecyclerView.ViewHolder {
         protected AppCompatImageView mCouponPic;
         protected AppCompatTextView mTitleView;
         protected AppCompatTextView mDescriptionView;
         protected AppCompatTextView mTagsView;
         protected AppCompatTextView mCreationDate;
-        protected AppCompatButton mAdvertiseButton;
-        protected AppCompatButton mDeleteButton;
 
         public CouponViewHolder(View itemView) {
             super(itemView);
@@ -125,8 +105,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
             mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);
             mTagsView = (AppCompatTextView) itemView.findViewById(R.id.txt_tags);
             mCreationDate = (AppCompatTextView) itemView.findViewById(R.id.txt_creation_date);
-            mAdvertiseButton = (AppCompatButton) itemView.findViewById(R.id.btn_advertise);
-            mDeleteButton = (AppCompatButton) itemView.findViewById(R.id.btn_delete);
         }
     }
 }

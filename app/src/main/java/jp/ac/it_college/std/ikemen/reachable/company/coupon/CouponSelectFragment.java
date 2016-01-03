@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.CreateCouponActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
@@ -96,7 +95,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponAdapter(getCouponInfoList(), R.layout.coupon_card, this));
+        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), this));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
