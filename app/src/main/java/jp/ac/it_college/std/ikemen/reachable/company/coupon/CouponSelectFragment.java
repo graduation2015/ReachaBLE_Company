@@ -423,7 +423,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
 
         //Fragmentを切り替える
-        ((MainActivity) getActivity()).changeFragment(destination);
+        ((MainActivity) getActivity()).changeFragment(destination, R.string.menu_title_advertise_coupon);
     }
 
     /**

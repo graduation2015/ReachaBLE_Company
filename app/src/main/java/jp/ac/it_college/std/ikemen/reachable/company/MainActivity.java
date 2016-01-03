@@ -34,9 +34,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container_content, new CouponSelectFragment())
-                    .commit();
+            //クーポン選択画面に切り替える
+            changeFragment(new CouponSelectFragment(), R.string.menu_title_coupon_select);
         }
 
         //初期設定
@@ -122,10 +121,10 @@ public class MainActivity extends AppCompatActivity
         //NavigationViewのメニューアイテム押下時の処理
         switch (item.getItemId()) {
             case R.id.menu_select_coupon:
-                changeFragment(new CouponSelectFragment());
+                changeFragment(new CouponSelectFragment(), R.string.menu_title_coupon_select);
                 break;
             case R.id.menu_advertise_coupon:
-                changeFragment(new AdvertiseCouponFragment());
+                changeFragment(new AdvertiseCouponFragment(), R.string.menu_title_advertise_coupon);
                 break;
         }
         //DrawerLayoutを閉じる
@@ -135,10 +134,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * フラグメントを変更する
+     * ツールバーのタイトルを変更してフラグメントを切り替える
      * @param destination 変更先のフラグメント
+     * @param titleResId ツールバーにセットするタイトルのリソースID
      */
-    public void changeFragment(Fragment destination) {
+    public void changeFragment(Fragment destination, int titleResId) {
+        //ツールバーにタイトルをセット
+        getToolbar().setTitle(titleResId);
+        //フラグメントを切り替える
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_content, destination)
                 .commit();
