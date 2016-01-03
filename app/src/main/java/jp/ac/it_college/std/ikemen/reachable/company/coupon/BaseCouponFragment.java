@@ -23,7 +23,10 @@ import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
 public class BaseCouponFragment extends Fragment {
 
     /* Constants */
-    public static final long COUPON_ANIM_DURATION = 800L;
+    public static final long COUPON_ADD_DURATION = 1000L;
+    public static final long COUPON_REMOVE_DURATION = 500L;
+    public static final long COUPON_MOVE_DURATION = 500L;
+    public static final long COUPON_CHANGE_DURATION = 500L;
     public static final String PREF_SAVED_COUPON_INFO_LIST = "pref_saved_coupon_info_list";
     public static final String PREF_ADVERTISE_COUPON_LIST = "pref_advertise_coupon_list";
 
@@ -53,10 +56,10 @@ public class BaseCouponFragment extends Fragment {
 
         //クーポン追加/更新時のアニメーションをセット
         couponListView.setItemAnimator(new OvershootInRightAnimator());
-        couponListView.getItemAnimator().setAddDuration(COUPON_ANIM_DURATION);
-        couponListView.getItemAnimator().setChangeDuration(COUPON_ANIM_DURATION);
-        couponListView.getItemAnimator().setMoveDuration(COUPON_ANIM_DURATION);
-        couponListView.getItemAnimator().setRemoveDuration(COUPON_ANIM_DURATION);
+        couponListView.getItemAnimator().setAddDuration(COUPON_ADD_DURATION);
+        couponListView.getItemAnimator().setChangeDuration(COUPON_CHANGE_DURATION);
+        couponListView.getItemAnimator().setMoveDuration(COUPON_MOVE_DURATION);
+        couponListView.getItemAnimator().setRemoveDuration(COUPON_REMOVE_DURATION);
     }
 
     /**
