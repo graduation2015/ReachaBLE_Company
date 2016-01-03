@@ -305,6 +305,7 @@ public class CouponSelectFragment extends BaseCouponFragment
             beginUpload(fileList);
         } else {
             //JSONへの書き込みが失敗した時の処理
+            Toast.makeText(getActivity(), R.string.failed_to_write_coupon, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -333,7 +334,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     private boolean putCouponToJson(CouponInfo info) {
         try {
             getJsonManager().putJsonObj(info);
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException | NullPointerException e) {
             e.printStackTrace();
             return false;
         }
