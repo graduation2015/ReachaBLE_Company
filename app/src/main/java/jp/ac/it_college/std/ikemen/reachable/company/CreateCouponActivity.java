@@ -1,7 +1,5 @@
 package jp.ac.it_college.std.ikemen.reachable.company;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,29 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 
-import org.json.JSONException;
-
-import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
+import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
-public class CreateCouponActivity extends AppCompatActivity
-        implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+public class CreateCouponActivity extends AppCompatActivity {
 
     /* Constants */
     public static final String CREATED_COUPON_DATA = "created_coupon_data";
@@ -46,8 +33,6 @@ public class CreateCouponActivity extends AppCompatActivity
 
     /* coupon */
     private String mCouponPath;
-    private ProgressDialog mProgressDialog;
-    private JsonManager mJsonManager;
     private CouponInfo mCouponInfo;
 
     @Override
@@ -61,9 +46,6 @@ public class CreateCouponActivity extends AppCompatActivity
     private void initSettings() {
         setUpToolbar();
         setCouponPreview();
-
-        //JsonManagerのインスタンスを生成
-        mJsonManager = new JsonManager(this);
     }
 
     /**
@@ -116,14 +98,10 @@ public class CreateCouponActivity extends AppCompatActivity
         this.mCouponInfo = couponInfo;
     }
 
-    public JsonManager getJsonManager() {
-        return mJsonManager;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //SENDメニューを表示
-        getMenuInflater().inflate(R.menu.menu_send, menu);
+        //ツールバーメニューを表示
+        getMenuInflater().inflate(R.menu.create_coupon, menu);
         return true;
     }
 
@@ -132,7 +110,7 @@ public class CreateCouponActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.menu_send:
                 //sendボタン押下時の処理
-                sendCoupon();
+                createCoupon();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -162,8 +140,8 @@ public class CreateCouponActivity extends AppCompatActivity
     }
 
     /**
-     * jsonファイルにクーポンの情報をセット
-     * @return jsonファイルに書き込みが完了したかどうかを返却
+     * クーポンの情報をセット
+     * @return クーポン情報がセットできた場合にtrueを返す
      */
     private boolean putCouponInfo() {
         //タイトルを取得
@@ -187,13 +165,6 @@ public class CreateCouponActivity extends AppCompatActivity
 
         //CouponInfoインスタンスをセット
         setCouponInfo(new CouponInfo(getCouponPath(), title, description, tagsList));
-        //クーポンの情報をjsonに書き込む
-        try {
-            getJsonManager().putJsonObj(getCouponInfo());
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
 
         return true;
     }
@@ -216,51 +187,6 @@ public class CreateCouponActivity extends AppCompatActivity
         return !title.isEmpty();
     }
 
-    /**
-     * ProgressDialogを生成して返す
-     * @return progressDialog
-     */
-    public ProgressDialog getProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgress(0);
-            mProgressDialog.setOnCancelListener(this);
-            mProgressDialog.setOnDismissListener(this);
-        }
-        return mProgressDialog;
-    }
-
-    /**
-     * ProgressDialogが中止されたタイミングで呼ばれる
-     * @param dialog
-     */
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        Toast.makeText(
-                this, getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * ProgressDialogが破棄されたタイミングで呼ばれる
-     * @param dialog
-     */
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            Toast.makeText(
-                    this, getString(R.string.coupon_upload_completed), Toast.LENGTH_SHORT).show();
-
-            //ProgressDialogを破棄
-            mProgressDialog = null;
-
-            //クーポンの情報をリザルトにセットして、Activityを破棄する
-            completeCreate();
-        }
-    }
 
     /**
      * クーポンの情報をリザルトにセットし、Activityを破棄
@@ -271,51 +197,17 @@ public class CreateCouponActivity extends AppCompatActivity
     }
 
     /**
-     * 選択されたクーポンをS3にアップロードする
-     * @param files アップロードするファイルのリスト
+     * クーポンを作成する
      */
-    private void beginUpload(List<File> files) {
-        //ファイルパスがnullの場合Toastを表示してメソッドを抜ける
-        if (getCouponPath() == null) {
-            Toast.makeText(this, "File has not been set.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        //アップロードを実行しObserverListを取得
-        List<TransferObserver> observerList = new S3UploadManager(
-                this, AwsUtil.getTransferUtility(this), files).execute(getProgressDialog());
-        //UploadObserversを生成
-        UploadObservers uploadObservers = new UploadObservers(observerList);
-
-        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
-        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
-        //ProgressDialogを表示
-        getProgressDialog().show();
-    }
-
-    /**
-     * S3バケットにクーポンを送信する
-     */
-    private void sendCoupon() {
+    private void createCoupon() {
         //キーボードを非表示にする
-        hideKeyboard();
+        Utils.hideKeyboard(this);
 
+        //クーポン情報をセットする
         if (putCouponInfo()) {
-            //アップロードするファイルをリスト化
-            List<File> files = Arrays.asList(new File(getCouponPath()), getJsonManager().getFile());
-            //S3バケットにアップロード
-            beginUpload(files);
+            //正常にセットできた場合、クーポン作成を終了する
+            completeCreate();
         }
     }
 
-    /**
-     * キーボードを非表示にする
-     */
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-        if (view != null) {
-            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                    view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 }

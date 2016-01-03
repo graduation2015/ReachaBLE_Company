@@ -12,27 +12,23 @@ import android.view.View;
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private GestureDetector mGestureDetector;
     private OnItemClickListener mListener;
+    private View mChildView;
+    private int mChildViewPosition;
 
     public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
         mListener = listener;
-        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
+        mGestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
         // タッチした箇所のViewを取得
-        View childView = view.findChildViewUnder(e.getX(), e.getY());
-        if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-            // onInterceptTouchEventのタイミングだとアイテムのtouch feedbackがつく前にonItemClickが
-            // 呼ばれてしまうので、明示的にsetPressed(true)を呼んでいます。
-            childView.setPressed(true);
-            mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
-        }
+        mChildView = view.findChildViewUnder(e.getX(), e.getY());
+        // タッチした箇所のViewのポジションを取得
+        mChildViewPosition = view.getChildAdapterPosition(mChildView);
+        // タッチした箇所のViewのonTouchEventを発生させる
+        mGestureDetector.onTouchEvent(e);
+
         return false;
     }
 
@@ -46,8 +42,37 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     }
 
+    /**
+     * クーポンリストアイテムクリック時のリスナークラス
+     */
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void onItemLongPress(View view, int position);
     }
 
+    /**
+     * RecyclerViewのアイテムクリックイベントをリスナーに通知するクラス
+     */
+    protected class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            if (mChildView != null && mListener != null) {
+                mListener.onItemClick(mChildView, mChildViewPosition);
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            if (mChildView != null && mListener != null) {
+                mListener.onItemLongPress(mChildView, mChildViewPosition);
+            }
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+    }
 }

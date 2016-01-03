@@ -2,6 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.info;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +23,7 @@ public class CouponInfo implements Serializable {
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
 
-    public static final String DATE_FORMAT_PATTERN = "yyyy年MM月dd日";
+    public static final String DATE_FORMAT_PATTERN = "MMMM dd, yyyy";
 
 
     public CouponInfo(String filePath, String title, String description, List<String> category) {
@@ -97,9 +98,22 @@ public class CouponInfo implements Serializable {
 
     /**
      * フォーマットされた作成日を返す
-     * @return yyyy年MM月dd日 形式の文字列
+     * @return MMMM dd, yyyy 形式の文字列
      */
     public String getFormattedCreationDate() {
-        return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.JAPAN).format(getCreationDate());
+        return new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.US).format(getCreationDate());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        List<String> strings = Arrays.asList(getTitle(), getDescription(), getCategoryToString());
+
+        for (String str : strings) {
+            builder.append(str);
+            builder.append("\n");
+        }
+
+        return builder.toString();
     }
 }

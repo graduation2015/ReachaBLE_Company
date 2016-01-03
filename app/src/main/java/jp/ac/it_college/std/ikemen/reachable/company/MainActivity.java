@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.AdvertiseCouponFragment;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponPreviewFragment;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponSelectFragment;
 import jp.ac.it_college.std.ikemen.reachable.company.drawer.DrawerToggle;
 
 public class MainActivity extends AppCompatActivity
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container_content, new CouponPreviewFragment())
+                    .replace(R.id.container_content, new CouponSelectFragment())
                     .commit();
         }
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         //NavigationViewのメニューアイテム押下時の処理
         switch (item.getItemId()) {
             case R.id.menu_select_coupon:
-                changeFragment(new CouponPreviewFragment());
+                changeFragment(new CouponSelectFragment());
                 break;
             case R.id.menu_advertise_coupon:
                 changeFragment(new AdvertiseCouponFragment());
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
      * フラグメントを変更する
      * @param destination 変更先のフラグメント
      */
-    private void changeFragment(Fragment destination) {
+    public void changeFragment(Fragment destination) {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_content, destination)
                 .commit();

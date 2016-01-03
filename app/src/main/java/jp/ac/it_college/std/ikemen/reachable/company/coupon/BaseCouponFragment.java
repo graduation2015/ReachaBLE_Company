@@ -15,7 +15,7 @@ import java.util.Set;
 import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
 
 /**
  * クーポンリストを表示するFragmentのベースクラス
@@ -24,10 +24,13 @@ public class BaseCouponFragment extends Fragment {
 
     /* Constants */
     public static final long COUPON_ANIM_DURATION = 800L;
-    public static final String PREF_COUPON_INFO_LIST = "coupon_info_list";
+    public static final String PREF_SAVED_COUPON_INFO_LIST = "pref_saved_coupon_info_list";
+    public static final String PREF_ADVERTISE_COUPON_LIST = "pref_advertise_coupon_list";
+
 
     /* Coupon */
     private List<CouponInfo> mCouponInfoList;
+    private List<CouponInfo> mSelectedCouponList;
 
     /* Adapter */
     private CouponListAdapter mCouponListAdapter;
@@ -49,7 +52,7 @@ public class BaseCouponFragment extends Fragment {
         couponListView.setAdapter(getCouponListAdapter());
 
         //クーポン追加/更新時のアニメーションをセット
-        couponListView.setItemAnimator(new SlideInDownAnimator());
+        couponListView.setItemAnimator(new OvershootInRightAnimator());
         couponListView.getItemAnimator().setAddDuration(COUPON_ANIM_DURATION);
         couponListView.getItemAnimator().setChangeDuration(COUPON_ANIM_DURATION);
         couponListView.getItemAnimator().setMoveDuration(COUPON_ANIM_DURATION);
@@ -57,40 +60,62 @@ public class BaseCouponFragment extends Fragment {
     }
 
     /**
-     * SharedPreferencesに保存されているクーポンリストを取得
-     * @return 保存されているクーポンリスト
+     * SharedPreferencesに保存されているクーポン情報を取得
+     * @param key SharedPreferencesから取得する値のキー名
+     * @return 保存されているクーポン情報のStringSet
      */
-    protected Set<String> getPrefCouponInfoSet() {
+    private Set<String> getPrefCouponInfoSet(String key) {
         SharedPreferences prefs = getActivity().getSharedPreferences(
                 CouponInfo.PREF_INFO, Context.MODE_PRIVATE);
-        return prefs.getStringSet(PREF_COUPON_INFO_LIST, new HashSet<String>());
+        return prefs.getStringSet(key, new HashSet<String>());
     }
 
+    /**
+     * SharedPreferencesに保存されているクーポンリストを返す
+     * @return 指定されたキー名のクーポンリスト
+     */
     protected List<CouponInfo> getCouponInfoList() {
         if (mCouponInfoList == null) {
-            mCouponInfoList = new ArrayList<>();
-
-            List<String> list = new ArrayList<>(getPrefCouponInfoSet());
-            Gson gson = new Gson();
-
-            for (String info : list) {
-                mCouponInfoList.add(gson.fromJson(info, CouponInfo.class));
-            }
+            mCouponInfoList = getPrefInfoList(PREF_SAVED_COUPON_INFO_LIST);
         }
 
         return mCouponInfoList;
     }
 
-    protected CouponListAdapter getCouponListAdapter() {
-        if (mCouponListAdapter == null) {
-            mCouponListAdapter = new CouponListAdapter(getCouponInfoList());
+    /**
+     * 宣伝対象のクーポンリストを取得
+     * @return SharedPreferencesに保存されている宣伝対象のクーポンリストを返す
+     */
+    protected List<CouponInfo> getAdvertiseCouponList() {
+        if (mSelectedCouponList == null) {
+            mSelectedCouponList = getPrefInfoList(PREF_ADVERTISE_COUPON_LIST);
         }
+
+        return mSelectedCouponList;
+    }
+
+    /**
+     * SharedPreferencesに保存されているクーポン情報からリストを生成して返す
+     * @param key 取得するクーポンリストのキー名
+     * @return keyで指定されたクーポンリストを返す
+     */
+    private List<CouponInfo> getPrefInfoList(String key) {
+        List<String> prefList = new ArrayList<>(getPrefCouponInfoSet(key));
+        List<CouponInfo> result = new ArrayList<>();
+
+        Gson gson = new Gson();
+        for (String info : prefList) {
+            result.add(gson.fromJson(info, CouponInfo.class));
+        }
+
+        return result;
+    }
+
+    protected CouponListAdapter getCouponListAdapter() {
         return mCouponListAdapter;
     }
 
     protected void setCouponListAdapter(CouponListAdapter adapter) {
-        if (adapter != null) {
-            this.mCouponListAdapter = adapter;
-        }
+        this.mCouponListAdapter = adapter;
     }
 }

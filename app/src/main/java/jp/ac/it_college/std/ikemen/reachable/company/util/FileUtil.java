@@ -3,6 +3,8 @@ package jp.ac.it_college.std.ikemen.reachable.company.util;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -147,5 +149,51 @@ public class FileUtil {
         return path.substring(path.lastIndexOf(FOLDER_SUFFIX) + 1);
     }
 
+    /**
+     * 画像のサブサンプルサイズを計算して返す
+     * @param options デコードした後のoptions
+     * @param reqWidth 画像をセットするImageViewの横幅
+     * @param reqHeight 画像をセットするImageViewの縦幅
+     * @return 画像のサブサンプルサイズ
+     */
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // 画像の元サイズ
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+
+    /**
+     * 画像をリサイズしてBitmapで返す
+     * @param filePath 読み込む画像のファイルパス
+     * @param reqWidth 画像をセットするImageViewの横幅
+     * @param reqHeight 画像をセットするImageViewの縦幅
+     * @return サンプルサイズを計算しなおしたBitmap
+     */
+    public static Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
+        // inJustDecodeBounds=true で画像のサイズをチェック
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // inSampleSize を計算
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // inSampleSize をセットしてデコード
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
+    }
 
 }
