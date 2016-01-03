@@ -18,7 +18,7 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponFilter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
-public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.CouponViewHolder>
+public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder>
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
@@ -26,12 +26,12 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Co
     private int mLayoutResource;
     private BitmapCache mBitmapCache;
 
-    public CouponListAdapter(List<CouponInfo> couponInfoList) {
+    public CouponAdapter(List<CouponInfo> couponInfoList) {
         this(couponInfoList, R.layout.coupon_card_advertise, null);
     }
 
-    public CouponListAdapter(List<CouponInfo> couponInfoList,
-                             int layoutResource, OnActionClickListener actionClickListener) {
+    public CouponAdapter(List<CouponInfo> couponInfoList,
+                         int layoutResource, OnActionClickListener actionClickListener) {
         this.mCouponInfoList = couponInfoList;
         this.mLayoutResource = layoutResource;
         this.mActionClickListener = actionClickListener;

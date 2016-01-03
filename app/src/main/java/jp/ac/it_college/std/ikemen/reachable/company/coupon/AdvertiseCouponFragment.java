@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
@@ -67,7 +67,7 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
         setUpBluetooth();
 
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getAdvertiseCouponList()));
+        setCouponListAdapter(new CouponAdapter(getAdvertiseCouponList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
     }

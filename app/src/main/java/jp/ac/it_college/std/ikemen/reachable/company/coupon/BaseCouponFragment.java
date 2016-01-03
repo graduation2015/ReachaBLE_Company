@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
@@ -33,7 +33,7 @@ public class BaseCouponFragment extends Fragment {
     private List<CouponInfo> mSelectedCouponList;
 
     /* Adapter */
-    private CouponListAdapter mCouponListAdapter;
+    private CouponAdapter mCouponListAdapter;
 
 
     /**
@@ -111,11 +111,11 @@ public class BaseCouponFragment extends Fragment {
         return result;
     }
 
-    protected CouponListAdapter getCouponListAdapter() {
+    protected CouponAdapter getCouponListAdapter() {
         return mCouponListAdapter;
     }
 
-    protected void setCouponListAdapter(CouponListAdapter adapter) {
+    protected void setCouponListAdapter(CouponAdapter adapter) {
         this.mCouponListAdapter = adapter;
     }
 }

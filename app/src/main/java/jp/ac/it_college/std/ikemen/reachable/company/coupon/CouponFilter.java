@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**
@@ -14,11 +14,11 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
  */
 public class CouponFilter extends Filter {
 
-    private final CouponListAdapter mAdapter;
+    private final CouponAdapter mAdapter;
     private final List<CouponInfo> mOriginalList;
     private final List<CouponInfo> mFilteredList;
 
-    public CouponFilter(CouponListAdapter adapter, List<CouponInfo> originalList) {
+    public CouponFilter(CouponAdapter adapter, List<CouponInfo> originalList) {
         this.mAdapter = adapter;
         this.mOriginalList = new LinkedList<>(originalList);
         this.mFilteredList = new ArrayList<>();

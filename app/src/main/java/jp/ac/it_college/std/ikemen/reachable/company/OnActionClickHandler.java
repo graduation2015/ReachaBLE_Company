@@ -6,10 +6,10 @@ import android.view.View;
  * クーポンアクションボタン押下時の処理を決定するハンドラークラス
  */
 public class OnActionClickHandler implements View.OnClickListener {
-    private final CouponListAdapter.CouponViewHolder mHolder;
+    private final CouponAdapter.CouponViewHolder mHolder;
     private final OnActionClickListener mListener;
 
-    public OnActionClickHandler(CouponListAdapter.CouponViewHolder mHolder, OnActionClickListener mListener) {
+    public OnActionClickHandler(CouponAdapter.CouponViewHolder mHolder, OnActionClickListener mListener) {
         this.mHolder = mHolder;
         this.mListener = mListener;
     }
