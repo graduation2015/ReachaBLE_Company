@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickHandler;
 import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**

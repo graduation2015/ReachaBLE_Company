@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**
