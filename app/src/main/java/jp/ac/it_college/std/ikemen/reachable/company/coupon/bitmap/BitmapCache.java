@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;

@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company.coupon;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
-import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickHandler;
-import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.OnActionClickHandler;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 

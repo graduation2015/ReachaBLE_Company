@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

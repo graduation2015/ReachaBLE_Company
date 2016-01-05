@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
-import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
 

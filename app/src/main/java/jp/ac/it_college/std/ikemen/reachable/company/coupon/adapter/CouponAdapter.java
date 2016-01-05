@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatImageView;
@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponFilter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapCache;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapWorkerTask;
+import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**

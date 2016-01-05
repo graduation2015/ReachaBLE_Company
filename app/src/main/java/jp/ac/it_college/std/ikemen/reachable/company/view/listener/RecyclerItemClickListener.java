@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.view.listener;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

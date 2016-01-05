@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;

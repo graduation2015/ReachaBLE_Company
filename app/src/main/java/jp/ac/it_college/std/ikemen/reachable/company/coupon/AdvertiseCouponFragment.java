@@ -16,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import jp.ac.it_college.std.ikemen.reachable.company.CouponAdapter;
-import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
 
 
 public class AdvertiseCouponFragment extends BaseCouponFragment

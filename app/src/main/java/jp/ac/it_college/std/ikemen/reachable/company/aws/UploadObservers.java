@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.aws;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 
