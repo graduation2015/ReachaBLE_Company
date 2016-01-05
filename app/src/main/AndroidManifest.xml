@@ -38,7 +38,7 @@
             android:enabled="true" />
 
         <activity
-            android:name=".CreateCouponActivity"
+            android:name=".coupon.CreateCouponActivity"
             android:label="@string/title_activity_create_coupon"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".MainActivity">
