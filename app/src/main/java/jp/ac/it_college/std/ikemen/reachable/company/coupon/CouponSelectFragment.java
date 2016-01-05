@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
