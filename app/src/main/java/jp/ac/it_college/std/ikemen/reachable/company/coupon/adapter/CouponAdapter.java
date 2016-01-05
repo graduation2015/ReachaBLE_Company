@@ -17,7 +17,6 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapCache;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapWorkerTask;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponFilter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
 /**

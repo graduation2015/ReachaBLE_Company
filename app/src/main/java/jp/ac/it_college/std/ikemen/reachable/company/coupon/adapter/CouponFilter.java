@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company.coupon;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.widget.Filter;
 
