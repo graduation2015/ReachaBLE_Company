@@ -39,7 +39,7 @@ import java.util.Set;
 
 import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
-import jp.ac.it_college.std.ikemen.reachable.company.OnActionClickListener;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;

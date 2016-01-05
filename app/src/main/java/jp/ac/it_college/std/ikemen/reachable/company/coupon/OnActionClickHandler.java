@@ -1,8 +1,10 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.view.View;
 
+import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 
 /**
  * クーポンアクションボタン押下時の処理を決定するハンドラークラス
