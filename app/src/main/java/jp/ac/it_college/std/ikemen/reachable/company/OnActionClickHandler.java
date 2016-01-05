@@ -2,7 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company;
 
 import android.view.View;
 
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
 
 /**
  * クーポンアクションボタン押下時の処理を決定するハンドラークラス

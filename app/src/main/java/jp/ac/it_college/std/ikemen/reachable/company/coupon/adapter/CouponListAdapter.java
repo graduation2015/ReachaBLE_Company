@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company.coupon;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;

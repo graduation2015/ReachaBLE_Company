@@ -45,6 +45,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.RecyclerItemClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
