@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapCache;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 /**
