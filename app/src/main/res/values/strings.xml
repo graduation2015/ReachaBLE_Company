@@ -33,5 +33,6 @@
     <string name="menu_title_search">Search</string>
     <string name="coupon_not_found">No results found for \"%1$s\".</string>
     <string name="failed_to_write_coupon">Failed to write coupon.</string>
+    <string name="menu_title_delete">@string/btn_delete</string>
 
 </resources>
