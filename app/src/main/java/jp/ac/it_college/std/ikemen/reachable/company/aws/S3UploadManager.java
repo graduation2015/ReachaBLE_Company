@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.CouponUploadListener;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.CouponUploadListener;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 public class S3UploadManager {
