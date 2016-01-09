@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -281,6 +282,10 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         //クーポンリストのアイテムクリック時の処理
+        if (mActionMode != null) {
+            //Viewの背景色を変更
+            ((Checkable) view).toggle();
+        }
     }
 
     /*
@@ -289,6 +294,8 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemLongPress(View view, int position) {
         if (mActionMode == null) {
+            //Viewの背景色を変更する
+            ((Checkable) view).toggle();
             mActionMode = ((AppCompatActivity) getActivity())
                     .startSupportActionMode(new ActionModeCallback());
         }
