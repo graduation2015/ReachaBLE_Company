@@ -1,6 +1,7 @@
 package jp.ac.it_college.std.ikemen.reachable.company.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.Checkable;
@@ -24,10 +25,19 @@ public class CheckableCardView extends CardView implements Checkable {
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Viewの背景色をトグルする
+     * @param checked Viewがチェックされている場合trueを渡す
+     */
+    private void toggleCardBackgroundColor(boolean checked) {
+        setCardBackgroundColor(checked ? Color.LTGRAY : Color.WHITE);
+    }
+
     @Override
     public void setChecked(boolean checked) {
         if (mIsChecked != checked) {
             mIsChecked = checked;
+            toggleCardBackgroundColor(mIsChecked);
             refreshDrawableState();
         }
     }
