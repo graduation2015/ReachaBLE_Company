@@ -3,6 +3,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +95,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder {
+        protected CardView mCardView;
         protected AppCompatImageView mCouponPic;
         protected AppCompatTextView mTitleView;
         protected AppCompatTextView mDescriptionView;
@@ -102,6 +104,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
 
         public CouponViewHolder(View itemView) {
             super(itemView);
+            mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mCouponPic = (AppCompatImageView) itemView.findViewById(R.id.img_coupon_pic);
             mTitleView = (AppCompatTextView) itemView.findViewById(R.id.txt_title);
             mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);
