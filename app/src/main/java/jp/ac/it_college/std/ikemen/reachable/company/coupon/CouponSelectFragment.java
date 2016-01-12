@@ -254,14 +254,11 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * リストアイテムがタップされた際のトグル処理を実装
-     * @param view タップされたリストアイテムのView
      * @param position タップされたアイテムの位置
      */
-    private void toggleSelection(View view, int position) {
+    private void toggleSelection(int position) {
         //アダプターにチェックアイテムの変更を通知
         getCouponListAdapter().toggleSelection(position);
-        //Viewの背景色を変更
-        ((Checkable) view).toggle();
         //チェックされているアイテムの数を取得
         int count = getCouponListAdapter().getSelectedItemCount();
 
@@ -311,7 +308,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         if (getActionMode() != null) {
-            toggleSelection(view, position);
+            toggleSelection(position);
         }
     }
 
@@ -325,7 +322,7 @@ public class CouponSelectFragment extends BaseCouponFragment
                     .startSupportActionMode(new ActionModeCallback());
         }
 
-        toggleSelection(view, position);
+        toggleSelection(position);
     }
 
     /**
@@ -573,7 +570,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         return false;
     }
 
-
     private class ActionModeCallback implements ActionMode.Callback {
 
         private int mStatusBarColor;
@@ -627,6 +623,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         public void onDestroyActionMode(ActionMode mode) {
             //ステータスバーの背景色を元に戻す
             getActivity().getWindow().setStatusBarColor(mStatusBarColor);
+            //選択されている項目をクリアする
+            getCouponListAdapter().clearSelection();
             //ActionModeを破棄
             mActionMode = null;
         }

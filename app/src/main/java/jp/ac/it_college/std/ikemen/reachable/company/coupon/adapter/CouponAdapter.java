@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -52,6 +53,7 @@ public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHol
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
+        ((Checkable) holder.mCardView).setChecked(isSelected(position));
     }
 
     /**
