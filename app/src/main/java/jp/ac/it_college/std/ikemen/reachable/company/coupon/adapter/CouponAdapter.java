@@ -23,7 +23,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 /**
  * RecyclerViewに表示するアイテムを管理するアダプタークラス
  */
-public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder>
+public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHolder>
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
