@@ -170,6 +170,10 @@ public class CouponSelectFragment extends BaseCouponFragment
         return mJsonManager;
     }
 
+    public ActionMode getActionMode() {
+        return mActionMode;
+    }
+
     /**
      * クーポンをギャラリーから選択する
      */
@@ -248,6 +252,28 @@ public class CouponSelectFragment extends BaseCouponFragment
         editor.apply();
     }
 
+    /**
+     * リストアイテムがタップされた際のトグル処理を実装
+     * @param view タップされたリストアイテムのView
+     * @param position タップされたアイテムの位置
+     */
+    private void toggleSelection(View view, int position) {
+        //アダプターにチェックアイテムの変更を通知
+        getCouponListAdapter().toggleSelection(position);
+        //Viewの背景色を変更
+        ((Checkable) view).toggle();
+        //チェックされているアイテムの数を取得
+        int count = getCouponListAdapter().getSelectedItemCount();
+
+        if (count == 0) {
+            //チェックアイテムが0になった場合ActionModeを終了する
+            getActionMode().finish();
+        } else {
+            //チェックアイテムの数をActionModeのタイトルにセットする
+            getActionMode().setTitle(String.valueOf(count));
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -279,12 +305,13 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
     }
 
+    /*
+     * クーポンアイテムがクリックされた時に呼ばれる
+     */
     @Override
     public void onItemClick(View view, int position) {
-        //クーポンリストのアイテムクリック時の処理
-        if (mActionMode != null) {
-            //Viewの背景色を変更
-            ((Checkable) view).toggle();
+        if (getActionMode() != null) {
+            toggleSelection(view, position);
         }
     }
 
@@ -293,12 +320,12 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     @Override
     public void onItemLongPress(View view, int position) {
-        if (mActionMode == null) {
-            //Viewの背景色を変更する
-            ((Checkable) view).toggle();
+        if (getActionMode() == null) {
             mActionMode = ((AppCompatActivity) getActivity())
                     .startSupportActionMode(new ActionModeCallback());
         }
+
+        toggleSelection(view, position);
     }
 
     /**
