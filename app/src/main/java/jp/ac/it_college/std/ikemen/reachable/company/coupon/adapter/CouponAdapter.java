@@ -31,7 +31,7 @@ public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHol
     private BitmapCache mBitmapCache;
 
     public CouponAdapter(List<CouponInfo> couponInfoList) {
-        this.mCouponInfoList = couponInfoList;
+        this.mCouponInfoList = new ArrayList<>(couponInfoList);
         this.mBitmapCache = new BitmapCache();
     }
 
