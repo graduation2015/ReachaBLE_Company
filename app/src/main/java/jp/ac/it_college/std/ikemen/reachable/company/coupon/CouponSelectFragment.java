@@ -240,8 +240,6 @@ public class CouponSelectFragment extends BaseCouponFragment
             deleteCoupon(position);
         }
 
-        //選択リストをクリアする
-        getCouponListAdapter().clearSelection();
         //アダプターにリストの変更を通知
         getCouponListAdapter().notifyDataSetChanged();
     }
@@ -594,6 +592,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //FABを非表示にする
+            getFab().hide();
             //コンテキストメニューを生成
             mode.getMenuInflater().inflate(R.menu.contextual_menu, menu);
 
@@ -640,8 +640,12 @@ public class CouponSelectFragment extends BaseCouponFragment
         public void onDestroyActionMode(ActionMode mode) {
             //ステータスバーの背景色を元に戻す
             getActivity().getWindow().setStatusBarColor(mStatusBarColor);
+            //選択リストをクリアする
+            getCouponListAdapter().clearSelection();
             //ActionModeを破棄
             mActionMode = null;
+            //FABを表示する
+            getFab().show();
         }
     }
 }
