@@ -82,6 +82,31 @@ public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHol
         notifyDataSetChanged();
     }
 
+    /**
+     * クーポンリストにクーポンを追加する
+     * @param info 追加するクーポン
+     */
+    public void add(CouponInfo info) {
+        //リストの先頭に追加
+        getCouponInfoList().add(0, info);
+        //追加したことを通知
+        notifyItemInserted(0);
+    }
+
+    /**
+     * クーポンリストからクーポンを削除する
+     * @param position 削除するクーポンのリストにおけるポジション
+     * @return 削除したクーポンを返す
+     */
+    public CouponInfo remove(int position) {
+        //positionで指定されたクーポンを削除する
+        CouponInfo removedCoupon = getCouponInfoList().remove(position);
+        //削除したことを通知
+        notifyItemRemoved(position);
+
+        return removedCoupon;
+    }
+
     @Override
     public int getItemCount() {
         return getCouponInfoList().size();

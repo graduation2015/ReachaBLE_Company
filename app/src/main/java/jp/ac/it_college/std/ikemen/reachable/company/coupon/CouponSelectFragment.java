@@ -206,9 +206,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
         getCouponInfoList().add(0, info);
-        getCouponListAdapter().getCouponInfoList().add(0, info);
-        //追加をアダプターに通知
-        getCouponListAdapter().notifyItemInserted(0);
+        getCouponListAdapter().add(info);
         //追加したクーポンまでスクロールする
         getCouponListView().getLayoutManager()
                 .smoothScrollToPosition(getCouponListView(), null, 0);
@@ -219,16 +217,14 @@ public class CouponSelectFragment extends BaseCouponFragment
     /**
      * クーポンリストからクーポンを削除する
      *
-     * @param infoList 削除対象のクーポンがあるクーポンリスト
      * @param position 削除するクーポンのインデックス
      */
-    private void deleteCoupon(List<CouponInfo> infoList, int position) {
-        //クーポンを削除
-        CouponInfo target = infoList.remove(position);
+    private void deleteCoupon(int position) {
+        //アダプターのクーポンリストからクーポンを削除
+        CouponInfo target = getCouponListAdapter().remove(position);
+        //オリジナルのクーポンリストからクーポンを削除
         getCouponInfoList().remove(target);
-        //削除をアダプターに通知
-        getCouponListAdapter().notifyItemRemoved(position);
-        //クーポンリストを保存
+        //クーポンリストをSharedPreferencesに保存
         saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
@@ -241,7 +237,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         Collections.reverse(selectedItem);
         //最後尾から削除していく
         for (Integer position : selectedItem) {
-            deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
+            deleteCoupon(position);
         }
 
         //選択リストをクリアする
@@ -385,7 +381,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
 
         //クーポンを削除
-        deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
+        deleteCoupon(position);
     }
 
     /**
