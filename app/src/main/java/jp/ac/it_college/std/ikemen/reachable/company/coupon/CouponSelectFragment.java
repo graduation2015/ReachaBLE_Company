@@ -596,6 +596,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //FABを非表示にする
+            getFab().hide();
             //コンテキストメニューを生成
             mode.getMenuInflater().inflate(R.menu.contextual_menu, menu);
 
@@ -646,6 +648,8 @@ public class CouponSelectFragment extends BaseCouponFragment
             getCouponListAdapter().clearSelection();
             //ActionModeを破棄
             mActionMode = null;
+            //FABを表示する
+            getFab().show();
         }
     }
 }
