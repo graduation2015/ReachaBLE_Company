@@ -244,8 +244,6 @@ public class CouponSelectFragment extends BaseCouponFragment
             deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
         }
 
-        //選択リストをクリアする
-        getCouponListAdapter().clearSelection();
         //アダプターにリストの変更を通知
         getCouponListAdapter().notifyDataSetChanged();
     }
@@ -644,6 +642,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         public void onDestroyActionMode(ActionMode mode) {
             //ステータスバーの背景色を元に戻す
             getActivity().getWindow().setStatusBarColor(mStatusBarColor);
+            //選択リストをクリアする
+            getCouponListAdapter().clearSelection();
             //ActionModeを破棄
             mActionMode = null;
         }
