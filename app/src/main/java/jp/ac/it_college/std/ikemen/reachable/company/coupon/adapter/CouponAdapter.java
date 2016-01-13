@@ -3,10 +3,12 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -22,14 +24,14 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 /**
  * RecyclerViewに表示するアイテムを管理するアダプタークラス
  */
-public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder>
+public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHolder>
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
     private BitmapCache mBitmapCache;
 
     public CouponAdapter(List<CouponInfo> couponInfoList) {
-        this.mCouponInfoList = couponInfoList;
+        this.mCouponInfoList = new ArrayList<>(couponInfoList);
         this.mBitmapCache = new BitmapCache();
     }
 
@@ -51,6 +53,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
+        ((Checkable) holder.mCardView).setChecked(isSelected(position));
     }
 
     /**
@@ -94,6 +97,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder {
+        protected CardView mCardView;
         protected AppCompatImageView mCouponPic;
         protected AppCompatTextView mTitleView;
         protected AppCompatTextView mDescriptionView;
@@ -102,6 +106,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
 
         public CouponViewHolder(View itemView) {
             super(itemView);
+            mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mCouponPic = (AppCompatImageView) itemView.findViewById(R.id.img_coupon_pic);
             mTitleView = (AppCompatTextView) itemView.findViewById(R.id.txt_title);
             mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);

@@ -109,8 +109,8 @@ public class CreateCouponActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_send:
-                //sendボタン押下時の処理
+            case R.id.menu_accept:
+                //acceptボタン押下時の処理
                 createCoupon();
                 return true;
             default:

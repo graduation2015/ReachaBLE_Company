@@ -11,7 +11,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.transition.Slide;
 import android.transition.TransitionSet;
@@ -33,22 +36,23 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
+import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
 
 /**
  * クーポン登録画面のFragmentクラス
@@ -76,6 +80,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     /* Coupon */
     private CouponInfo mSelectedCoupon;
     private ProgressDialog mProgressDialog;
+    private ActionMode mActionMode;
 
 
     @Override
@@ -165,6 +170,10 @@ public class CouponSelectFragment extends BaseCouponFragment
         return mJsonManager;
     }
 
+    public ActionMode getActionMode() {
+        return mActionMode;
+    }
+
     /**
      * クーポンをギャラリーから選択する
      */
@@ -191,10 +200,12 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストにクーポンを追加する
+     *
      * @param info クーポン作成画面で作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
+        getCouponInfoList().add(0, info);
         getCouponListAdapter().getCouponInfoList().add(0, info);
         //追加をアダプターに通知
         getCouponListAdapter().notifyItemInserted(0);
@@ -202,19 +213,19 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().getLayoutManager()
                 .smoothScrollToPosition(getCouponListView(), null, 0);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponListAdapter().getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
      * クーポンリストからクーポンを削除する
+     *
      * @param infoList 削除対象のクーポンがあるクーポンリスト
      * @param position 削除するクーポンのインデックス
      */
     private void deleteCoupon(List<CouponInfo> infoList, int position) {
         //クーポンを削除
-        CouponInfo target = infoList.get(position);
+        CouponInfo target = infoList.remove(position);
         getCouponInfoList().remove(target);
-        getCouponListAdapter().getCouponInfoList().remove(target);
         //削除をアダプターに通知
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
@@ -222,9 +233,28 @@ public class CouponSelectFragment extends BaseCouponFragment
     }
 
     /**
+     * 選択されたリストアイテムを削除する
+     * @param selectedItem アダプターの選択済みリスト
+     */
+    private void deleteSelectedItem(List<Integer> selectedItem) {
+        //選択リストを逆順にソート
+        Collections.reverse(selectedItem);
+        //最後尾から削除していく
+        for (Integer position : selectedItem) {
+            deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
+        }
+
+        //選択リストをクリアする
+        getCouponListAdapter().clearSelection();
+        //アダプターにリストの変更を通知
+        getCouponListAdapter().notifyDataSetChanged();
+    }
+
+    /**
      * SharedPreferencesにクーポンのインスタンスを保存
+     *
      * @param infoList 保存するクーポン情報リスト
-     * @param key SharedPreferencesに保存する際のキー名
+     * @param key      SharedPreferencesに保存する際のキー名
      */
     private void saveCouponInstance(List<CouponInfo> infoList, String key) {
         Gson gson = new Gson();
@@ -238,6 +268,25 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         editor.putStringSet(key, instances);
         editor.apply();
+    }
+
+    /**
+     * リストアイテムがタップされた際のトグル処理を実装
+     * @param position タップされたアイテムの位置
+     */
+    private void toggleSelection(int position) {
+        //アダプターにチェックアイテムの変更を通知
+        getCouponListAdapter().toggleSelection(position);
+        //チェックされているアイテムの数を取得
+        int count = getCouponListAdapter().getSelectedItemCount();
+
+        if (count == 0) {
+            //チェックアイテムが0になった場合ActionModeを終了する
+            getActionMode().finish();
+        } else {
+            //チェックアイテムの数をActionModeのタイトルにセットする
+            getActionMode().setTitle(String.valueOf(count));
+        }
     }
 
     @Override
@@ -271,19 +320,33 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
     }
 
+    /*
+     * クーポンアイテムがクリックされた時に呼ばれる
+     */
     @Override
     public void onItemClick(View view, int position) {
-        //クーポンリストのアイテムクリック時の処理
+        if (getActionMode() != null) {
+            toggleSelection(position);
+        }
     }
 
+    /*
+     * クーポンアイテムが長押しされた時に呼ばれる
+     */
     @Override
     public void onItemLongPress(View view, int position) {
-        //クーポンアイテム長押し時の処理
+        if (getActionMode() == null) {
+            mActionMode = ((AppCompatActivity) getActivity())
+                    .startSupportActionMode(new ActionModeCallback());
+        }
+
+        toggleSelection(position);
     }
 
     /**
      * ADVERTISEボタン押下時に呼ばれる
-     * @param view クリックされたボタンのView
+     *
+     * @param view     クリックされたボタンのView
      * @param position 選択されたクーポンのインデックス
      */
     @Override
@@ -309,7 +372,8 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * DELETEボタン押下時に呼ばれる
-     * @param view クリックされたボタンのView
+     *
+     * @param view     クリックされたボタンのView
      * @param position 選択されたクーポンのインデックス
      */
     @Override
@@ -326,6 +390,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンの情報をjsonに書き込む
+     *
      * @param info 書き込むクーポン
      * @return 書き込みが成功した場合はtrueを返す
      */
@@ -337,11 +402,12 @@ public class CouponSelectFragment extends BaseCouponFragment
             return false;
         }
 
-        return  true;
+        return true;
     }
 
     /**
      * ProgressDialogを生成して返す
+     *
      * @return progressDialog
      */
     public ProgressDialog getProgressDialog() {
@@ -360,6 +426,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ProgressDialogが中止されたタイミングで呼ばれる
+     *
      * @param dialog
      */
     @Override
@@ -370,6 +437,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ProgressDialogが破棄されたタイミングで呼ばれる
+     *
      * @param dialog
      */
     @Override
@@ -390,6 +458,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンアップロード後に宣伝用のクーポンを保存する
+     *
      * @param selectedCoupon 選択されたクーポン
      */
     private void saveAdvertiseCoupon(CouponInfo selectedCoupon) {
@@ -403,6 +472,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * Fragmentをアニメーションしながら遷移させる
+     *
      * @param destination 遷移先のFragment
      */
     private void changeFragment(Fragment destination) {
@@ -427,6 +497,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * 選択されたクーポンをS3にアップロードする
+     *
      * @param files アップロードするファイルのリスト
      */
     private void beginUpload(List<File> files) {
@@ -444,6 +515,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ツールバーのメニューアイテムが開かれた際に呼ばれる
+     *
      * @param item OnActionExpandListenerにセットされたメニューアイテム
      * @return メニューアイテムが開かれた際の処理を実行する場合はtrueを返す
      */
@@ -461,6 +533,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ツールバーのメニューアイテムが閉じられた際に呼ばれる
+     *
      * @param item OnActionExpandListenerにセットされたメニューアイテム
      * @return メニューアイテムが閉じられた際の処理を実行する場合はtrueを返す
      */
@@ -485,6 +558,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * SearchViewでエンターボタンが押された際に呼ばれる
+     *
      * @param query SearchViewに入力されたテキスト
      * @return 処理を実行する場合はtrue
      */
@@ -505,11 +579,73 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * SearchViewにテキストが入力される度に呼ばれる
+     *
      * @param newText SearchViewに入力されたテキスト
      * @return 処理を実行する場合はtrue
      */
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+
+    private class ActionModeCallback implements ActionMode.Callback {
+
+        private int mStatusBarColor;
+
+       /*
+        * ActionModeが初めて呼び出された時に発生　trueを返さないとその後何もしない
+        */
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //コンテキストメニューを生成
+            mode.getMenuInflater().inflate(R.menu.contextual_menu, menu);
+
+            //ステータスバーの背景色を取得
+            mStatusBarColor = getActivity().getWindow().getStatusBarColor();
+            //ステータスバーの背景色を変更
+            getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(
+                    getActivity(), R.color.action_mode_status_bar_background));
+
+            return true;
+        }
+
+        /*
+         * ActionModeが呼び出される度に発生　Menuだのなんだのを動的に変更する場合はここに記述する
+         * trueを返すと変更が反映される
+         */
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        /*
+         * onCreateActionMode / onPrepareActionModeで登録されたMenuItemがクリックされると発生
+         * 正常に処理できたらtrueを返す
+         */
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_delete: //delete(ゴミ箱)ボタン押下時の処理
+                    //選択されたアイテムを削除する
+                    deleteSelectedItem(getCouponListAdapter().getSelectedItems());
+                    //ActionModeを閉じる
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /*
+         * ActionMode#finish()が呼び出されたりするなどしてActionModeが終了する時に発生
+         */
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //ステータスバーの背景色を元に戻す
+            getActivity().getWindow().setStatusBarColor(mStatusBarColor);
+            //ActionModeを破棄
+            mActionMode = null;
+        }
     }
 }

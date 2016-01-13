@@ -3,4 +3,6 @@
     <color name="primary">#03a9f4</color>
     <color name="primary_dark">#0288d1</color>
     <color name="accent">#c41411</color>
+    <color name="action_mode_background">#9E9E9E</color>
+    <color name="action_mode_status_bar_background">#757575</color>
 </resources>

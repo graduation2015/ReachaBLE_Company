@@ -13,6 +13,10 @@
         <item name="android:windowContentOverlay">@null</item>
         <!-- Transitionの有効化 -->
         <item name="android:windowContentTransitions">true</item>
+        <!-- ActionModeのオーバーレイを有効化 -->
+        <item name="windowActionModeOverlay">true</item>
+        <!-- ActionModeの背景色を設定-->
+        <item name="android:actionModeBackground">@color/action_mode_background</item>
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">

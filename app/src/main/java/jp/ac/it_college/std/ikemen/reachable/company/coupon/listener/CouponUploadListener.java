@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.ikemen.reachable.company.coupon;
+package jp.ac.it_college.std.ikemen.reachable.company.coupon.listener;
 
 import android.app.ProgressDialog;
 import android.os.Handler;

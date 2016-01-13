@@ -4,7 +4,7 @@
     tools:context=".coupon.CreateCouponActivity">
 
     <item
-        android:id="@+id/menu_send"
+        android:id="@+id/menu_accept"
         app:showAsAction="always"
         android:icon="@drawable/ic_action_accept"
         android:title="@string/menu_send" />
