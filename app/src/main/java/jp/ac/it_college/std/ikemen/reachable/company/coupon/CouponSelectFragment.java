@@ -25,7 +25,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Checkable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,22 +36,23 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
+import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
+import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
 
 /**
  * クーポン登録画面のFragmentクラス
@@ -205,6 +205,7 @@ public class CouponSelectFragment extends BaseCouponFragment
      */
     private void addCoupon(CouponInfo info) {
         //クーポンリストにクーポンを追加
+        getCouponInfoList().add(0, info);
         getCouponListAdapter().getCouponInfoList().add(0, info);
         //追加をアダプターに通知
         getCouponListAdapter().notifyItemInserted(0);
@@ -212,7 +213,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().getLayoutManager()
                 .smoothScrollToPosition(getCouponListView(), null, 0);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponListAdapter().getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -229,6 +230,24 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListAdapter().notifyItemRemoved(position);
         //クーポンリストを保存
         saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+    }
+
+    /**
+     * 選択されたリストアイテムを削除する
+     * @param selectedItem アダプターの選択済みリスト
+     */
+    private void deleteSelectedItem(List<Integer> selectedItem) {
+        //選択リストを逆順にソート
+        Collections.reverse(selectedItem);
+        //最後尾から削除していく
+        for (Integer position : selectedItem) {
+            deleteCoupon(getCouponListAdapter().getCouponInfoList(), position);
+        }
+
+        //選択リストをクリアする
+        getCouponListAdapter().clearSelection();
+        //アダプターにリストの変更を通知
+        getCouponListAdapter().notifyDataSetChanged();
     }
 
     /**
@@ -569,6 +588,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         return false;
     }
 
+
     private class ActionModeCallback implements ActionMode.Callback {
 
         private int mStatusBarColor;
@@ -607,6 +627,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_delete: //delete(ゴミ箱)ボタン押下時の処理
+                    //選択されたアイテムを削除する
+                    deleteSelectedItem(getCouponListAdapter().getSelectedItems());
                     //ActionModeを閉じる
                     mode.finish();
                     return true;
@@ -622,8 +644,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         public void onDestroyActionMode(ActionMode mode) {
             //ステータスバーの背景色を元に戻す
             getActivity().getWindow().setStatusBarColor(mStatusBarColor);
-            //選択されている項目をクリアする
-            getCouponListAdapter().clearSelection();
             //ActionModeを破棄
             mActionMode = null;
         }
