@@ -38,7 +38,7 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
     @Override
     public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.coupon_card_advertise, parent, false);
+                .inflate(R.layout.coupon_card, parent, false);
 
         return new CouponViewHolder(itemView);
     }
