@@ -21,7 +21,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeListener;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.BluetoothStateChangeReceiver;
 import jp.ac.it_college.std.ikemen.reachable.company.bluetooth.le.Advertise;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
 
 
 public class AdvertiseCouponFragment extends BaseCouponFragment
@@ -67,7 +67,7 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
         setUpBluetooth();
 
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponAdapter(getAdvertiseCouponList()));
+        setCouponListAdapter(new CouponListAdapter(getAdvertiseCouponList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
     }

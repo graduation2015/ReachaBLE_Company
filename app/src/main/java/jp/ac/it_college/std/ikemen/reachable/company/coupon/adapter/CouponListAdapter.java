@@ -24,13 +24,13 @@ import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 /**
  * RecyclerViewに表示するアイテムを管理するアダプタークラス
  */
-public class CouponAdapter extends SelectableAdapter<CouponAdapter.CouponViewHolder>
+public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.CouponViewHolder>
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
     private BitmapCache mBitmapCache;
 
-    public CouponAdapter(List<CouponInfo> couponInfoList) {
+    public CouponListAdapter(List<CouponInfo> couponInfoList) {
         this.mCouponInfoList = new ArrayList<>(couponInfoList);
         this.mBitmapCache = new BitmapCache();
     }
