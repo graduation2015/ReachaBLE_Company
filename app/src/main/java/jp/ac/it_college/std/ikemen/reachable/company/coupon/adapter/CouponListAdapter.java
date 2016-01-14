@@ -1,8 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.graphics.Bitmap;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.widget.Checkable;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,20 +122,20 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder {
         protected CardView mCardView;
-        protected AppCompatImageView mCouponPic;
-        protected AppCompatTextView mTitleView;
-        protected AppCompatTextView mDescriptionView;
-        protected AppCompatTextView mTagsView;
-        protected AppCompatTextView mCreationDate;
+        protected ImageView mCouponPic;
+        protected TextView mTitleView;
+        protected TextView mDescriptionView;
+        protected TextView mTagsView;
+        protected TextView mCreationDate;
 
         public CouponViewHolder(View itemView) {
             super(itemView);
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
-            mCouponPic = (AppCompatImageView) itemView.findViewById(R.id.img_coupon_pic);
-            mTitleView = (AppCompatTextView) itemView.findViewById(R.id.txt_title);
-            mDescriptionView = (AppCompatTextView) itemView.findViewById(R.id.txt_description);
-            mTagsView = (AppCompatTextView) itemView.findViewById(R.id.txt_tags);
-            mCreationDate = (AppCompatTextView) itemView.findViewById(R.id.txt_creation_date);
+            mCouponPic = (ImageView) itemView.findViewById(R.id.img_coupon_pic);
+            mTitleView = (TextView) itemView.findViewById(R.id.txt_title);
+            mDescriptionView = (TextView) itemView.findViewById(R.id.txt_description);
+            mTagsView = (TextView) itemView.findViewById(R.id.txt_tags);
+            mCreationDate = (TextView) itemView.findViewById(R.id.txt_creation_date);
         }
     }
 }

@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-        <android.support.v7.widget.AppCompatImageView
+        <ImageView
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:id="@+id/img_coupon_pic"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:background="#80000000"
             android:id="@+id/txt_title"
             android:layout_alignBottom="@id/img_coupon_pic"
@@ -32,7 +32,7 @@
             android:textColor="#FFF"
             android:textSize="14sp" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/txt_creation_date"
             android:layout_below="@id/txt_title"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:textColor="#9E9E9E"
             android:textSize="14sp" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/txt_description"
             android:layout_below="@id/txt_creation_date"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/txt_clause"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
@@ -70,7 +70,7 @@
                 android:text="@string/txt_tag_clause"
                 android:textSize="14sp" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/txt_tags"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
