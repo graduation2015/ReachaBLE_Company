@@ -46,7 +46,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponAdapter;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
@@ -100,7 +100,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), this));
+        setCouponListAdapter(new CouponAdapter(getCouponInfoList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
