@@ -51,9 +51,11 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
 
         holder.mTitleView.setText(info.getTitle());
         holder.mDescriptionView.setText(info.getDescription());
-        holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
         ((Checkable) holder.mCardView).setChecked(isSelected(position));
+        holder.mTagsView.setText(info.getCategoryToString().length() == 0
+                ? getContext().getString(R.string.no_category)
+                : getContext().getString(R.string.txt_tag_clause) + info.getCategoryToString());
     }
 
     /**
