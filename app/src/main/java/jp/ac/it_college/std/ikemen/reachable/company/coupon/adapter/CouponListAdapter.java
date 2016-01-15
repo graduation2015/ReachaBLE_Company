@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -28,8 +29,10 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
 
     private List<CouponInfo> mCouponInfoList;
     private BitmapCache mBitmapCache;
+    private Context mContext;
 
-    public CouponListAdapter(List<CouponInfo> couponInfoList) {
+    public CouponListAdapter(Context context, List<CouponInfo> couponInfoList) {
+        this.mContext = context;
         this.mCouponInfoList = new ArrayList<>(couponInfoList);
         this.mBitmapCache = new BitmapCache();
     }
@@ -113,6 +116,10 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
 
     public List<CouponInfo> getCouponInfoList() {
         return mCouponInfoList;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     @Override

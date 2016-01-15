@@ -67,7 +67,7 @@ public class AdvertiseCouponFragment extends BaseCouponFragment
         setUpBluetooth();
 
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getAdvertiseCouponList()));
+        setCouponListAdapter(new CouponListAdapter(getActivity(), getAdvertiseCouponList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
     }

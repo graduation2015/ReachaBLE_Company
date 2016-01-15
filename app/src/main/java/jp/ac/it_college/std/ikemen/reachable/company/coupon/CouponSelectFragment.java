@@ -100,7 +100,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList()));
+        setCouponListAdapter(new CouponListAdapter(getActivity(), getCouponInfoList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
