@@ -11,7 +11,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -320,8 +323,34 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         if (getActionMode() != null) {
+            //コンテキストメニュー表示時の処理
             toggleSelection(position);
+        } else {
+            //リストアイテムクリック時の処理
+            transitionCouponDetails(view, position);
         }
+    }
+
+    /**
+     * クーポン詳細画面に遷移する
+     * @param view 選択されたクーポンのView
+     * @param position 選択されたクーポンのリストポジション
+     */
+    private void transitionCouponDetails(View view, int position) {
+        //step1
+        View image = view.findViewById(R.id.img_coupon_pic);
+        Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
+        intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
+                getCouponListAdapter().getCouponInfoList().get(position));
+        intent.putExtra(CouponDetailActivity.THUMBNAIL_WIDTH, image.getWidth());
+        intent.putExtra(CouponDetailActivity.THUMBNAIL_HEIGHT, image.getHeight());
+
+        //step2
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                new Pair<View, String>(image, getString(R.string.transition_image)));
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     /*
