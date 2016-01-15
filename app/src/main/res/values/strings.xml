@@ -20,7 +20,7 @@
     <string name="coupon_tag_hint">Tag(Space delimited)</string>
     <string name="validate_title_error">Please enter a title.</string>
     <string name="no_coupon_data">Coupon has not registered.</string>
-    <string name="txt_tag_clause">Tag:</string>
+    <string name="txt_tag">"Tag: " %1$s</string>
     <string name="toolbar_advertise">ADVERTISE</string>
     <string name="switch_advertise_on">ON</string>
     <string name="switch_advertise_off">OFF</string>
@@ -34,5 +34,6 @@
     <string name="coupon_not_found">No results found for \"%1$s\".</string>
     <string name="failed_to_write_coupon">Failed to write coupon.</string>
     <string name="menu_title_delete">@string/btn_delete</string>
+    <string name="no_category">No category</string>
 
 </resources>
