@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +12,12 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapCache;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapWorkerTask;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
@@ -28,13 +28,11 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
         implements Filterable {
 
     private List<CouponInfo> mCouponInfoList;
-    private BitmapCache mBitmapCache;
     private Context mContext;
 
     public CouponListAdapter(Context context, List<CouponInfo> couponInfoList) {
         this.mContext = context;
         this.mCouponInfoList = new ArrayList<>(couponInfoList);
-        this.mBitmapCache = new BitmapCache();
     }
 
     @Override
@@ -49,30 +47,15 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
     public void onBindViewHolder(CouponViewHolder holder, int position) {
         CouponInfo info = getCouponInfoList().get(position);
         //Bitmapの読み込みを非同期で行う
-        loadBitmap(info.getFilePath(), holder.mCouponPic);
+        Picasso.with(getContext()).load(new File(info.getFilePath()))
+                .placeholder(R.drawable.placeholder)
+                .into(holder.mCouponPic);
 
         holder.mTitleView.setText(info.getTitle());
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
         ((Checkable) holder.mCardView).setChecked(isSelected(position));
-    }
-
-    /**
-     * Bitmapの読み込みをAsyncTaskクラスで実行する
-     * @param filePath 画像のファイルパス
-     * @param imageView 画像をセットするImageView
-     */
-    private void loadBitmap(String filePath, ImageView imageView) {
-        final Bitmap bitmap = mBitmapCache.getBitmapFromMemCache(filePath);
-
-        if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
-        } else {
-            imageView.setImageResource(R.drawable.placeholder);
-            new BitmapWorkerTask(imageView, mBitmapCache).execute(filePath);
-        }
-
     }
 
     /**
