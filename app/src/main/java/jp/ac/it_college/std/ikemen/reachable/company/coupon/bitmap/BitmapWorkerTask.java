@@ -12,6 +12,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 /**
  * Bitmapに画像をセットする処理を非同期で実行するAsyncTaskクラス
  */
+@Deprecated
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private static final int BITMAP_HEIGHT_SIZE = 200;
     private static final int BITMAP_WIDTH_SIZE = 200;

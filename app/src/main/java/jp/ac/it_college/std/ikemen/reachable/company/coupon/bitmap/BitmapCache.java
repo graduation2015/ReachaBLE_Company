@@ -6,6 +6,7 @@ import android.util.LruCache;
 /**
  * Bitmapのキャッシュ周りの実装をまとめたクラス
  */
+@Deprecated
 public class BitmapCache {
 
     private LruCache<String, Bitmap> mMemoryCache;
