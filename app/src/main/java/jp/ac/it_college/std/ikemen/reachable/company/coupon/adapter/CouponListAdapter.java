@@ -47,15 +47,26 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
     public void onBindViewHolder(CouponViewHolder holder, int position) {
         CouponInfo info = getCouponInfoList().get(position);
         //Bitmapの読み込みを非同期で行う
-        Picasso.with(getContext()).load(new File(info.getFilePath()))
-                .placeholder(R.drawable.placeholder)
-                .into(holder.mCouponPic);
+        loadBitmap(info.getFilePath(), holder.mCouponPic);
 
         holder.mTitleView.setText(info.getTitle());
         holder.mDescriptionView.setText(info.getDescription());
         holder.mTagsView.setText(info.getCategoryToString());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
         ((Checkable) holder.mCardView).setChecked(isSelected(position));
+    }
+
+    /**
+     * Bitmapの読み込みを行う
+     * @param path 読み込む画像のファイルパス
+     * @param imageView 読み込んだ画像を表示するImageView
+     */
+    private void loadBitmap(String path, ImageView imageView) {
+        Picasso.with(getContext())
+                .load(new File(path))
+                .fit()
+                .placeholder(R.drawable.placeholder)
+                .into(imageView);
     }
 
     /**
