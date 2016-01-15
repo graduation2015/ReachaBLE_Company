@@ -15,10 +15,9 @@
 
         <ImageView
             android:id="@+id/img_coupon_pic"
+            android:transitionName="@string/transition_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
             android:scaleType="centerCrop" />
 
         <TextView
