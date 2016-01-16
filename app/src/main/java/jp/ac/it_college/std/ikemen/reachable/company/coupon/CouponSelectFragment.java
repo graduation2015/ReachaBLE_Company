@@ -18,7 +18,9 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.view.Gravity;
@@ -63,12 +65,13 @@ import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemC
 public class CouponSelectFragment extends BaseCouponFragment
         implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener,
         OnActionClickListener, DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
-        MenuItemCompat.OnActionExpandListener, SearchView.OnQueryTextListener {
+        MenuItemCompat.OnActionExpandListener, SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
 
     /* Constants */
     private static final int REQUEST_GALLERY = 0;
     public static final int CREATE_COUPON = 0x002;
     private static final int ITEM_DELETED = -1;
+    public static final int SPAN_COUNT = 2;
 
     /* Views */
     private View mContentView;
@@ -120,12 +123,14 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //メニューをインフレート
         inflater.inflate(R.menu.coupon_select_menu, menu);
-        final MenuItem item = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) item.getActionView();
+        //サーチメニューを取得
+        final MenuItem searchMenu = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) searchMenu.getActionView();
 
         //SearchView開閉時のリスナーをセットする
-        MenuItemCompat.setOnActionExpandListener(item, this);
+        MenuItemCompat.setOnActionExpandListener(searchMenu, this);
         //SearchViewにキーワードが入力された時のリスナーをセットする
         mSearchView.setOnQueryTextListener(this);
 
@@ -134,13 +139,48 @@ public class CouponSelectFragment extends BaseCouponFragment
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     //SearchViewからフォーカスが外れた際にメニューを閉じる
-                    item.collapseActionView();
+                    searchMenu.collapseActionView();
                 }
             }
         });
 
-
+        //表示形式変更メニューのクリックリスナーを登録
+        menu.findItem(R.id.menu_change_view).setOnMenuItemClickListener(this);
     }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_change_view:
+                //RecyclerViewの表示形式を切り替える
+                if (getCouponListView().getLayoutManager() instanceof LinearLayoutManager) {
+                    //グリット表示に切り替える
+                    getCouponListView().setLayoutManager(new StaggeredGridLayoutManager(
+                            SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL));
+                } else {
+                    //リスト表示に切り替える
+                    getCouponListView().setLayoutManager(new LinearLayoutManager(getActivity()));
+                }
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        //表示形式変更メニューを取得
+        MenuItem changeViewMenu = menu.findItem(R.id.menu_change_view);
+
+        //RecyclerViewに設定されているLayoutManagerによって表示形式変更メニューのタイトルを切り替える
+        if (getCouponListView().getLayoutManager() instanceof LinearLayoutManager) {
+            changeViewMenu.setTitle(R.string.menu_title_grid_view);
+        } else {
+            changeViewMenu.setTitle(R.string.menu_title_list_view);
+        }
+    }
+
+
 
     public View getContentView() {
         return mContentView;

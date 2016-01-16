@@ -38,5 +38,6 @@
     <string name="title_activity_coupon_detail">CreateCouponActivity</string>
     <string name="transition_image">detail:header:image</string>
     <string name="menu_title_grid_view">Grid view</string>
+    <string name="menu_title_list_view">List view</string>
 
 </resources>

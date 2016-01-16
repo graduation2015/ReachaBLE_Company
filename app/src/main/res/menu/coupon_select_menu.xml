@@ -9,6 +9,6 @@
         app:actionLayout="@layout/search" />
 
     <item
-        android:id="@+id/menu_view"
+        android:id="@+id/menu_change_view"
         android:title="@string/menu_title_grid_view" />
 </menu>
