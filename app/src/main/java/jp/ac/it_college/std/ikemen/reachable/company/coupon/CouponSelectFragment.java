@@ -120,7 +120,7 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
+        inflater.inflate(R.menu.coupon_select_menu, menu);
         final MenuItem item = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) item.getActionView();
 
