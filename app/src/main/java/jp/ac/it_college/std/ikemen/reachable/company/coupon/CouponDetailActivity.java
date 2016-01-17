@@ -2,7 +2,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
 import android.widget.ImageView;
 
@@ -18,7 +18,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 /**
  * クーポンの詳細情報を表示するActivityクラス
  */
-public class CouponDetailActivity extends Activity {
+public class CouponDetailActivity extends AppCompatActivity {
 
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
