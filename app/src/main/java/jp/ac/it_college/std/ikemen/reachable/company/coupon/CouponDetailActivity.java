@@ -3,6 +3,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.widget.ImageView;
 
@@ -25,6 +26,7 @@ public class CouponDetailActivity extends AppCompatActivity {
 
     /* Views */
     private ImageView mHeaderImageView;
+    private Toolbar mToolbar;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
@@ -42,6 +44,18 @@ public class CouponDetailActivity extends AppCompatActivity {
      */
     private void initSettings() {
         loadItem();
+        setUpActionBar(getToolbar());
+    }
+
+    /**
+     * Actionbarの初期設定を実行する
+     * @param toolbar Actionbarにセットするツールバー
+     */
+    private void setUpActionBar(Toolbar toolbar) {
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**
@@ -134,5 +148,12 @@ public class CouponDetailActivity extends AppCompatActivity {
             mSelectedItem = (CouponInfo) getIntent().getSerializableExtra(SELECTED_ITEM);
         }
         return mSelectedItem;
+    }
+
+    public Toolbar getToolbar() {
+        if (mToolbar == null) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        }
+        return mToolbar;
     }
 }

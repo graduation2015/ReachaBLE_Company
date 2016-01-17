@@ -379,6 +379,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     private void transitionCouponDetails(View view, int position) {
         //step1
         View image = view.findViewById(R.id.img_coupon_pic);
+        View toolbar = ((MainActivity) getActivity()).getToolbar();
         Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
         intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
                 getCouponListAdapter().getCouponInfoList().get(position));
@@ -386,7 +387,8 @@ public class CouponSelectFragment extends BaseCouponFragment
         //step2
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
-                new Pair<View, String>(image, getString(R.string.transition_image)));
+                new Pair<View, String>(image, getString(R.string.transition_image)),
+                new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)));
 
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
