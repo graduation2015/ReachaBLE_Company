@@ -22,13 +22,9 @@ public class CouponDetailActivity extends Activity {
 
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
-    public static final String THUMBNAIL_WIDTH = "thumbnail:width";
-    public static final String THUMBNAIL_HEIGHT = "thumbnail:height";
 
     /* Views */
     private ImageView mHeaderImageView;
-    private int mThumbnailWidth;
-    private int mThumbnailHeight;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
@@ -45,8 +41,6 @@ public class CouponDetailActivity extends Activity {
      * 初期設定を実行
      */
     private void initSettings() {
-        mThumbnailWidth = getIntent().getIntExtra(THUMBNAIL_WIDTH, 0);
-        mThumbnailHeight = getIntent().getIntExtra(THUMBNAIL_HEIGHT, 0);
         loadItem();
     }
 

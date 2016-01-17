@@ -382,8 +382,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
         intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
                 getCouponListAdapter().getCouponInfoList().get(position));
-        intent.putExtra(CouponDetailActivity.THUMBNAIL_WIDTH, image.getWidth());
-        intent.putExtra(CouponDetailActivity.THUMBNAIL_HEIGHT, image.getHeight());
 
         //step2
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
