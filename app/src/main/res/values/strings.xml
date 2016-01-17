@@ -40,5 +40,6 @@
     <string name="menu_title_grid_view">Grid view</string>
     <string name="menu_title_list_view">List view</string>
     <string name="transition_toolbar">transition:toolbar</string>
+    <string name="search_hint">Coupon search</string>
 
 </resources>
