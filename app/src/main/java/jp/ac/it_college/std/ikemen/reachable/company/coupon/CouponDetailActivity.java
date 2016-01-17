@@ -11,7 +11,9 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapTransform;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 /**
  * クーポンの詳細情報を表示するActivityクラス
@@ -65,7 +67,8 @@ public class CouponDetailActivity extends Activity {
     private void loadThumbnail() {
         Picasso.with(getHeaderImageView().getContext())
                 .load(new File(getSelectedItem().getFilePath()))
-                .resize(mThumbnailWidth, mThumbnailHeight)
+                .transform(new BitmapTransform(
+                        FileUtil.IMG_THUMBNAIL_WIDTH, FileUtil.IMG_THUMBNAIL_HEIGHT))
                 .noFade()
                 .into(getHeaderImageView());
     }
@@ -76,6 +79,8 @@ public class CouponDetailActivity extends Activity {
     private void loadFullSizeImage() {
         Picasso.with(getHeaderImageView().getContext())
                 .load(new File(getSelectedItem().getFilePath()))
+                .transform(new BitmapTransform(
+                        FileUtil.IMG_FULL_SIZE_WIDTH, FileUtil.IMG_FULL_SIZE_HEIGHT))
                 .noFade()
                 .noPlaceholder()
                 .into(getHeaderImageView());

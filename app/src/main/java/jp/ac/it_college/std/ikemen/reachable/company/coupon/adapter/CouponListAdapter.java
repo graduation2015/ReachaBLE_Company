@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
+import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapTransform;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 /**
  * RecyclerViewに表示するアイテムを管理するアダプタークラス
@@ -66,7 +68,8 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
     private void loadBitmap(String path, ImageView imageView) {
         Picasso.with(getContext())
                 .load(new File(path))
-                .fit()
+                .transform(new BitmapTransform(
+                        FileUtil.IMG_THUMBNAIL_WIDTH, FileUtil.IMG_THUMBNAIL_HEIGHT))
                 .placeholder(R.drawable.placeholder)
                 .into(imageView);
     }
