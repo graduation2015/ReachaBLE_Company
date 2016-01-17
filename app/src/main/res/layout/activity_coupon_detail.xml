@@ -9,7 +9,7 @@
         android:id="@+id/img_coupon_pic"
         android:transitionName="@string/transition_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:scaleType="centerCrop" />
 
 
