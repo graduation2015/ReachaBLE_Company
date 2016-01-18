@@ -43,5 +43,5 @@
     <string name="search_hint">Coupon search</string>
     <string name="transition_creation_date">transition:creation:date</string>
     <string name="transition_category">transition:category</string>
-
+    <string name="menu_title_coupon_upload">@string/dialog_title_coupon_upload</string>
 </resources>

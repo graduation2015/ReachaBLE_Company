@@ -167,7 +167,7 @@ public class CouponDetailActivity extends AppCompatActivity {
                 //アクションバーの戻るボタン押下時の処理
                 finishAfterTransition();
                 return true;
-            case R.id.menu_advertise_coupon:
+            case R.id.menu_coupon_upload:
                 //Advertiseボタン押下時の処理
                 return true;
             case R.id.menu_delete:

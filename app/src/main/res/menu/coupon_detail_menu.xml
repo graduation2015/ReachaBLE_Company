@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_advertise_coupon"
-        android:title="@string/menu_title_advertise_coupon"
-        android:icon="@drawable/ic_action_bluetooth_searching"
+        android:id="@+id/menu_coupon_upload"
+        android:title="@string/menu_title_coupon_upload"
+        android:icon="@drawable/ic_cloud_upload_white_24dp"
         app:showAsAction="ifRoom" />
 
     <item
