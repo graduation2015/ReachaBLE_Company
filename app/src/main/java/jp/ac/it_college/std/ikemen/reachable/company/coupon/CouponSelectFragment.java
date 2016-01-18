@@ -356,7 +356,7 @@ public class CouponSelectFragment extends BaseCouponFragment
             toggleSelection(position);
         } else {
             //リストアイテムクリック時の処理
-            transitionCouponDetails(view, position);
+            transitionToCouponDetails(view, position);
         }
     }
 
@@ -365,7 +365,7 @@ public class CouponSelectFragment extends BaseCouponFragment
      * @param view 選択されたクーポンのView
      * @param position 選択されたクーポンのリストポジション
      */
-    private void transitionCouponDetails(View view, int position) {
+    private void transitionToCouponDetails(View view, int position) {
         //Step1 Viewの取得/Intentデータの設定
         View image = view.findViewById(R.id.img_coupon_pic);
         View toolbar = ((MainActivity) getActivity()).getToolbar();
@@ -382,6 +382,30 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         //Step3 Activityを起動する
         startActivityForResult(intent, REQUEST_DETAIL, options.toBundle());
+    }
+
+    /**
+     * Fragmentをアニメーションしながら遷移させる
+     * @param destination 遷移先のFragment
+     */
+    private void transitionToAdvertise(Fragment destination) {
+        //TransitionSetを設定
+        TransitionSet transitionSet = new TransitionSet();
+        //Slideアニメーションを使用
+        Slide slide = new Slide();
+        //画面右からスライドするように設定
+        slide.setSlideEdge(Gravity.END);
+        //TransitionSetにTransitionを追加
+        transitionSet.addTransition(slide);
+
+        //FragmentにTransitionをセット
+        destination.setEnterTransition(transitionSet);
+
+        //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
+        ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
+
+        //Fragmentを切り替える
+        ((MainActivity) getActivity()).changeFragment(destination, R.string.menu_title_advertise_coupon);
     }
 
     /*
@@ -408,32 +432,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
 
         //クーポン宣伝画面に切り替える
-        changeFragment(new AdvertiseCouponFragment());
-    }
-
-    /**
-     * Fragmentをアニメーションしながら遷移させる
-     *
-     * @param destination 遷移先のFragment
-     */
-    private void changeFragment(Fragment destination) {
-        //TransitionSetを設定
-        TransitionSet transitionSet = new TransitionSet();
-        //Slideアニメーションを使用
-        Slide slide = new Slide();
-        //画面右からスライドするように設定
-        slide.setSlideEdge(Gravity.END);
-        //TransitionSetにTransitionを追加
-        transitionSet.addTransition(slide);
-
-        //FragmentにTransitionをセット
-        destination.setEnterTransition(transitionSet);
-
-        //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
-        ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
-
-        //Fragmentを切り替える
-        ((MainActivity) getActivity()).changeFragment(destination, R.string.menu_title_advertise_coupon);
+        transitionToAdvertise(new AdvertiseCouponFragment());
     }
 
     /**
