@@ -1,5 +1,7 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,25 +12,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
+import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapTransform;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
 /**
  * クーポンの詳細情報を表示するActivityクラス
  */
-public class CouponDetailActivity extends AppCompatActivity {
+public class CouponDetailActivity extends AppCompatActivity
+        implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
     public static final String SELECTED_ITEM_POSITION = "selected:position";
     public static final int RESULT_DELETE = 0x004;
+    public static final int RESULT_UPLOADED = 0x005;
 
     /* Views */
     private ImageView mHeaderImageView;
@@ -39,6 +54,11 @@ public class CouponDetailActivity extends AppCompatActivity {
 
     /* Coupon */
     private CouponInfo mSelectedItem;
+    private ProgressDialog mProgressDialog;
+
+    /* Json */
+    private JsonManager mJsonManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +74,9 @@ public class CouponDetailActivity extends AppCompatActivity {
     private void initSettings() {
         loadItem(getSelectedItem());
         setUpActionBar(getToolbar());
+
+        //JsonManagerのインスタンスを生成
+        mJsonManager = new JsonManager(this);
     }
 
     /**
@@ -169,6 +192,7 @@ public class CouponDetailActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_coupon_upload:
                 //Advertiseボタン押下時の処理
+                uploadCoupon();
                 return true;
             case R.id.menu_delete:
                 //削除ボタン押下時の処理
@@ -186,6 +210,64 @@ public class CouponDetailActivity extends AppCompatActivity {
         Intent data = new Intent().putExtra(SELECTED_ITEM_POSITION, getSelectedItemPosition());
         setResult(RESULT_DELETE, data);
         finishAfterTransition();
+    }
+
+    /**
+     * クーポンアップロード完了をリザルトをセットしてクーポン選択画面に戻る
+     */
+    private void completeCouponUpload() {
+        Intent data = new Intent().putExtra(SELECTED_ITEM, getSelectedItem());
+        setResult(RESULT_UPLOADED, data);
+        finishAfterTransition();
+    }
+
+    /**
+     * S3バケットにクーポンをアップロードする
+     */
+    private void uploadCoupon() {
+        //選択されたクーポンをJSONファイルに書き込む
+        if (putCouponToJson(getSelectedItem())) {
+            //書き込みが成功した場合クーポンファイルをS3にアップロードする
+            File couponFile = new File(getSelectedItem().getFilePath());
+            List<File> fileList = Arrays.asList(couponFile, getJsonManager().getFile());
+            beginUpload(fileList);
+        } else {
+            //JSONへの書き込みが失敗した時の処理
+            Toast.makeText(this, R.string.failed_to_write_coupon, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 選択されたクーポンをS3にアップロードする
+     * @param files アップロードするファイルのリスト
+     */
+    private void beginUpload(List<File> files) {
+        //アップロードを実行しObserverListを取得
+        List<TransferObserver> observerList = new S3UploadManager(this,
+                AwsUtil.getTransferUtility(this), files).execute(getProgressDialog());
+        //UploadObserversを生成
+        UploadObservers uploadObservers = new UploadObservers(observerList);
+
+        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
+        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
+        //ProgressDialogを表示
+        getProgressDialog().show();
+    }
+
+    /**
+     * クーポンの情報をjsonに書き込む
+     * @param info 書き込むクーポン
+     * @return 書き込みが成功した場合はtrueを返す
+     */
+    private boolean putCouponToJson(CouponInfo info) {
+        try {
+            getJsonManager().putJsonObj(info);
+        } catch (IOException | JSONException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public ImageView getHeaderImageView() {
@@ -232,5 +314,53 @@ public class CouponDetailActivity extends AppCompatActivity {
 
     public int getSelectedItemPosition() {
         return getIntent().getIntExtra(SELECTED_ITEM_POSITION, -1);
+    }
+
+    public JsonManager getJsonManager() {
+        return mJsonManager;
+    }
+
+    /**
+     * ProgressDialogを生成して返す
+     * @return progressDialog
+     */
+    public ProgressDialog getProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
+            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgress(0);
+            mProgressDialog.setOnCancelListener(this);
+            mProgressDialog.setOnDismissListener(this);
+        }
+        return mProgressDialog;
+    }
+
+    /**
+     * ProgressDialogが中止されたタイミングで呼ばれる
+     * @param dialog
+     */
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        Toast.makeText(
+                this, getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * ProgressDialogが破棄されたタイミングで呼ばれる
+     * @param dialog
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        //クーポンアップロード完了後の処理
+        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
+            //ProgressDialogを破棄
+            mProgressDialog = null;
+
+            //リザルトをセットしてクーポン選択画面に戻る
+            completeCouponUpload();
+        }
     }
 }

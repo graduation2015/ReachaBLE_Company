@@ -180,8 +180,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
     }
 
-
-
     public View getContentView() {
         return mContentView;
     }
@@ -346,11 +344,19 @@ public class CouponSelectFragment extends BaseCouponFragment
             }
         }
 
-        if (requestCode == REQUEST_DETAIL) {
+        if (requestCode == REQUEST_DETAIL && data != null) {
             if (resultCode == CouponDetailActivity.RESULT_DELETE) {
                 //クーポン詳細画面で削除ボタンが押された際の処理
                 int targetPosition = data.getIntExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, -1);
+                //クーポンを削除する
                 deleteCoupon(targetPosition);
+            }
+
+            if (resultCode == CouponDetailActivity.RESULT_UPLOADED) {
+                CouponInfo selectedCoupon =
+                        (CouponInfo) data.getSerializableExtra(CouponDetailActivity.SELECTED_ITEM);
+                //宣伝用クーポンリストにクーポンを保存する
+                saveAdvertiseCoupon(selectedCoupon);
             }
         }
 
@@ -481,7 +487,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ProgressDialogを生成して返す
-     *
      * @return progressDialog
      */
     public ProgressDialog getProgressDialog() {
@@ -511,7 +516,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * ProgressDialogが破棄されたタイミングで呼ばれる
-     *
      * @param dialog
      */
     @Override
@@ -571,7 +575,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * 選択されたクーポンをS3にアップロードする
-     *
      * @param files アップロードするファイルのリスト
      */
     private void beginUpload(List<File> files) {
