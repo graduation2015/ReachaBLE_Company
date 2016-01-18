@@ -42,7 +42,6 @@
     <string name="transition_toolbar">transition:toolbar</string>
     <string name="search_hint">Coupon search</string>
     <string name="transition_creation_date">transition:creation:date</string>
-    <string name="transition_description">transition:description</string>
     <string name="transition_category">transition:category</string>
 
 </resources>
