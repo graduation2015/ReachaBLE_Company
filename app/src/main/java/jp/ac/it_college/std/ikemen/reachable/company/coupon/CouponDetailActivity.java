@@ -42,8 +42,8 @@ public class CouponDetailActivity extends AppCompatActivity
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
     public static final String SELECTED_ITEM_POSITION = "selected:position";
-    public static final int RESULT_DELETE = 0x004;
-    public static final int RESULT_UPLOADED = 0x005;
+    public static final int RESULT_DELETE = 0x201;
+    public static final int RESULT_UPLOADED = 0x202;
 
     /* Views */
     private ImageView mHeaderImageView;

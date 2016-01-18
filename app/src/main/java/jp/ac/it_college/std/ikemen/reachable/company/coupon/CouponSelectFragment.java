@@ -54,10 +54,10 @@ public class CouponSelectFragment extends BaseCouponFragment
         MenuItem.OnMenuItemClickListener {
 
     /* Constants */
-    private static final int REQUEST_GALLERY = 0;
-    public static final int CREATE_COUPON = 0x002;
+    private static final int REQUEST_GALLERY = 0x101;
+    public static final int CREATE_COUPON = 0x102;
+    public static final int REQUEST_DETAIL = 0x103;
     public static final int SPAN_COUNT = 2;
-    public static final int REQUEST_DETAIL = 0x003;
 
     /* Views */
     private View mContentView;
