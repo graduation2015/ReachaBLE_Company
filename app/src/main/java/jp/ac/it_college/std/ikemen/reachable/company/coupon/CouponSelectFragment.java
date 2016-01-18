@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -72,6 +71,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     public static final int CREATE_COUPON = 0x002;
     private static final int ITEM_DELETED = -1;
     public static final int SPAN_COUNT = 2;
+    public static final int REQUEST_DETAIL = 0x003;
 
     /* Views */
     private View mContentView;
@@ -345,6 +345,15 @@ public class CouponSelectFragment extends BaseCouponFragment
                 addCoupon(couponInfo);
             }
         }
+
+        if (requestCode == REQUEST_DETAIL) {
+            if (resultCode == CouponDetailActivity.RESULT_DELETE) {
+                //クーポン詳細画面で削除ボタンが押された際の処理
+                int targetPosition = data.getIntExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, -1);
+                deleteCoupon(targetPosition);
+            }
+        }
+
     }
 
     @Override
@@ -377,20 +386,22 @@ public class CouponSelectFragment extends BaseCouponFragment
      * @param position 選択されたクーポンのリストポジション
      */
     private void transitionCouponDetails(View view, int position) {
-        //step1
+        //Step1 Viewの取得/Intentデータの設定
         View image = view.findViewById(R.id.img_coupon_pic);
         View toolbar = ((MainActivity) getActivity()).getToolbar();
         Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
         intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
                 getCouponListAdapter().getCouponInfoList().get(position));
+        intent.putExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, position);
 
-        //step2
+        //Step2 SharedElementのPairを設定する
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
                 new Pair<View, String>(image, getString(R.string.transition_image)),
                 new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)));
 
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        //Step3 Activityを起動する
+        startActivityForResult(intent, REQUEST_DETAIL, options.toBundle());
     }
 
     /*

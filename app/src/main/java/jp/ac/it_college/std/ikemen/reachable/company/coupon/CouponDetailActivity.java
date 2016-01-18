@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class CouponDetailActivity extends AppCompatActivity {
 
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
+    public static final String SELECTED_ITEM_POSITION = "selected:position";
+    public static final int RESULT_DELETE = 0x004;
 
     /* Views */
     private ImageView mHeaderImageView;
@@ -164,10 +167,25 @@ public class CouponDetailActivity extends AppCompatActivity {
                 //アクションバーの戻るボタン押下時の処理
                 finishAfterTransition();
                 return true;
-
+            case R.id.menu_advertise_coupon:
+                //Advertiseボタン押下時の処理
+                return true;
+            case R.id.menu_delete:
+                //削除ボタン押下時の処理
+                deleteCoupon();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * クーポンを削除する
+     */
+    private void deleteCoupon() {
+        Intent data = new Intent().putExtra(SELECTED_ITEM_POSITION, getSelectedItemPosition());
+        setResult(RESULT_DELETE, data);
+        finishAfterTransition();
     }
 
     public ImageView getHeaderImageView() {
@@ -210,5 +228,9 @@ public class CouponDetailActivity extends AppCompatActivity {
             mCategoryView = (TextView) findViewById(R.id.txt_tags);
         }
         return mCategoryView;
+    }
+
+    public int getSelectedItemPosition() {
+        return getIntent().getIntExtra(SELECTED_ITEM_POSITION, -1);
     }
 }
