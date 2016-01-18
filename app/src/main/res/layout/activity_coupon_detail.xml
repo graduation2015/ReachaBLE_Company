@@ -63,7 +63,11 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_today_black_36dp"
                 android:drawablePadding="64dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:textSize="18sp" />
+
+            <include layout="@layout/divider" />
 
             <TextView
                 android:id="@+id/txt_description"
@@ -71,8 +75,11 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_description_black_36dp"
                 android:drawablePadding="64dp"
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:textSize="18sp" />
+
+            <include layout="@layout/divider" />
 
             <TextView
                 android:id="@+id/txt_tags"
@@ -81,8 +88,11 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_label_black_36dp"
                 android:drawablePadding="64dp"
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:textSize="18sp" />
+
+            <include layout="@layout/divider" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
