@@ -103,7 +103,7 @@ public class CouponDetailActivity extends AppCompatActivity
         //カテゴリーをセット
         getCategoryView().setText(info.getCategoryToString().length() == 0
                 ? getString(R.string.no_category)
-                : getString(R.string.txt_tag, info.getCategoryToString()));
+                : info.getCategoryToString());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             loadThumbnail();
