@@ -52,7 +52,6 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
         loadBitmap(info.getFilePath(), holder.mCouponPic);
 
         holder.mTitleView.setText(info.getTitle());
-        holder.mDescriptionView.setText(info.getDescription());
         holder.mCreationDate.setText(info.getFormattedCreationDate());
         ((Checkable) holder.mCardView).setChecked(isSelected(position));
         holder.mTagsView.setText(info.getCategoryToString().length() == 0
@@ -130,7 +129,6 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
         protected CardView mCardView;
         protected ImageView mCouponPic;
         protected TextView mTitleView;
-        protected TextView mDescriptionView;
         protected TextView mTagsView;
         protected TextView mCreationDate;
 
@@ -139,7 +137,6 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mCouponPic = (ImageView) itemView.findViewById(R.id.img_coupon_pic);
             mTitleView = (TextView) itemView.findViewById(R.id.txt_title);
-            mDescriptionView = (TextView) itemView.findViewById(R.id.txt_description);
             mTagsView = (TextView) itemView.findViewById(R.id.txt_tags);
             mCreationDate = (TextView) itemView.findViewById(R.id.txt_creation_date);
         }
