@@ -50,16 +50,17 @@
 
         <!-- コンテンツ -->
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txt_creation_date"
                 android:transitionName="@string/transition_creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
                 android:textColor="#9E9E9E"
                 android:textSize="14sp" />
 
@@ -67,20 +68,17 @@
                 android:id="@+id/txt_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_title"
-                android:visibility="gone"
                 android:paddingTop="8dp"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/txt_tags"
                 android:transitionName="@string/transition_category"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_description"
                 android:paddingTop="8dp"
                 android:textSize="14sp" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

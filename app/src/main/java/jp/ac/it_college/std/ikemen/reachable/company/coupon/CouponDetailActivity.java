@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +29,9 @@ public class CouponDetailActivity extends AppCompatActivity {
     /* Views */
     private ImageView mHeaderImageView;
     private Toolbar mToolbar;
+    private TextView mCreationDateView;
+    private TextView mDescriptionView;
+    private TextView mCategoryView;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
@@ -44,7 +48,7 @@ public class CouponDetailActivity extends AppCompatActivity {
      * 初期設定を実行
      */
     private void initSettings() {
-        loadItem();
+        loadItem(getSelectedItem());
         setUpActionBar(getToolbar());
     }
 
@@ -64,7 +68,14 @@ public class CouponDetailActivity extends AppCompatActivity {
     /**
      * クーポン情報を読み込む
      */
-    private void loadItem() {
+    private void loadItem(CouponInfo info) {
+        //作成日をセット
+        getCreationDateView().setText(info.getFormattedCreationDate());
+        //説明をセット
+        getDescriptionView().setText(info.getDescription());
+        //カテゴリーをセット
+        getCategoryView().setText(info.getCategoryToString());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             loadThumbnail();
         } else {
@@ -171,5 +182,26 @@ public class CouponDetailActivity extends AppCompatActivity {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
         }
         return mToolbar;
+    }
+
+    public TextView getCreationDateView() {
+        if (mCreationDateView == null) {
+            mCreationDateView = (TextView) findViewById(R.id.txt_creation_date);
+        }
+        return mCreationDateView;
+    }
+
+    public TextView getDescriptionView() {
+        if (mDescriptionView == null) {
+            mDescriptionView = (TextView) findViewById(R.id.txt_description);
+        }
+        return mDescriptionView;
+    }
+
+    public TextView getCategoryView() {
+        if (mCategoryView == null) {
+            mCategoryView = (TextView) findViewById(R.id.txt_tags);
+        }
+        return mCategoryView;
     }
 }
