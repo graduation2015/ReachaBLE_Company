@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_advertise_coupon"
+        android:title="@string/menu_title_advertise_coupon"
+        android:icon="@drawable/ic_action_bluetooth_searching"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_delete"
+        android:title="@string/menu_title_delete"
+        android:icon="@drawable/ic_delete_white_24dp"
+        app:showAsAction="ifRoom" />
+
+</menu>
