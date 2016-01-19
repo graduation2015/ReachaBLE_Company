@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.github.jorgecastilloprz.FABProgressCircle;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -51,6 +52,7 @@ public class CouponDetailActivity extends AppCompatActivity
     private TextView mCreationDateView;
     private TextView mDescriptionView;
     private TextView mCategoryView;
+    private FABProgressCircle mProgressCircle;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
@@ -320,6 +322,13 @@ public class CouponDetailActivity extends AppCompatActivity
 
     public JsonManager getJsonManager() {
         return mJsonManager;
+    }
+
+    public FABProgressCircle getProgressCircle() {
+        if (mProgressCircle == null) {
+            mProgressCircle = (FABProgressCircle) findViewById(R.id.fab_progress_circle);
+        }
+        return mProgressCircle;
     }
 
     /**
