@@ -1,21 +1,23 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -28,7 +30,6 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapTransform;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
@@ -38,7 +39,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
  * クーポンの詳細情報を表示するActivityクラス
  */
 public class CouponDetailActivity extends AppCompatActivity
-        implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+        implements View.OnClickListener, S3UploadManager.OnUploadListener, FABProgressListener {
 
     /* Constants */
     public static final String SELECTED_ITEM = "selected:item";
@@ -53,10 +54,10 @@ public class CouponDetailActivity extends AppCompatActivity
     private TextView mDescriptionView;
     private TextView mCategoryView;
     private FABProgressCircle mProgressCircle;
+    private CoordinatorLayout mCoordinatorLayout;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
-    private ProgressDialog mProgressDialog;
 
     /* Json */
     private JsonManager mJsonManager;
@@ -79,6 +80,11 @@ public class CouponDetailActivity extends AppCompatActivity
 
         //JsonManagerのインスタンスを生成
         mJsonManager = new JsonManager(this);
+
+        //アップロード用FABのOnclickListenerを設定する
+        getProgressCircle().setOnClickListener(this);
+        //FABProgressCircleのattachListenerを登録
+        getProgressCircle().attachListener(this);
     }
 
     /**
@@ -183,7 +189,7 @@ public class CouponDetailActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.coupon_detail_menu, menu);
+        getMenuInflater().inflate(R.menu.contextual_menu, menu);
         return true;
     }
 
@@ -193,10 +199,6 @@ public class CouponDetailActivity extends AppCompatActivity
             case android.R.id.home:
                 //アクションバーの戻るボタン押下時の処理
                 finishAfterTransition();
-                return true;
-            case R.id.menu_coupon_upload:
-                //Advertiseボタン押下時の処理
-                uploadCoupon();
                 return true;
             case R.id.menu_delete:
                 //削除ボタン押下時の処理
@@ -246,16 +248,11 @@ public class CouponDetailActivity extends AppCompatActivity
      * @param files アップロードするファイルのリスト
      */
     private void beginUpload(List<File> files) {
-        //アップロードを実行しObserverListを取得
-        List<TransferObserver> observerList = new S3UploadManager(this,
-                AwsUtil.getTransferUtility(this), files).execute(getProgressDialog());
-        //UploadObserversを生成
-        UploadObservers uploadObservers = new UploadObservers(observerList);
+        //FABProgressCircleを表示する
+        getProgressCircle().show();
 
-        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
-        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
-        //ProgressDialogを表示
-        getProgressDialog().show();
+        //アップロードを実行しObserverListを取得
+        new S3UploadManager(AwsUtil.getTransferUtility(this), this).upload(files);
     }
 
     /**
@@ -331,47 +328,49 @@ public class CouponDetailActivity extends AppCompatActivity
         return mProgressCircle;
     }
 
-    /**
-     * ProgressDialogを生成して返す
-     * @return progressDialog
-     */
-    public ProgressDialog getProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgress(0);
-            mProgressDialog.setOnCancelListener(this);
-            mProgressDialog.setOnDismissListener(this);
+    public CoordinatorLayout getCoordinatorLayout() {
+        if (mCoordinatorLayout == null) {
+            mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         }
-        return mProgressDialog;
+        return mCoordinatorLayout;
     }
 
-    /**
-     * ProgressDialogが中止されたタイミングで呼ばれる
-     * @param dialog
-     */
     @Override
-    public void onCancel(DialogInterface dialog) {
-        Toast.makeText(
-                this, getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_progress_circle:
+                //UploadFAB押下時の処理
+                uploadCoupon();
+                break;
+        }
     }
 
-    /**
-     * ProgressDialogが破棄されたタイミングで呼ばれる
-     * @param dialog
-     */
+    /* アップロード完了後に呼ばれる */
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        //クーポンアップロード完了後の処理
-        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            //ProgressDialogを破棄
-            mProgressDialog = null;
+    public void onUploadCompleted() {
+        getProgressCircle().beginFinalAnimation();
+    }
 
-            //リザルトをセットしてクーポン選択画面に戻る
-            completeCouponUpload();
-        }
+    /* アップロードキャンセル時に呼ばれる */
+    @Override
+    public void onUploadCanceled(int id, TransferState transferState) {
+        getProgressCircle().hide();
+    }
+
+    /* アップロード失敗時に呼ばれる */
+    @Override
+    public void onUploadFailed(int id, TransferState transferState) {
+        getProgressCircle().hide();
+    }
+
+    /* クーポンアップロード完了後、FABProgressCircleのアニメーション終了時に呼ばれる */
+    @Override
+    public void onFABProgressAnimationEnd() {
+        //アップロード完了後にFABのアイコンが正しく表示されない現象を修正
+        findViewById(R.id.completeFabRoot).setPadding(0, 0, 0, 0);
+
+        //アップロード完了を通知するSnackBarを表示する
+        Snackbar.make(getCoordinatorLayout(), getString(R.string.coupon_upload_completed),
+                Snackbar.LENGTH_INDEFINITE).show();
     }
 }
