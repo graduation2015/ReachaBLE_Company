@@ -56,6 +56,7 @@ public class CouponDetailActivity extends AppCompatActivity
     private TextView mCategoryView;
     private FABProgressCircle mProgressCircle;
     private CoordinatorLayout mCoordinatorLayout;
+    private TextView mTitleView;
 
     /* Coupon */
     private CouponInfo mSelectedItem;
@@ -96,8 +97,7 @@ public class CouponDetailActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setTitle(getSelectedItem().getTitle());
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -111,8 +111,9 @@ public class CouponDetailActivity extends AppCompatActivity
         getDescriptionView().setText(info.getDescription());
         //カテゴリーをセット
         getCategoryView().setText(info.getCategoryToString().length() == 0
-                ? getString(R.string.no_category)
-                : info.getCategoryToString());
+                ? getString(R.string.no_category) : info.getCategoryToString());
+        //タイトルをセット
+        getTitleView().setText(info.getTitle());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             loadThumbnail();
@@ -333,6 +334,13 @@ public class CouponDetailActivity extends AppCompatActivity
             mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         }
         return mCoordinatorLayout;
+    }
+
+    public TextView getTitleView() {
+        if (mTitleView == null) {
+            mTitleView = (TextView) findViewById(R.id.txt_title);
+        }
+        return mTitleView;
     }
 
     @Override
