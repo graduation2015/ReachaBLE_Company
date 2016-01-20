@@ -3,9 +3,7 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,12 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amazonaws.com.google.gson.Gson;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
@@ -224,7 +219,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         getCouponListView().getLayoutManager()
                 .smoothScrollToPosition(getCouponListView(), null, 0);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -237,7 +232,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //オリジナルのクーポンリストからクーポンを削除
         getCouponInfoList().remove(target);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
@@ -254,25 +249,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         //アダプターにリストの変更を通知
         getCouponListAdapter().notifyDataSetChanged();
-    }
-
-    /**
-     * SharedPreferencesにクーポンのインスタンスを保存
-     * @param infoList 保存するクーポン情報リスト
-     * @param key      SharedPreferencesに保存する際のキー名
-     */
-    private void saveCouponInstance(List<CouponInfo> infoList, String key) {
-        Gson gson = new Gson();
-        SharedPreferences.Editor editor = getActivity().getSharedPreferences(
-                CouponInfo.PREF_INFO, Context.MODE_PRIVATE).edit();
-        Set<String> instances = new HashSet<>();
-
-        for (CouponInfo info : infoList) {
-            instances.add(gson.toJson(info));
-        }
-
-        editor.putStringSet(key, instances);
-        editor.apply();
     }
 
     /**
