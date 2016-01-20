@@ -47,4 +47,5 @@
     <string name="advertise">ADVERTISE</string>
     <string name="coupon_upload_canceled">Upload canceled.</string>
     <string name="transition_fab">transition:fab</string>
+    <string name="transition_title">transition:title</string>
 </resources>
