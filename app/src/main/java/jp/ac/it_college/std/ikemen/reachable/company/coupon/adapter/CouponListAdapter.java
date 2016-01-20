@@ -55,8 +55,7 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
         holder.mCreationDate.setText(info.getFormattedCreationDate());
         ((Checkable) holder.mCardView).setChecked(isSelected(position));
         holder.mTagsView.setText(info.getCategoryToString().length() == 0
-                ? getContext().getString(R.string.no_category)
-                : getContext().getString(R.string.txt_tag, info.getCategoryToString()));
+                ? getContext().getString(R.string.no_category) : info.getCategoryToString());
     }
 
     /**
