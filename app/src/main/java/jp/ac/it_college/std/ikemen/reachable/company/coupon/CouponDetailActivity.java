@@ -380,9 +380,6 @@ public class CouponDetailActivity extends AppCompatActivity
     /* クーポンアップロード完了後、FABProgressCircleのアニメーション終了時に呼ばれる */
     @Override
     public void onFABProgressAnimationEnd() {
-        //アップロード完了後にFABのアイコンが正しく表示されない現象を修正
-        findViewById(R.id.completeFabRoot).setPadding(0, 0, 0, 0);
-
         //アップロード完了を通知するSnackBarを表示する
         Snackbar.make(getCoordinatorLayout(), R.string.coupon_upload_completed,
                 Snackbar.LENGTH_INDEFINITE)

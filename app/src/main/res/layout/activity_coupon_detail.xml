@@ -43,27 +43,34 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle
-        android:id="@+id/fab_progress_circle"
+    <RelativeLayout
+        android:id="@+id/fab_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:arcWidth="4dp"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|end"
         app:layout_behavior='jp.ac.it_college.std.ikemen.reachable.company.view.behavior.FabProgressCircleBehavior'>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+        <jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle
+            android:id="@+id/fab_progress_circle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_cloud_upload_white_24dp"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:borderWidth="0dp" />
+            android:fitsSystemWindows="true"
+            app:finalIcon="@drawable/ic_cloud_done_white_24dp"
+            app:arcWidth="4dp">
 
-    </jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_cloud_upload_white_24dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:borderWidth="0dp" />
+
+        </jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle>
+    </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
