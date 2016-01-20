@@ -53,6 +53,7 @@
 
         <jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle
             android:id="@+id/fab_progress_circle"
+            android:transitionName="@string/transition_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
