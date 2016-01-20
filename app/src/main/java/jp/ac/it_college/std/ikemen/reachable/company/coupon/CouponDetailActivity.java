@@ -34,6 +34,7 @@ import jp.ac.it_college.std.ikemen.reachable.company.coupon.bitmap.BitmapTransfo
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
+import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
 /**
  * クーポンの詳細情報を表示するActivityクラス
@@ -81,7 +82,7 @@ public class CouponDetailActivity extends AppCompatActivity
         //JsonManagerのインスタンスを生成
         mJsonManager = new JsonManager(this);
 
-        //アップロード用FABのOnclickListenerを設定する
+        //FABProgressCircleのOnclickListenerを設定する
         getProgressCircle().setOnClickListener(this);
         //FABProgressCircleのattachListenerを登録
         getProgressCircle().attachListener(this);
@@ -219,11 +220,10 @@ public class CouponDetailActivity extends AppCompatActivity
     }
 
     /**
-     * クーポンアップロード完了をリザルトをセットしてクーポン選択画面に戻る
+     * クーポンアップロード完了をリザルトにセットしてクーポン選択画面に戻る
      */
     private void completeCouponUpload() {
-        Intent data = new Intent().putExtra(SELECTED_ITEM, getSelectedItem());
-        setResult(RESULT_UPLOADED, data);
+        setResult(RESULT_UPLOADED);
         finishAfterTransition();
     }
 
@@ -339,8 +339,11 @@ public class CouponDetailActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_progress_circle:
-                //UploadFAB押下時の処理
-                uploadCoupon();
+                //ProgressCircleが表示中の場合は処理を実行しない
+                if (!getProgressCircle().isShown()) {
+                    //UploadFAB押下時の処理
+                    uploadCoupon();
+                }
                 break;
         }
     }
@@ -348,19 +351,30 @@ public class CouponDetailActivity extends AppCompatActivity
     /* アップロード完了後に呼ばれる */
     @Override
     public void onUploadCompleted() {
+        //FABProgressの終了アニメーションを再生する
         getProgressCircle().beginFinalAnimation();
+        //宣伝用にクーポンを保存する
+        Utils.saveCouponInstance(
+                this, Arrays.asList(getSelectedItem()), BaseCouponFragment.PREF_ADVERTISE_COUPON_LIST);
     }
 
     /* アップロードキャンセル時に呼ばれる */
     @Override
     public void onUploadCanceled(int id, TransferState transferState) {
+        //FABProgressCircleを非表示にする
         getProgressCircle().hide();
+
+        Snackbar.make(getCoordinatorLayout(), R.string.coupon_upload_canceled, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     /* アップロード失敗時に呼ばれる */
     @Override
     public void onUploadFailed(int id, TransferState transferState) {
         getProgressCircle().hide();
+
+        Snackbar.make(getCoordinatorLayout(), R.string.coupon_upload_failed, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     /* クーポンアップロード完了後、FABProgressCircleのアニメーション終了時に呼ばれる */
@@ -370,7 +384,14 @@ public class CouponDetailActivity extends AppCompatActivity
         findViewById(R.id.completeFabRoot).setPadding(0, 0, 0, 0);
 
         //アップロード完了を通知するSnackBarを表示する
-        Snackbar.make(getCoordinatorLayout(), getString(R.string.coupon_upload_completed),
-                Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(getCoordinatorLayout(), R.string.coupon_upload_completed,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.advertise, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        completeCouponUpload();
+                    }
+                })
+                .show();
     }
 }
