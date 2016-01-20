@@ -43,7 +43,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.github.jorgecastilloprz.FABProgressCircle
+    <jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle
         android:id="@+id/fab_progress_circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             app:fabSize="normal"
             app:borderWidth="0dp" />
 
-    </com.github.jorgecastilloprz.FABProgressCircle>
+    </jp.ac.it_college.std.ikemen.reachable.company.view.ShowingSupportProgressCircle>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
