@@ -21,38 +21,49 @@
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/txt_creation_date"
-            android:transitionName="@string/transition_creation_date"
-            android:layout_width="wrap_content"
+            android:id="@+id/txt_title"
+            android:transitionName="@string/transition_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/img_coupon_pic"
-            android:padding="12dp"
-            android:textColor="#9E9E9E"
-            android:textSize="14sp" />
+            android:layout_alignBottom="@id/img_coupon_pic"
+            android:gravity="center"
+            android:padding="8dp"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/img_coupon_pic"
+            android:orientation="vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="16dp"
-            android:layout_below="@id/txt_creation_date">
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp">
 
             <TextView
-                android:id="@+id/txt_title"
-                android:layout_width="match_parent"
+                android:id="@+id/txt_creation_date"
+                android:transitionName="@string/transition_creation_date"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp" />
+                android:drawableStart="@drawable/ic_today_black_18dp"
+                android:drawablePadding="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="#9E9E9E"
+                android:textSize="14sp" />
+
 
             <TextView
                 android:id="@+id/txt_tags"
                 android:transitionName="@string/transition_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_title"
+                android:drawableStart="@drawable/ic_label_black_18dp"
+                android:drawablePadding="8dp"
                 android:paddingTop="8dp"
                 android:textSize="14sp" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </jp.ac.it_college.std.ikemen.reachable.company.view.CheckableCardView>
