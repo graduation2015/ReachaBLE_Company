@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.transition.Slide;
-import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 
 import java.util.Collections;
 import java.util.List;
@@ -351,26 +349,19 @@ public class CouponSelectFragment extends BaseCouponFragment
     }
 
     /**
-     * Fragmentをアニメーションしながら遷移させる
+     * クーポン宣伝画面に遷移する
      */
     private void transitionToAdvertise() {
-        //宣伝画面用フラグメントのインスタンスを生成
-        Fragment fragment = new AdvertiseCouponFragment();
-        //TransitionSetを設定
-        TransitionSet transitionSet = new TransitionSet();
         //Slideアニメーションを使用
         Slide slide = new Slide();
         //画面右からスライドするように設定
         slide.setSlideEdge(Gravity.END);
-        //TransitionSetにTransitionを追加
-        transitionSet.addTransition(slide);
-
+        //宣伝画面用フラグメントのインスタンスを生成
+        Fragment fragment = new AdvertiseCouponFragment();
         //FragmentにTransitionをセット
-        fragment.setEnterTransition(transitionSet);
-
+        fragment.setEnterTransition(slide);
         //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
         ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
-
         //Fragmentを切り替える
         ((MainActivity) getActivity()).changeFragment(fragment, R.string.menu_title_advertise_coupon);
     }
