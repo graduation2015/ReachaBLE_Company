@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -33,7 +31,6 @@ import android.widget.TextView;
 
 import com.amazonaws.com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +64,6 @@ public class CouponSelectFragment extends BaseCouponFragment
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
     private SearchView mSearchView;
-    private CoordinatorLayout mCoordinatorLayout;
 
     /* Actionbar */
     private ActionMode mActionMode;
@@ -192,14 +188,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         return mActionMode;
     }
 
-    public CoordinatorLayout getCoordinatorLayout() {
-        if (mCoordinatorLayout == null) {
-            mCoordinatorLayout =
-                    (CoordinatorLayout) getContentView().findViewById(R.id.coordinator_layout);
-        }
-        return mCoordinatorLayout;
-    }
-
     /**
      * クーポンをギャラリーから選択する
      */
@@ -226,7 +214,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストにクーポンを追加する
-     *
      * @param info クーポン作成画面で作成されたクーポン
      */
     private void addCoupon(CouponInfo info) {
@@ -242,7 +229,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストからクーポンを削除する
-     *
      * @param position 削除するクーポンのインデックス
      */
     private void deleteCoupon(int position) {
@@ -272,7 +258,6 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * SharedPreferencesにクーポンのインスタンスを保存
-     *
      * @param infoList 保存するクーポン情報リスト
      * @param key      SharedPreferencesに保存する際のキー名
      */
@@ -314,13 +299,12 @@ public class CouponSelectFragment extends BaseCouponFragment
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
+            //フォトギャラリーからのレスポンス
             if (requestCode == REQUEST_GALLERY) {
                 Intent intent = new Intent(getActivity(), CreateCouponActivity.class);
                 intent.setData(data.getData());
                 startActivityForResult(intent, CREATE_COUPON);
-            }
-
-            if (requestCode == CREATE_COUPON) {
+            } else if (requestCode == CREATE_COUPON) { //クーポン作成画面からのレスポンス
                 //作成されたクーポンの情報を取得
                 CouponInfo couponInfo = (CouponInfo) data.getSerializableExtra(
                         CreateCouponActivity.CREATED_COUPON_DATA);
@@ -329,22 +313,17 @@ public class CouponSelectFragment extends BaseCouponFragment
             }
         }
 
-        if (requestCode == REQUEST_DETAIL && data != null) {
-            if (resultCode == CouponDetailActivity.RESULT_DELETE) {
+        //クーポン詳細画面からのレスポンス
+        if (requestCode == REQUEST_DETAIL) {
+            if (resultCode == CouponDetailActivity.RESULT_DELETE && data != null) {
                 //クーポン詳細画面で削除ボタンが押された際の処理
                 int targetPosition = data.getIntExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, -1);
                 //クーポンを削除する
                 deleteCoupon(targetPosition);
-            }
-
-            if (resultCode == CouponDetailActivity.RESULT_UPLOADED) {
-                CouponInfo selectedCoupon =
-                        (CouponInfo) data.getSerializableExtra(CouponDetailActivity.SELECTED_ITEM);
-                //宣伝用クーポンリストにクーポンを保存する
-                saveAdvertiseCoupon(selectedCoupon);
+            } else if (resultCode == CouponDetailActivity.RESULT_UPLOADED) {
+                transitionToAdvertise();
             }
         }
-
     }
 
     @Override
@@ -397,9 +376,10 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * Fragmentをアニメーションしながら遷移させる
-     * @param destination 遷移先のFragment
      */
-    private void transitionToAdvertise(Fragment destination) {
+    private void transitionToAdvertise() {
+        //宣伝画面用フラグメントのインスタンスを生成
+        Fragment fragment = new AdvertiseCouponFragment();
         //TransitionSetを設定
         TransitionSet transitionSet = new TransitionSet();
         //Slideアニメーションを使用
@@ -410,13 +390,13 @@ public class CouponSelectFragment extends BaseCouponFragment
         transitionSet.addTransition(slide);
 
         //FragmentにTransitionをセット
-        destination.setEnterTransition(transitionSet);
+        fragment.setEnterTransition(transitionSet);
 
         //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
         ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
 
         //Fragmentを切り替える
-        ((MainActivity) getActivity()).changeFragment(destination, R.string.menu_title_advertise_coupon);
+        ((MainActivity) getActivity()).changeFragment(fragment, R.string.menu_title_advertise_coupon);
     }
 
     /*
@@ -430,39 +410,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
 
         toggleSelection(position);
-    }
-
-    /**
-     * クーポンアップロード後に宣伝用のクーポンを保存する
-     *
-     * @param selectedCoupon 選択されたクーポン
-     */
-    private void saveAdvertiseCoupon(CouponInfo selectedCoupon) {
-        //選択されたクーポンを保存
-        List<CouponInfo> selectedList = Arrays.asList(selectedCoupon);
-        saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
-
-        //SnackBarを表示してクーポン宣伝画面への遷移を促す
-        showSnackBar(getString(R.string.coupon_upload_completed), getString(R.string.advertise),
-                new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //クーポン宣伝画面に切り替える
-                transitionToAdvertise(new AdvertiseCouponFragment());
-            }
-        });
-    }
-
-    /**
-     * SnackBarを表示する
-     * @param message SnackBarに表示する文字列
-     * @param actionStr アクションボタンにセットする文字列
-     * @param listener アクションボタン押下時のOnclickListener
-     */
-    private void showSnackBar(String message, String actionStr, View.OnClickListener listener) {
-        Snackbar.make(getCoordinatorLayout(), message, Snackbar.LENGTH_INDEFINITE)
-                .setAction(actionStr, listener)
-                .show();
     }
 
     /**
