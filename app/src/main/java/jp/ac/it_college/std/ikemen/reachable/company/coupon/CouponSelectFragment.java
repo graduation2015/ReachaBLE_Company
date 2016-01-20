@@ -325,27 +325,41 @@ public class CouponSelectFragment extends BaseCouponFragment
     }
 
     /**
+     * クーポン詳細画面と共有するViewをSharedElementに設定する
+     * @param view クリックされたクーポンのView
+     * @return SharedElementの情報が入ったActivityOptionsCompatを返す
+     */
+    private ActivityOptionsCompat makeSharedElementOptions(View view) {
+        View title = view.findViewById(R.id.txt_title);
+        View image = view.findViewById(R.id.img_coupon_pic);
+        View creationDate = view.findViewById(R.id.txt_creation_date);
+        View category = view.findViewById(R.id.txt_tags);
+        View toolbar = ((MainActivity) getActivity()).getToolbar();
+        View fab = getContentView().findViewById(R.id.fab);
+
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                new Pair<View, String>(image, getString(R.string.transition_image)),
+                new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)),
+                new Pair<View, String>(creationDate, getString(R.string.transition_creation_date)),
+                new Pair<View, String>(category, getString(R.string.transition_category)),
+                new Pair<View, String>(fab, getString(R.string.transition_fab)),
+                new Pair<View, String>(title, getString(R.string.transition_title))
+        );
+    }
+
+    /**
      * クーポン詳細画面に遷移する
      * @param view 選択されたクーポンのView
      * @param position 選択されたクーポンのリストポジション
      */
     private void transitionToCouponDetails(View view, int position) {
-        //Step1 Viewの取得/Intentデータの設定
-        View image = view.findViewById(R.id.img_coupon_pic);
-        View toolbar = ((MainActivity) getActivity()).getToolbar();
         Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
         intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
                 getCouponListAdapter().getCouponInfoList().get(position));
         intent.putExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, position);
 
-        //Step2 SharedElementのPairを設定する
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                new Pair<View, String>(image, getString(R.string.transition_image)),
-                new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)));
-
-        //Step3 Activityを起動する
-        startActivityForResult(intent, REQUEST_DETAIL, options.toBundle());
+        startActivityForResult(intent, REQUEST_DETAIL, makeSharedElementOptions(view).toBundle());
     }
 
     /**
