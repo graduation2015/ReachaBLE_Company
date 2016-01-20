@@ -45,4 +45,5 @@
     <string name="transition_category">transition:category</string>
     <string name="menu_title_coupon_upload">@string/dialog_title_coupon_upload</string>
     <string name="advertise">ADVERTISE</string>
+    <string name="coupon_upload_canceled">Upload canceled.</string>
 </resources>
