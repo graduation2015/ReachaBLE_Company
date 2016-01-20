@@ -60,12 +60,10 @@ public class S3UploadManager implements TransferListener {
         return mTransferUtility;
     }
 
-    private boolean isAllUploadCompleted(TransferUtility transferUtility) {
-        List<TransferObserver> uploadList =
-                transferUtility.getTransfersWithType(TransferType.UPLOAD);
-
-        for (TransferObserver observer : uploadList) {
-            if (observer.getState() != TransferState.COMPLETED) {
+    private boolean checkObserversState(TransferType type, TransferState state) {
+        List<TransferObserver> observerList = getTransferUtility().getTransfersWithType(type);
+        for (TransferObserver observer : observerList) {
+            if (observer.getState() != state) {
                 return false;
             }
         }
@@ -84,7 +82,7 @@ public class S3UploadManager implements TransferListener {
                     mUploadListener.onUploadCanceled(i, transferState);
                     break;
                 case COMPLETED:
-                    if (isAllUploadCompleted(getTransferUtility())) {
+                    if (checkObserversState(TransferType.UPLOAD, TransferState.COMPLETED)) {
                         mUploadListener.onUploadCompleted();
                     }
                     break;
