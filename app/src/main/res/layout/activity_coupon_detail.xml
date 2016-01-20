@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:src="@drawable/ic_cloud_upload_white_24dp"
-            app:elevation="16dp"
+            app:elevation="6dp"
             app:fabSize="normal"
             app:borderWidth="0dp" />
 
