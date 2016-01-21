@@ -5,6 +5,7 @@ import android.widget.Filter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
 
@@ -53,9 +54,16 @@ public class CouponFilter extends Filter {
      * @return クーポンにキーワードが含まれる場合はtrueを返す
      */
     private boolean isKeywordExists(CouponInfo info, CharSequence keyword) {
-        final String filterPattern = keyword.toString().toLowerCase().trim();
+        final String filterPattern = keyword.toString().toLowerCase().trim().replace("　", " ");
+        final String[] dividedWords = filterPattern.split(" ");
 
-        return info.toString().toLowerCase().trim().contains(filterPattern);
+        for (String word : dividedWords) {
+            if (info.toString().toLowerCase(Locale.ENGLISH).trim().contains(word)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
