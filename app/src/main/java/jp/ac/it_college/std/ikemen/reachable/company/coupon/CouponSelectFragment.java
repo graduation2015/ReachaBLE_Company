@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -27,7 +28,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
@@ -62,6 +66,10 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /* Actionbar */
     private ActionMode mActionMode;
+
+    /* Coupon */
+    private LinkedHashMap<Integer, CouponInfo> mDeletedCouponMap;
+    private View.OnClickListener mUndoCouponListener;
 
 
     @Override
@@ -191,6 +199,13 @@ public class CouponSelectFragment extends BaseCouponFragment
         return mCoordinatorLayout;
     }
 
+    public HashMap<Integer, CouponInfo> getDeletedCouponMap() {
+        if (mDeletedCouponMap == null) {
+            mDeletedCouponMap = new LinkedHashMap<>();
+        }
+        return mDeletedCouponMap;
+    }
+
     /**
      * クーポンをギャラリーから選択する
      */
@@ -217,15 +232,16 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストにクーポンを追加する
+     * @param location 追加する場所
      * @param info クーポン作成画面で作成されたクーポン
      */
-    private void addCoupon(CouponInfo info) {
+    private void addCoupon(int location, CouponInfo info) {
         //クーポンリストにクーポンを追加
-        getCouponInfoList().add(0, info);
-        getCouponListAdapter().add(info);
+        getCouponInfoList().add(info);
+        getCouponListAdapter().add(location, info);
         //追加したクーポンまでスクロールする
         getCouponListView().getLayoutManager()
-                .smoothScrollToPosition(getCouponListView(), null, 0);
+                .smoothScrollToPosition(getCouponListView(), null, location);
         //クーポンリストをSharedPreferencesに保存
         Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
@@ -233,14 +249,17 @@ public class CouponSelectFragment extends BaseCouponFragment
     /**
      * クーポンリストからクーポンを削除する
      * @param position 削除するクーポンのインデックス
+     * @return 削除したクーポンを返す
      */
-    private void deleteCoupon(int position) {
+    private CouponInfo deleteCoupon(int position) {
         //アダプターのクーポンリストからクーポンを削除
         CouponInfo target = getCouponListAdapter().remove(position);
         //オリジナルのクーポンリストからクーポンを削除
         getCouponInfoList().remove(target);
         //クーポンリストをSharedPreferencesに保存
         Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+
+        return target;
     }
 
     /**
@@ -252,8 +271,51 @@ public class CouponSelectFragment extends BaseCouponFragment
         Collections.reverse(selectedItem);
         //最後尾から削除していく
         for (Integer position : selectedItem) {
-            deleteCoupon(position);
+            getDeletedCouponMap().put(position, deleteCoupon(position));
         }
+
+        //削除アイテムを戻す際のSnackBarを表示する
+        showUndoSnackBar(selectedItem.size());
+    }
+
+    /**
+     * 削除されたクーポンを元に戻す
+     */
+    private void undoCoupon() {
+        //UNDOボタン押下時の処理
+        List<Integer> reverseList = new ArrayList<>(getDeletedCouponMap().keySet());
+        Collections.reverse(reverseList);
+        for (Integer location : reverseList) {
+            addCoupon(location, getDeletedCouponMap().get(location));
+        }
+    }
+
+    private View.OnClickListener getUndoCouponListener() {
+        if (mUndoCouponListener == null) {
+            mUndoCouponListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    undoCoupon();
+                }
+            };
+        }
+
+        return mUndoCouponListener;
+    }
+
+    private void showUndoSnackBar(int deleteCount) {
+        Snackbar.make(getCoordinatorLayout(), getString(R.string.deleted_coupon, deleteCount),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, getUndoCouponListener())
+                .setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
+                        //SnackBar非表示の際に削除済みクーポンのマップをクリアする
+                        getDeletedCouponMap().clear();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -290,7 +352,7 @@ public class CouponSelectFragment extends BaseCouponFragment
                 CouponInfo couponInfo = (CouponInfo) data.getSerializableExtra(
                         CreateCouponActivity.CREATED_COUPON_DATA);
                 //クーポンをクーポンリストに追加
-                addCoupon(couponInfo);
+                addCoupon(0, couponInfo);
             }
         }
 
@@ -299,9 +361,12 @@ public class CouponSelectFragment extends BaseCouponFragment
             if (resultCode == CouponDetailActivity.RESULT_DELETE && data != null) {
                 //クーポン詳細画面で削除ボタンが押された際の処理
                 int targetPosition = data.getIntExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, -1);
-                //クーポンを削除する
-                deleteCoupon(targetPosition);
+                //クーポンを削除して削除済みマップに追加する
+                getDeletedCouponMap().put(targetPosition, deleteCoupon(targetPosition));
+                //削除したクーポンを戻す際のSnackBarを表示する
+                showUndoSnackBar(1);
             } else if (resultCode == CouponDetailActivity.RESULT_UPLOADED) {
+                //クーポン宣伝画面へ遷移する
                 transitionToAdvertise();
             }
         }

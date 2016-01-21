@@ -85,11 +85,13 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
      * クーポンリストにクーポンを追加する
      * @param info 追加するクーポン
      */
-    public void add(CouponInfo info) {
-        //リストの先頭に追加
-        getCouponInfoList().add(0, info);
+    public void add(int location, CouponInfo info) {
+        int newLocation = location < getItemCount() ? location : getItemCount();
+        //リストにクーポンを追加
+        getCouponInfoList().add(newLocation, info);
+
         //追加したことを通知
-        notifyItemInserted(0);
+        notifyItemInserted(newLocation);
     }
 
     /**
