@@ -17,11 +17,18 @@ import java.net.URISyntaxException;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CompanyInfo;
 
 public class FileUtil {
+    /* JSON */
     public static final String FOLDER_SUFFIX = "/";
     public static final String FILE_DELIMITER = ".";
     private static final String OBJECT_KEY =
             CompanyInfo.COMPANY_ID + FOLDER_SUFFIX + CompanyInfo.COMPANY_ID;
     private static final String JSON_FILE_EXTENSION = ".json";
+
+    /* IMAGE */
+    public static final int IMG_THUMBNAIL_WIDTH = 1024;
+    public static final int IMG_THUMBNAIL_HEIGHT = 576;
+    public static final int IMG_FULL_SIZE_WIDTH = 2048;
+    public static final int IMG_FULL_SIZE_HEIGHT = 1152;
 
     /**
      * ファイルの絶対パスを取得

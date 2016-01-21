@@ -3,21 +3,22 @@ package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.transition.Slide;
-import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,30 +27,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.amazonaws.com.google.gson.Gson;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-
-import org.json.JSONException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import jp.ac.it_college.std.ikemen.reachable.company.MainActivity;
 import jp.ac.it_college.std.ikemen.reachable.company.R;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.AwsUtil;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.S3UploadManager;
-import jp.ac.it_college.std.ikemen.reachable.company.aws.UploadObservers;
 import jp.ac.it_college.std.ikemen.reachable.company.coupon.adapter.CouponListAdapter;
-import jp.ac.it_college.std.ikemen.reachable.company.coupon.listener.OnActionClickListener;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.ac.it_college.std.ikemen.reachable.company.json.JsonManager;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 import jp.ac.it_college.std.ikemen.reachable.company.view.EmptySupportRecyclerView;
 import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemClickListener;
@@ -59,13 +47,14 @@ import jp.ac.it_college.std.ikemen.reachable.company.view.listener.RecyclerItemC
  */
 public class CouponSelectFragment extends BaseCouponFragment
         implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener,
-        OnActionClickListener, DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
-        MenuItemCompat.OnActionExpandListener, SearchView.OnQueryTextListener {
+        MenuItemCompat.OnActionExpandListener, SearchView.OnQueryTextListener,
+        MenuItem.OnMenuItemClickListener {
 
     /* Constants */
-    private static final int REQUEST_GALLERY = 0;
-    public static final int CREATE_COUPON = 0x002;
-    private static final int ITEM_DELETED = -1;
+    private static final int REQUEST_GALLERY = 0x101;
+    public static final int CREATE_COUPON = 0x102;
+    public static final int REQUEST_DETAIL = 0x103;
+    public static final int SPAN_COUNT = 2;
 
     /* Views */
     private View mContentView;
@@ -73,14 +62,14 @@ public class CouponSelectFragment extends BaseCouponFragment
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
     private SearchView mSearchView;
+    private CoordinatorLayout mCoordinatorLayout;
 
-    /* Json */
-    private JsonManager mJsonManager;
+    /* Actionbar */
+    private ActionMode mActionMode;
 
     /* Coupon */
-    private CouponInfo mSelectedCoupon;
-    private ProgressDialog mProgressDialog;
-    private ActionMode mActionMode;
+    private LinkedHashMap<Integer, CouponInfo> mDeletedCouponMap;
+    private View.OnClickListener mUndoCouponListener;
 
 
     @Override
@@ -100,7 +89,7 @@ public class CouponSelectFragment extends BaseCouponFragment
         //ツールバーにメニューを表示する
         setHasOptionsMenu(true);
         //クーポンリストのアダプターをセット
-        setCouponListAdapter(new CouponListAdapter(getCouponInfoList(), this));
+        setCouponListAdapter(new CouponListAdapter(getActivity(), getCouponInfoList()));
         //クーポンリストをセットアップ
         setUpCouponListView(getCouponListView());
 
@@ -110,19 +99,18 @@ public class CouponSelectFragment extends BaseCouponFragment
 
         //FABのOnClickListenerをセット
         getFab().setOnClickListener(this);
-
-        //JsonManagerのインスタンスを生成
-        mJsonManager = new JsonManager(getActivity());
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
-        final MenuItem item = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) item.getActionView();
+        //メニューをインフレート
+        inflater.inflate(R.menu.coupon_select_menu, menu);
+        //サーチメニューを取得
+        final MenuItem searchMenu = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) searchMenu.getActionView();
 
         //SearchView開閉時のリスナーをセットする
-        MenuItemCompat.setOnActionExpandListener(item, this);
+        MenuItemCompat.setOnActionExpandListener(searchMenu, this);
         //SearchViewにキーワードが入力された時のリスナーをセットする
         mSearchView.setOnQueryTextListener(this);
 
@@ -131,12 +119,45 @@ public class CouponSelectFragment extends BaseCouponFragment
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     //SearchViewからフォーカスが外れた際にメニューを閉じる
-                    item.collapseActionView();
+                    searchMenu.collapseActionView();
                 }
             }
         });
 
+        //表示形式変更メニューのクリックリスナーを登録
+        menu.findItem(R.id.menu_change_view).setOnMenuItemClickListener(this);
+    }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_change_view:
+                //RecyclerViewの表示形式を切り替える
+                if (getCouponListView().getLayoutManager() instanceof LinearLayoutManager) {
+                    //グリット表示に切り替える
+                    getCouponListView().setLayoutManager(new StaggeredGridLayoutManager(
+                            SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL));
+                } else {
+                    //リスト表示に切り替える
+                    getCouponListView().setLayoutManager(new LinearLayoutManager(getActivity()));
+                }
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        //表示形式変更メニューを取得
+        MenuItem changeViewMenu = menu.findItem(R.id.menu_change_view);
+
+        //RecyclerViewに設定されているLayoutManagerによって表示形式変更メニューのタイトルを切り替える
+        if (getCouponListView().getLayoutManager() instanceof LinearLayoutManager) {
+            changeViewMenu.setTitle(R.string.menu_title_grid_view);
+        } else {
+            changeViewMenu.setTitle(R.string.menu_title_list_view);
+        }
     }
 
     public View getContentView() {
@@ -166,12 +187,23 @@ public class CouponSelectFragment extends BaseCouponFragment
         return mCouponListView;
     }
 
-    public JsonManager getJsonManager() {
-        return mJsonManager;
-    }
-
     public ActionMode getActionMode() {
         return mActionMode;
+    }
+
+    public CoordinatorLayout getCoordinatorLayout() {
+        if (mCoordinatorLayout == null) {
+            mCoordinatorLayout =
+                    (CoordinatorLayout) getContentView().findViewById(R.id.coordinator_layout);
+        }
+        return mCoordinatorLayout;
+    }
+
+    public HashMap<Integer, CouponInfo> getDeletedCouponMap() {
+        if (mDeletedCouponMap == null) {
+            mDeletedCouponMap = new LinkedHashMap<>();
+        }
+        return mDeletedCouponMap;
     }
 
     /**
@@ -200,32 +232,34 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     /**
      * クーポンリストにクーポンを追加する
-     *
+     * @param location 追加する場所
      * @param info クーポン作成画面で作成されたクーポン
      */
-    private void addCoupon(CouponInfo info) {
+    private void addCoupon(int location, CouponInfo info) {
         //クーポンリストにクーポンを追加
-        getCouponInfoList().add(0, info);
-        getCouponListAdapter().add(info);
+        getCouponInfoList().add(info);
+        getCouponListAdapter().add(location, info);
         //追加したクーポンまでスクロールする
         getCouponListView().getLayoutManager()
-                .smoothScrollToPosition(getCouponListView(), null, 0);
+                .smoothScrollToPosition(getCouponListView(), null, location);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
     }
 
     /**
      * クーポンリストからクーポンを削除する
-     *
      * @param position 削除するクーポンのインデックス
+     * @return 削除したクーポンを返す
      */
-    private void deleteCoupon(int position) {
+    private CouponInfo deleteCoupon(int position) {
         //アダプターのクーポンリストからクーポンを削除
         CouponInfo target = getCouponListAdapter().remove(position);
         //オリジナルのクーポンリストからクーポンを削除
         getCouponInfoList().remove(target);
         //クーポンリストをSharedPreferencesに保存
-        saveCouponInstance(getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+        Utils.saveCouponInstance(getActivity(), getCouponInfoList(), PREF_SAVED_COUPON_INFO_LIST);
+
+        return target;
     }
 
     /**
@@ -237,31 +271,51 @@ public class CouponSelectFragment extends BaseCouponFragment
         Collections.reverse(selectedItem);
         //最後尾から削除していく
         for (Integer position : selectedItem) {
-            deleteCoupon(position);
+            getDeletedCouponMap().put(position, deleteCoupon(position));
         }
 
-        //アダプターにリストの変更を通知
-        getCouponListAdapter().notifyDataSetChanged();
+        //削除アイテムを戻す際のSnackBarを表示する
+        showUndoSnackBar(selectedItem.size());
     }
 
     /**
-     * SharedPreferencesにクーポンのインスタンスを保存
-     *
-     * @param infoList 保存するクーポン情報リスト
-     * @param key      SharedPreferencesに保存する際のキー名
+     * 削除されたクーポンを元に戻す
      */
-    private void saveCouponInstance(List<CouponInfo> infoList, String key) {
-        Gson gson = new Gson();
-        SharedPreferences.Editor editor = getActivity().getSharedPreferences(
-                CouponInfo.PREF_INFO, Context.MODE_PRIVATE).edit();
-        Set<String> instances = new HashSet<>();
+    private void undoCoupon() {
+        //UNDOボタン押下時の処理
+        List<Integer> reverseList = new ArrayList<>(getDeletedCouponMap().keySet());
+        Collections.reverse(reverseList);
+        for (Integer location : reverseList) {
+            addCoupon(location, getDeletedCouponMap().get(location));
+        }
+    }
 
-        for (CouponInfo info : infoList) {
-            instances.add(gson.toJson(info));
+    private View.OnClickListener getUndoCouponListener() {
+        if (mUndoCouponListener == null) {
+            mUndoCouponListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    undoCoupon();
+                }
+            };
         }
 
-        editor.putStringSet(key, instances);
-        editor.apply();
+        return mUndoCouponListener;
+    }
+
+    private void showUndoSnackBar(int deleteCount) {
+        Snackbar.make(getCoordinatorLayout(), getString(R.string.deleted_coupon, deleteCount),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, getUndoCouponListener())
+                .setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
+                        //SnackBar非表示の際に削除済みクーポンのマップをクリアする
+                        getDeletedCouponMap().clear();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -288,18 +342,32 @@ public class CouponSelectFragment extends BaseCouponFragment
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
+            //フォトギャラリーからのレスポンス
             if (requestCode == REQUEST_GALLERY) {
                 Intent intent = new Intent(getActivity(), CreateCouponActivity.class);
                 intent.setData(data.getData());
                 startActivityForResult(intent, CREATE_COUPON);
-            }
-
-            if (requestCode == CREATE_COUPON) {
+            } else if (requestCode == CREATE_COUPON) { //クーポン作成画面からのレスポンス
                 //作成されたクーポンの情報を取得
                 CouponInfo couponInfo = (CouponInfo) data.getSerializableExtra(
                         CreateCouponActivity.CREATED_COUPON_DATA);
                 //クーポンをクーポンリストに追加
-                addCoupon(couponInfo);
+                addCoupon(0, couponInfo);
+            }
+        }
+
+        //クーポン詳細画面からのレスポンス
+        if (requestCode == REQUEST_DETAIL) {
+            if (resultCode == CouponDetailActivity.RESULT_DELETE && data != null) {
+                //クーポン詳細画面で削除ボタンが押された際の処理
+                int targetPosition = data.getIntExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, -1);
+                //クーポンを削除して削除済みマップに追加する
+                getDeletedCouponMap().put(targetPosition, deleteCoupon(targetPosition));
+                //削除したクーポンを戻す際のSnackBarを表示する
+                showUndoSnackBar(1);
+            } else if (resultCode == CouponDetailActivity.RESULT_UPLOADED) {
+                //クーポン宣伝画面へ遷移する
+                transitionToAdvertise();
             }
         }
     }
@@ -320,8 +388,68 @@ public class CouponSelectFragment extends BaseCouponFragment
     @Override
     public void onItemClick(View view, int position) {
         if (getActionMode() != null) {
+            //コンテキストメニュー表示時の処理
             toggleSelection(position);
+        } else {
+            //リストアイテムクリック時の処理
+            transitionToCouponDetails(view, position);
         }
+    }
+
+    /**
+     * クーポン詳細画面と共有するViewをSharedElementに設定する
+     * @param view クリックされたクーポンのView
+     * @return SharedElementの情報が入ったActivityOptionsCompatを返す
+     */
+    private ActivityOptionsCompat makeSharedElementOptions(View view) {
+        View title = view.findViewById(R.id.txt_title);
+        View image = view.findViewById(R.id.img_coupon_pic);
+        View creationDate = view.findViewById(R.id.txt_creation_date);
+        View category = view.findViewById(R.id.txt_tags);
+        View toolbar = ((MainActivity) getActivity()).getToolbar();
+        View fab = getContentView().findViewById(R.id.fab);
+
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                new Pair<View, String>(image, getString(R.string.transition_image)),
+                new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)),
+                new Pair<View, String>(creationDate, getString(R.string.transition_creation_date)),
+                new Pair<View, String>(category, getString(R.string.transition_category)),
+                new Pair<View, String>(fab, getString(R.string.transition_fab)),
+                new Pair<View, String>(title, getString(R.string.transition_title))
+        );
+    }
+
+    /**
+     * クーポン詳細画面に遷移する
+     * @param view 選択されたクーポンのView
+     * @param position 選択されたクーポンのリストポジション
+     */
+    private void transitionToCouponDetails(View view, int position) {
+        Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
+        intent.putExtra(CouponDetailActivity.SELECTED_ITEM,
+                getCouponListAdapter().getCouponInfoList().get(position));
+        intent.putExtra(CouponDetailActivity.SELECTED_ITEM_POSITION, position);
+
+        startActivityForResult(intent, REQUEST_DETAIL, makeSharedElementOptions(view).toBundle());
+    }
+
+    /**
+     * クーポン宣伝画面に遷移する
+     */
+    private void transitionToAdvertise() {
+        //Slideアニメーションを使用
+        Slide slide = new Slide();
+        //画面右からスライドするように設定
+        slide.setSlideEdge(Gravity.END);
+        //宣伝画面用フラグメントのインスタンスを生成
+        Fragment fragment = new AdvertiseCouponFragment();
+        //FragmentにTransitionをセット
+        fragment.setEnterTransition(slide);
+        //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
+        ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
+        //Fragmentを切り替える
+        ((MainActivity) getActivity()).changeFragment(fragment, R.string.menu_title_advertise_coupon);
     }
 
     /*
@@ -335,176 +463,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         }
 
         toggleSelection(position);
-    }
-
-    /**
-     * ADVERTISEボタン押下時に呼ばれる
-     *
-     * @param view     クリックされたボタンのView
-     * @param position 選択されたクーポンのインデックス
-     */
-    @Override
-    public void onAdvertiseClick(View view, int position) {
-        if (position == ITEM_DELETED) {
-            //選択されたクーポンが既にリストにない場合は処理を実行せずにメソッドを抜ける
-            return;
-        }
-        //選択されたクーポンを取得
-        mSelectedCoupon = getCouponListAdapter().getCouponInfoList().get(position);
-
-        //選択されたクーポンをJSONファイルに書き込む
-        if (putCouponToJson(mSelectedCoupon)) {
-            //書き込みが成功した場合クーポンファイルをS3にアップロードする
-            File couponFile = new File(mSelectedCoupon.getFilePath());
-            List<File> fileList = Arrays.asList(couponFile, getJsonManager().getFile());
-            beginUpload(fileList);
-        } else {
-            //JSONへの書き込みが失敗した時の処理
-            Toast.makeText(getActivity(), R.string.failed_to_write_coupon, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * DELETEボタン押下時に呼ばれる
-     *
-     * @param view     クリックされたボタンのView
-     * @param position 選択されたクーポンのインデックス
-     */
-    @Override
-    public void onDeleteClick(View view, int position) {
-        /* DELETEボタン押下時の処理 */
-        if (position == ITEM_DELETED) {
-            //選択されたクーポンが既にリストにない場合は処理を実行せずにメソッドを抜ける
-            return;
-        }
-
-        //クーポンを削除
-        deleteCoupon(position);
-    }
-
-    /**
-     * クーポンの情報をjsonに書き込む
-     *
-     * @param info 書き込むクーポン
-     * @return 書き込みが成功した場合はtrueを返す
-     */
-    private boolean putCouponToJson(CouponInfo info) {
-        try {
-            getJsonManager().putJsonObj(info);
-        } catch (IOException | JSONException | NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * ProgressDialogを生成して返す
-     *
-     * @return progressDialog
-     */
-    public ProgressDialog getProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle(getString(R.string.dialog_title_coupon_upload));
-            mProgressDialog.setMessage(getString(R.string.dialog_message_coupon_upload));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgress(0);
-            mProgressDialog.setOnCancelListener(this);
-            mProgressDialog.setOnDismissListener(this);
-        }
-        return mProgressDialog;
-    }
-
-    /**
-     * ProgressDialogが中止されたタイミングで呼ばれる
-     *
-     * @param dialog
-     */
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        Toast.makeText(
-                getActivity(), getString(R.string.coupon_upload_failed), Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * ProgressDialogが破棄されたタイミングで呼ばれる
-     *
-     * @param dialog
-     */
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        //クーポンアップロード完了後の処理
-        if (getProgressDialog().getProgress() >= getProgressDialog().getMax()) {
-            //アップロード完了を通知するToastを表示
-            Toast.makeText(
-                    getActivity(), getString(R.string.coupon_upload_completed), Toast.LENGTH_SHORT).show();
-
-            //ProgressDialogを破棄
-            mProgressDialog = null;
-
-            // クーポンアップロード後に宣伝用のクーポンを保存する
-            saveAdvertiseCoupon(mSelectedCoupon);
-        }
-    }
-
-    /**
-     * クーポンアップロード後に宣伝用のクーポンを保存する
-     *
-     * @param selectedCoupon 選択されたクーポン
-     */
-    private void saveAdvertiseCoupon(CouponInfo selectedCoupon) {
-        //選択されたクーポンを保存
-        List<CouponInfo> selectedList = Arrays.asList(selectedCoupon);
-        saveCouponInstance(selectedList, PREF_ADVERTISE_COUPON_LIST);
-
-        //クーポン宣伝画面に切り替える
-        changeFragment(new AdvertiseCouponFragment());
-    }
-
-    /**
-     * Fragmentをアニメーションしながら遷移させる
-     *
-     * @param destination 遷移先のFragment
-     */
-    private void changeFragment(Fragment destination) {
-        //TransitionSetを設定
-        TransitionSet transitionSet = new TransitionSet();
-        //Slideアニメーションを使用
-        Slide slide = new Slide();
-        //画面右からスライドするように設定
-        slide.setSlideEdge(Gravity.END);
-        //TransitionSetにTransitionを追加
-        transitionSet.addTransition(slide);
-
-        //FragmentにTransitionをセット
-        destination.setEnterTransition(transitionSet);
-
-        //Fragment変更時にNavigationViewのチェックアイテムが変わらないので明示的に変更する
-        ((MainActivity) getActivity()).getNavigationView().setCheckedItem(R.id.menu_advertise_coupon);
-
-        //Fragmentを切り替える
-        ((MainActivity) getActivity()).changeFragment(destination, R.string.menu_title_advertise_coupon);
-    }
-
-    /**
-     * 選択されたクーポンをS3にアップロードする
-     *
-     * @param files アップロードするファイルのリスト
-     */
-    private void beginUpload(List<File> files) {
-        //アップロードを実行しObserverListを取得
-        List<TransferObserver> observerList = new S3UploadManager(getActivity(),
-                AwsUtil.getTransferUtility(getActivity()), files).execute(getProgressDialog());
-        //UploadObserversを生成
-        UploadObservers uploadObservers = new UploadObservers(observerList);
-
-        //ProgressDialogの最大値にアップロードするファイルの合計サイズをセット
-        getProgressDialog().setMax((int) uploadObservers.getBytesTotal());
-        //ProgressDialogを表示
-        getProgressDialog().show();
     }
 
     /**
