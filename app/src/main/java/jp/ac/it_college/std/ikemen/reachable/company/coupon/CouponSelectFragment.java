@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -57,6 +58,7 @@ public class CouponSelectFragment extends BaseCouponFragment
     private EmptySupportRecyclerView mCouponListView;
     private TextView mEmptyView;
     private SearchView mSearchView;
+    private CoordinatorLayout mCoordinatorLayout;
 
     /* Actionbar */
     private ActionMode mActionMode;
@@ -179,6 +181,14 @@ public class CouponSelectFragment extends BaseCouponFragment
 
     public ActionMode getActionMode() {
         return mActionMode;
+    }
+
+    public CoordinatorLayout getCoordinatorLayout() {
+        if (mCoordinatorLayout == null) {
+            mCoordinatorLayout =
+                    (CoordinatorLayout) getContentView().findViewById(R.id.coordinator_layout);
+        }
+        return mCoordinatorLayout;
     }
 
     /**
