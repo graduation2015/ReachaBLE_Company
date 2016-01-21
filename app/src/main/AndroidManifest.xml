@@ -48,6 +48,7 @@
         </activity>
         <activity
             android:name=".coupon.CouponDetailActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_coupon_detail"/>
     </application>
 
