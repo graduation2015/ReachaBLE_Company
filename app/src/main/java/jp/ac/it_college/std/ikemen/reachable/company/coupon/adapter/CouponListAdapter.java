@@ -101,7 +101,7 @@ public class CouponListAdapter extends SelectableAdapter<CouponListAdapter.Coupo
         //positionで指定されたクーポンを削除する
         CouponInfo removedCoupon = getCouponInfoList().remove(position);
         //削除したことを通知
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
 
         return removedCoupon;
     }

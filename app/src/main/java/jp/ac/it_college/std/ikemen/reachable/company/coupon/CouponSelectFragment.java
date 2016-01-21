@@ -244,9 +244,6 @@ public class CouponSelectFragment extends BaseCouponFragment
         for (Integer position : selectedItem) {
             deleteCoupon(position);
         }
-
-        //アダプターにリストの変更を通知
-        getCouponListAdapter().notifyDataSetChanged();
     }
 
     /**
