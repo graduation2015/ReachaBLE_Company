@@ -6,7 +6,6 @@ import android.util.Log;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
@@ -16,13 +15,18 @@ import java.util.List;
 import jp.ac.it_college.std.ikemen.reachable.company.Constants;
 import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 
+/**
+ * S3バケットへのアップロード周りの処理をまとめたクラス
+ */
 public class S3UploadManager implements TransferListener {
     private final TransferUtility mTransferUtility;
     private final OnUploadListener mUploadListener;
+    private List<TransferObserver> mObserverList;
 
     public S3UploadManager(TransferUtility transferUtility, OnUploadListener uploadListener) {
         this.mTransferUtility = transferUtility;
         this.mUploadListener = uploadListener;
+        this.mObserverList = new ArrayList<>();
     }
 
     /**
@@ -30,7 +34,7 @@ public class S3UploadManager implements TransferListener {
      * @param file アップロードするファイル
      * @return アップロード中のイベントを返す
      */
-    public TransferObserver upload(File file) {
+    private TransferObserver upload(File file) {
         // "企業ID/企業ID.拡張子" の形式でファイルをアップロードする
         return getTransferUtility().upload(
                 Constants.BUCKET_NAME,
@@ -44,25 +48,26 @@ public class S3UploadManager implements TransferListener {
      * @return アップロード中のイベントを返す
      */
     public List<TransferObserver> upload(List<File> files) {
-        List<TransferObserver> observerList = new ArrayList<>();
-
         for (File file : files) {
             TransferObserver observer = upload(file);
             observer.setTransferListener(this);
 
-            observerList.add(observer);
+            getObserverList().add(observer);
         }
 
-        return observerList;
+        return mObserverList;
     }
 
     public TransferUtility getTransferUtility() {
         return mTransferUtility;
     }
 
-    private boolean checkObserversState(TransferType type, TransferState state) {
-        List<TransferObserver> observerList = getTransferUtility().getTransfersWithType(type);
-        for (TransferObserver observer : observerList) {
+    public List<TransferObserver> getObserverList() {
+        return mObserverList;
+    }
+
+    private boolean checkObserversState(TransferState state) {
+        for (TransferObserver observer : getObserverList()) {
             if (observer.getState() != state) {
                 return false;
             }
@@ -76,13 +81,17 @@ public class S3UploadManager implements TransferListener {
         if (mUploadListener != null) {
             switch (transferState) {
                 case FAILED:
-                    mUploadListener.onUploadFailed(i, transferState);
+                    if (checkObserversState(TransferState.FAILED)) {
+                        mUploadListener.onUploadFailed(i, transferState);
+                    }
                     break;
                 case CANCELED:
-                    mUploadListener.onUploadCanceled(i, transferState);
+                    if (checkObserversState(TransferState.CANCELED)) {
+                        mUploadListener.onUploadCanceled(i, transferState);
+                    }
                     break;
                 case COMPLETED:
-                    if (checkObserversState(TransferType.UPLOAD, TransferState.COMPLETED)) {
+                    if (checkObserversState(TransferState.COMPLETED)) {
                         mUploadListener.onUploadCompleted();
                     }
                     break;
