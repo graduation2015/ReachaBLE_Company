@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import jp.ac.it_college.std.ikemen.reachable.company.R;
+
 /**
  * スクロール時におけるFABProgressCircleの動作を管理するBehaviorクラス
  */
@@ -29,7 +31,9 @@ public class FabProgressCircleBehavior extends CoordinatorLayout.Behavior {
     @Override
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, View child, View target,
                                int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        if (dyUnconsumed > 0 && !this.mIsAnimatingOut && child.getVisibility() == View.VISIBLE) {
+        View progressCircle = child.findViewById(R.id.fab_progress_circle);
+        if (dyUnconsumed > 0 && !this.mIsAnimatingOut && child.getVisibility() == View.VISIBLE
+                && !progressCircle.isShown()) {
             animateOut(child);
         } else if (dyUnconsumed < 0 && child.getVisibility() != View.VISIBLE) {
             animateIn(child);

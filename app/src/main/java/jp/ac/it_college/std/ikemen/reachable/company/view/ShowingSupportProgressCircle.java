@@ -44,4 +44,10 @@ public class ShowingSupportProgressCircle extends FABProgressCircle {
     public boolean isShown() {
         return mIsShown;
     }
+
+    @Override
+    public void onArcAnimationComplete() {
+        super.onArcAnimationComplete();
+        mIsShown = false;
+    }
 }
