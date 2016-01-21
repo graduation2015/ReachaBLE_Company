@@ -48,4 +48,6 @@
     <string name="coupon_upload_canceled">Upload canceled.</string>
     <string name="transition_fab">transition:fab</string>
     <string name="transition_title">transition:title</string>
+    <string name="deleted_coupon">%1$s deleted</string>
+    <string name="undo">UNDO</string>
 </resources>
