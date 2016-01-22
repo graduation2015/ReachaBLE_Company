@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/img_coupon_pic"
+            android:background="#7000"
             android:gravity="center"
             android:padding="8dp"
             android:maxLines="1"
