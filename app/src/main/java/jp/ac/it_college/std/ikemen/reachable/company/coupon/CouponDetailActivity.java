@@ -60,6 +60,7 @@ public class CouponDetailActivity extends AppCompatActivity
 
     /* Coupon */
     private CouponInfo mSelectedItem;
+    private boolean mIsUploaded;
 
     /* Json */
     private JsonManager mJsonManager;
@@ -344,6 +345,15 @@ public class CouponDetailActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIsUploaded && getProgressCircle().isShown()) {
+            //Activity再表示時にアップロード完了後の場合はFABを変更する
+            getProgressCircle().onArcAnimationComplete();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_progress_circle:
@@ -359,6 +369,8 @@ public class CouponDetailActivity extends AppCompatActivity
     /* アップロード完了後に呼ばれる */
     @Override
     public void onUploadCompleted() {
+        //アップロード済みフラグをtrueにする
+        mIsUploaded = true;
         //FABProgressの終了アニメーションを再生する
         getProgressCircle().beginFinalAnimation();
         //宣伝用にクーポンを保存する
