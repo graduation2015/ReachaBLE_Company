@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Checkable;
+
+import jp.ac.it_college.std.ikemen.reachable.company.R;
 
 /**
  * チェック処理に対応したCardViewクラス
@@ -26,18 +29,25 @@ public class CheckableCardView extends CardView implements Checkable {
     }
 
     /**
-     * Viewの背景色をトグルする
+     * CardViewのトグル処理を実行する
      * @param checked Viewがチェックされている場合trueを渡す
      */
-    private void toggleCardBackgroundColor(boolean checked) {
+    private void toggleCardView(boolean checked) {
+        //CardViewの背景色を変更する
         setCardBackgroundColor(checked ? Color.LTGRAY : Color.WHITE);
+
+        //CheckCircleの可視性を変更する
+        View checkCircle = findViewById(R.id.img_check_circle);
+        if (checkCircle != null) {
+            checkCircle.setVisibility(checked ? VISIBLE : GONE);
+        }
     }
 
     @Override
     public void setChecked(boolean checked) {
         if (mIsChecked != checked) {
             mIsChecked = checked;
-            toggleCardBackgroundColor(mIsChecked);
+            toggleCardView(mIsChecked);
             refreshDrawableState();
         }
     }
