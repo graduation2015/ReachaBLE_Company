@@ -103,10 +103,8 @@ public class Advertise extends AdvertiseCallback {
         //characteristicUUIDを設定
         BluetoothGattCharacteristic characteristic = new BluetoothGattCharacteristic(
                 UUID.fromString(CHAR_UUID),
-                BluetoothGattCharacteristic.PROPERTY_READ |
-                        BluetoothGattCharacteristic.PROPERTY_WRITE,
-                BluetoothGattCharacteristic.PERMISSION_READ |
-                        BluetoothGattCharacteristic.PERMISSION_WRITE);
+                BluetoothGattCharacteristic.PROPERTY_READ,
+                BluetoothGattCharacteristic.PERMISSION_READ);
 
         //characteristicUUIDをserviceUUIDにのせる
         service.addCharacteristic(characteristic);
