@@ -11,7 +11,6 @@
         android:transitionName="@string/transition_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/toolbar_title"
         app:navigationIcon="@drawable/ic_drawer"
         app:popupTheme="@style/Theme.AppCompat.Light"
         android:minHeight="?attr/actionBarSize"

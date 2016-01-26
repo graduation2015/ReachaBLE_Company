@@ -149,7 +149,7 @@ public class CreateCouponActivity extends AppCompatActivity {
         String title = trim(getTitleWrapper().getEditText().getText().toString());
         //タイトルのバリデートチェック
         if (!validateTitle(title)) {
-            getTitleWrapper().setError(getString(R.string.validate_title_error));
+            getTitleWrapper().setError(getString(R.string.error_validate_title));
             return false;
         } else {
             getTitleWrapper().setError(null);

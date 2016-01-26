@@ -5,7 +5,7 @@
     android:id="@+id/switch_advertise"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/toolbar_advertise"
+    android:text="@string/switch_advertise"
     android:textSize="14sp"
     android:textOn="@string/switch_advertise_on"
     android:textOff="@string/switch_advertise_off"
