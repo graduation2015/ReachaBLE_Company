@@ -148,15 +148,6 @@ public class FileUtil {
     }
 
     /**
-     * ファイルパスからファイル名のみを抜き取る
-     * @param path
-     * @return
-     */
-    public static String extractFileName(String path) {
-        return path.substring(path.lastIndexOf(FOLDER_SUFFIX) + 1);
-    }
-
-    /**
      * 画像のサブサンプルサイズを計算して返す
      * @param options デコードした後のoptions
      * @param reqWidth 画像をセットするImageViewの横幅
