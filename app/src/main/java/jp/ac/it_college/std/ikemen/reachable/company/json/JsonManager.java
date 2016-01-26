@@ -83,26 +83,6 @@ public class JsonManager {
     }
 
     /**
-     * 読み書き可能な外部ストレージをチェック
-     *
-     * @return
-     */
-    private boolean isExternalStorageWritable() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
-    }
-
-    /**
-     * 少なくとも読み取りは可能な外部ストレージか、チェック
-     *
-     * @return
-     */
-    private boolean isExternalStorageReadable() {
-        return isExternalStorageWritable()
-                || Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState());
-    }
-
-
-    /**
      * JSONファイルにJSONオブジェクトを追加/更新
      * @param info
      */
