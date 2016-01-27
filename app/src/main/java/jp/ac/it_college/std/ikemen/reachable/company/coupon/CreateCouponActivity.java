@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +10,13 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 
+import com.squareup.picasso.Picasso;
+
 import java.util.Arrays;
 import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
-import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
 public class CreateCouponActivity extends AppCompatActivity {
@@ -32,7 +32,6 @@ public class CreateCouponActivity extends AppCompatActivity {
     private TextInputLayout mTagsWrapper;
 
     /* coupon */
-    private String mCouponPath;
     private CouponInfo mCouponInfo;
 
     @Override
@@ -45,16 +44,16 @@ public class CreateCouponActivity extends AppCompatActivity {
 
     private void initSettings() {
         setUpToolbar();
-        setCouponPreview();
+        loadCouponImage();
     }
 
     /**
-     * 選択されたクーポン画像をプレビューにセット
+     * 選択されたクーポン画像を読み込む
      */
-    private void setCouponPreview() {
-        String path = FileUtil.getPath(this, getIntent().getData());
-        setCouponPath(path);
-        getImageView().setImageBitmap(BitmapFactory.decodeFile(getCouponPath()));
+    private void loadCouponImage() {
+        Picasso.with(this)
+                .load(getIntent().getDataString())
+                .into(getImageView());
     }
 
 
@@ -75,14 +74,6 @@ public class CreateCouponActivity extends AppCompatActivity {
             mImageView = (ImageView) findViewById(R.id.img_coupon_preview);
         }
         return mImageView;
-    }
-
-    public String getCouponPath() {
-        return mCouponPath;
-    }
-
-    public void setCouponPath(String couponPath) {
-        this.mCouponPath = couponPath;
     }
 
     public CouponInfo getCouponInfo() {
@@ -159,7 +150,7 @@ public class CreateCouponActivity extends AppCompatActivity {
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
         //CouponInfoインスタンスをセット
-        setCouponInfo(new CouponInfo(getCouponPath(), title, description, tagsList));
+        setCouponInfo(new CouponInfo(getIntent().getDataString(), title, description, tagsList));
 
         return true;
     }

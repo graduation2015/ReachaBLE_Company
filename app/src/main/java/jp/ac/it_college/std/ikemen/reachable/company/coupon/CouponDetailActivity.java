@@ -1,6 +1,7 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -128,7 +129,7 @@ public class CouponDetailActivity extends AppCompatActivity
      */
     private void loadThumbnail() {
         Picasso.with(getHeaderImageView().getContext())
-                .load(new File(getSelectedItem().getFilePath()))
+                .load(getSelectedItem().getFilePath())
                 .transform(new BitmapTransform(
                         FileUtil.IMG_THUMBNAIL_WIDTH, FileUtil.IMG_THUMBNAIL_HEIGHT))
                 .noFade()
@@ -140,7 +141,7 @@ public class CouponDetailActivity extends AppCompatActivity
      */
     private void loadFullSizeImage() {
         Picasso.with(getHeaderImageView().getContext())
-                .load(new File(getSelectedItem().getFilePath()))
+                .load(getSelectedItem().getFilePath())
                 .transform(new BitmapTransform(
                         FileUtil.IMG_FULL_SIZE_WIDTH, FileUtil.IMG_FULL_SIZE_HEIGHT))
                 .noFade()
@@ -236,8 +237,9 @@ public class CouponDetailActivity extends AppCompatActivity
         //選択されたクーポンをJSONファイルに書き込む
         if (putCouponToJson(getSelectedItem())) {
             //書き込みが成功した場合クーポンファイルをS3にアップロードする
-            File couponFile = new File(getSelectedItem().getFilePath());
-            List<File> fileList = Arrays.asList(couponFile, getJsonManager().getFile());
+            List<File> fileList = Arrays.asList(
+                    new File(FileUtil.getPath(this, Uri.parse(getSelectedItem().getFilePath()))),
+                    getJsonManager().getFile());
             beginUpload(fileList);
         } else {
             //JSONへの書き込みが失敗した時の処理
