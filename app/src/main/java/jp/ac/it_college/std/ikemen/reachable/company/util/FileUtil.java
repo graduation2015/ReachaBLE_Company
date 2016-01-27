@@ -12,7 +12,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import jp.ac.it_college.std.ikemen.reachable.company.info.CompanyInfo;
 
@@ -32,64 +31,108 @@ public class FileUtil {
 
     /**
      * ファイルの絶対パスを取得
-     * @param context
-     * @param uri
-     * @return
-     * @throws URISyntaxException
+     * @param context ContentResolver取得用のContext
+     * @param uri ファイルのパス情報が入ったUri
+     * @return ファイルのドキュメントタイプに応じて絶対パスを返す
      */
-    public static String getPath(Context context, Uri uri) throws URISyntaxException {
-        final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;
-        String selection = null;
-        String[] selectionArgs = null;
+    public static String getPath(Context context, Uri uri) {
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context, uri)) {
+            final String docId = DocumentsContract.getDocumentId(uri);
 
-        if (needToCheckUri && DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
+                return getExternalStorageDocUri(docId);
             } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-
-                uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                uri = getDownloadsDocUri(docId);
             } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("image".equals(type)) {
-                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                selection = "_id=?";
-                selectionArgs = new String[]{split[1]};
+                return getMediaDocUri(context, docId);
             }
         }
+
+        return getRealPathFromUri(context, uri, null, null);
+    }
+
+
+    /**
+     * ContentResolverを使用してUriからファイルの絶対パスを取得する
+     * @param context ContentResolver取得用のContext
+     * @param uri ファイルのパス情報が入ったUri
+     * @param selection 行フィルタ。nullを渡すと指定されたURIのすべての行を返します。
+     * @param selectionArgs selectionで指定した行をこの値で書き換える
+     * @return ファイルの絶対パスを返す
+     */
+    private static String getRealPathFromUri(Context context, Uri uri, String selection, String[] selectionArgs) {
+        String path = null;
+
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {
-                    MediaStore.Images.Media.DATA
-            };
+            String[] projection = {MediaStore.Images.Media.DATA};
+            Cursor cursor = context.getContentResolver()
+                    .query(uri, projection, selection, selectionArgs, null);
 
-            Cursor cursor = null;
-            try {
-                cursor = context.getContentResolver()
-                        .query(uri, projection, selection, selectionArgs, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                path = cursor.getString(columnIndex);
+                cursor.close();
             }
+
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
+            path = uri.getPath();
         }
-        return null;
+
+        return path;
+    }
+
+    /**
+     * メディアドキュメントファイルの絶対パスを取得する
+     * @param context ContentResolver取得用のContext
+     * @param docId DocumentsContract.getDocumentId(Uri documentUri)で取得できるID
+     * @return メディアドキュメントファイルの絶対パスを返す
+     */
+    private static String getMediaDocUri(Context context, String docId) {
+        final String[] split = docId.split(":");
+        final String type = split[0];
+        final String selection = "_id=?";
+        final String[] selectionArgs = new String[]{split[1]};
+
+        return getRealPathFromUri(context, getContentUriFromType(type), selection, selectionArgs);
+    }
+
+    /**
+     * 内部ストレージドキュメントファイルの絶対パスを取得する
+     * @param docId DocumentsContract.getDocumentId(Uri documentUri)で取得できるID
+     * @return 内部ストレージドキュメントファイルの絶対パスを返す
+     */
+    private static String getExternalStorageDocUri(String docId) {
+        final String[] split = docId.split(":");
+
+        return Environment.getExternalStorageDirectory() + FOLDER_SUFFIX + split[1];
+    }
+
+    /**
+     * ダウンロードドキュメントファイルの絶対パスを取得する
+     * @param docId DocumentsContract.getDocumentId(Uri documentUri)で取得できるID
+     * @return ダウンロードドキュメントファイルの絶対パスを返す
+     */
+    private static Uri getDownloadsDocUri(String docId) {
+        return ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+    }
+
+    /**
+     * ファイルタイプに応じたCONTENT_URIを取得する
+     * @param type ファイルタイプ
+     * @return ファイルタイプに応じたCONTENT_URIを返す
+     */
+    private static Uri getContentUriFromType(String type) {
+        Uri uri = null;
+        if ("image".equals(type)) {
+            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        } else if ("video".equals(type)) {
+            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        } else if ("audio".equals(type)) {
+            uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+
+        return uri;
     }
 
     /**

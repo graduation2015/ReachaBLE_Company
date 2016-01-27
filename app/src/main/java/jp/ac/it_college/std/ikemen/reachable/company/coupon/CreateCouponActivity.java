@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,13 +52,8 @@ public class CreateCouponActivity extends AppCompatActivity {
      * 選択されたクーポン画像をプレビューにセット
      */
     private void setCouponPreview() {
-        try {
-            String path = FileUtil.getPath(this, getIntent().getData());
-            setCouponPath(path);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
+        String path = FileUtil.getPath(this, getIntent().getData());
+        setCouponPath(path);
         getImageView().setImageBitmap(BitmapFactory.decodeFile(getCouponPath()));
     }
 
