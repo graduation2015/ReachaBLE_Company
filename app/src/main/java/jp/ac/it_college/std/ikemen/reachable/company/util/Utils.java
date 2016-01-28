@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.amazonaws.com.google.gson.Gson;
+import com.google.gson.Gson;
 
 import java.util.HashSet;
 import java.util.List;
