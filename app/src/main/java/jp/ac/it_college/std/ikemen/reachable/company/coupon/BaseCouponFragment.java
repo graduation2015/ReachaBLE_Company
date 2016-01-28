@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.LinearLayoutManager;
 
-import com.amazonaws.com.google.gson.Gson;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashSet;
