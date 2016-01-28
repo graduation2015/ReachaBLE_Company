@@ -1,6 +1,7 @@
 package jp.ac.it_college.std.ikemen.reachable.company.coupon;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import jp.ac.it_college.std.ikemen.reachable.company.R;
 import jp.ac.it_college.std.ikemen.reachable.company.info.CouponInfo;
+import jp.ac.it_college.std.ikemen.reachable.company.util.FileUtil;
 import jp.ac.it_college.std.ikemen.reachable.company.util.Utils;
 
 public class CreateCouponActivity extends AppCompatActivity {
@@ -55,7 +57,6 @@ public class CreateCouponActivity extends AppCompatActivity {
                 .load(getIntent().getDataString())
                 .into(getImageView());
     }
-
 
     private void setUpToolbar() {
         setSupportActionBar(getToolbar());
@@ -150,7 +151,8 @@ public class CreateCouponActivity extends AppCompatActivity {
         List<String> tagsList = Arrays.asList(tags.replaceAll("　", " ").split(" "));
 
         //CouponInfoインスタンスをセット
-        setCouponInfo(new CouponInfo(getIntent().getDataString(), title, description, tagsList));
+        setCouponInfo(new CouponInfo(FileUtil.getPath(this, Uri.parse(getIntent().getDataString())),
+                title, description, tagsList));
 
         return true;
     }
@@ -172,7 +174,6 @@ public class CreateCouponActivity extends AppCompatActivity {
     private boolean validateTitle(String title) {
         return !title.isEmpty();
     }
-
 
     /**
      * クーポンの情報をリザルトにセットし、Activityを破棄
