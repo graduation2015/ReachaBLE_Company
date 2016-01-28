@@ -59,31 +59,31 @@
                 android:transitionName="@string/transition_creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_today_black_18dp"
+                android:drawableStart="@drawable/ic_today_black_24dp"
                 android:drawablePadding="8dp"
                 android:paddingBottom="8dp"
                 android:textColor="#9E9E9E"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/txt_description"
-                android:transitionName="@string/transition_creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_description_black_18dp"
+                android:lineSpacingExtra="3sp"
+                android:drawableStart="@drawable/ic_description_black_24dp"
                 android:drawablePadding="8dp"
                 android:paddingBottom="8dp"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/txt_tags"
                 android:transitionName="@string/transition_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_label_black_18dp"
+                android:drawableStart="@drawable/ic_label_black_24dp"
                 android:drawablePadding="8dp"
                 android:paddingTop="8dp"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
     </RelativeLayout>
