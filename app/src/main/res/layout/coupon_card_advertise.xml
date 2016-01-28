@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jp.ac.it_college.std.ikemen.reachable.company.view.CheckableCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_coupon_pic"
+            android:transitionName="@string/transition_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:transitionName="@string/transition_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/img_coupon_pic"
+            android:background="#7000"
+            android:gravity="center"
+            android:padding="8dp"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/img_check_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/img_coupon_pic"
+            android:layout_alignTop="@id/img_coupon_pic"
+            android:layout_margin="6dp"
+            android:src="@drawable/ic_check_circle_white_36dp"
+            android:tint="@color/primary"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/img_coupon_pic"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/txt_creation_date"
+                android:transitionName="@string/transition_creation_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_today_black_18dp"
+                android:drawablePadding="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="#9E9E9E"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_description"
+                android:transitionName="@string/transition_creation_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_description_black_18dp"
+                android:drawablePadding="8dp"
+                android:paddingBottom="8dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_tags"
+                android:transitionName="@string/transition_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_label_black_18dp"
+                android:drawablePadding="8dp"
+                android:paddingTop="8dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</jp.ac.it_college.std.ikemen.reachable.company.view.CheckableCardView>
